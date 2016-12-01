@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<Addin name="SimpleRenderer" library="libsimplerenderer.so">
+  <GameComponent name="SimpleRenderer" />
+</Addin>

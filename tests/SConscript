@@ -1,0 +1,9 @@
+Import( 'context' )
+
+env = Environment()
+
+config = File('TestEngine.xml')
+Command(config, config.srcnode(), Copy('$TARGET', '$SOURCE'))
+
+spec = File('TestGame.xml')
+Command(spec, spec.srcnode(), Copy('$TARGET', '$SOURCE'))

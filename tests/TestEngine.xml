@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<EngineConfig>
+  <PlatformConfig type="X11">
+    <Width>1024</Width>
+    <Height>600</Height>
+    <Fullscreen>false</Fullscreen>
+  </PlatformConfig>
+  <Addin source="simplerenderer/SimpleRenderer.xml" />
+</EngineConfig>

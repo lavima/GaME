@@ -1,0 +1,55 @@
+2014-04-20 Lars Vidar Magnusson <lavima@gmail.com>
+ * Changed the system API to use a singleton pattern instead of a simple 
+   function interface.
+
+2013-09-20 Lars Vidar Magnusson <lavima@gmail.com>
+ * SimpleRenderer working 
+
+2013-09-19 Lars Vidar Magnusson <lavima@gmail.com>
+ * Added CodingConvention to help maintain a clean design
+ * Minor miscellaneous changes
+
+2013-09-13 Lars Vidar Magnusson <lavima@gmail.com>
+ * Game component framework updated
+
+2012-09-12 Lars Vidar Magnusson <lavima@gmail.com>
+ * Working xerces integration
+
+2012-09-10 Lars Vidar Magnusson <lavima@gmail.com>
+ * Continued work on xerces integration
+ * Moved system/linux to system/x11
+
+2012-08-26 Lars Vidar Magnusson <lavima@gmail.com>
+ * Changed build setup
+ * Started XML integration with xerces.
+ * Redesign of the Engine class.
+
+2012-07-01 Lars Vidar Magnusson <lavima@gmail.com>
+ * Updated the build scripts to put output in ./build directory
+
+2012-01-23 Lars Vidar Magnusson <lavima@gmail.com>
+ * Added system function for reading the time stamp counter
+
+2012-01-15 Lars Vidar Magnusson <lavima@gmail.com>
+ * Worked on addin framework
+ * Added structures for using const char * as keys in unordered_map
+
+2012-01-08 Lars Vidar Magnusson <lavima@gmail.com>
+ * Created a framework for addins through dynamicly loaded libraries
+ * Minor work on the simple renderer
+
+2012-01-01 Lars Vidar Magnusson <lavima@gmail.com>
+ * Refactored Application to Engine
+ * Working X client with event handling, but input hasn't been implemented yet
+ * Started work on first game component; simplerenderer. 
+
+2011-12-30 Lars Vidar Magnusson <lavima@gmail.com>
+ * Added Application singleton for global encapsulation
+ * Minor improvements to the X client
+
+2011-12-28 Lars Vidar Magnusson <lavima@gmail.com>
+ * Started working on X11 integration
+
+2011-12-22 Lars Vidar Magnusson <lavima@gmail.com>
+ * Added Changelog
+ * Working v8 integration
