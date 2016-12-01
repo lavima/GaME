@@ -1,1 +1,1 @@
-GaME is a so called Game Mechanics Engine.
+GaME is an acronym for GaME Mechanics Engine.
