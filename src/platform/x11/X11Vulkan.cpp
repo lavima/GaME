@@ -3,6 +3,8 @@ File: X11Vulkan.cpp
 Author: Lars Vidar Magnusson
 */
 
+#ifdef OS_XLIB
+
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,12 +27,12 @@ Author: Lars Vidar Magnusson
 #include "../../scripting/ScriptContext.h"
 #include "../../scripting/Script.h"
 #include "../../framework/GameTime.h"
-#include "../../framework/GameComponent.h"
 #include "../../framework/Game.h"
 #include "../../AddinInfo.h"
 #include "../../AddinContainer.h"
 #include "../../Addin.h"
 #include "../../EngineConfig.h"
+#include "../../EngineComponent.h"
 #include "../../Engine.h"
 #include "X11Config.h"
 #include "X11Vulkan.h"
@@ -270,4 +272,6 @@ unsigned long long X11Vulkan::GetSystemTime() {
   return (unsigned long long)high << 32 | low;
 
 }
+
+#endif // OS_XLIB
 

@@ -10,7 +10,7 @@ extern "C" {
 
 void RegisterAddin(AddinInfo *addinInfo);
 
-GameComponent *CreateGameComponent(Game *game, const char *typeName, const char *name);
+EngineComponent *CreateEngineComponent(Game *game, const char *typeName, const char *name);
 
 }
 

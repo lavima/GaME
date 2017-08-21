@@ -12,7 +12,7 @@ Author: Lars Vidar Magnusson
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include "lib/XercesUtils.h"
+#include "lib/Xerces.h"
 #include "platform/PlatformConfig.h"
 #include "platform/Platform.h"
 #include "EngineConfig.h"

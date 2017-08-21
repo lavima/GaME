@@ -12,7 +12,7 @@ Author: Lars Vidar Magnusson
 
 #include <xercesc/dom/DOM.hpp>
 
-#include "lib/XercesUtils.h"
+#include "lib/Xerces.h"
 #include "lib/CStringHash.h"
 #include "AddinInfo.h"
 
@@ -25,14 +25,14 @@ AddinInfo *AddinInfo::Load(const char *filename) {
   ret->name = XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("name"))); 
   ret->libraryFilename = XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("library")));
 
-  xercesc::DOMNodeList *gameComponentElements = document->getElementsByTagName(XERCESTRANSCODE("GameComponent"));
-  if (gameComponentElements->getLength() > 0)
-    ret->type = GAME_COMPONENT_ADDIN;
-  for (int i=0; i<gameComponentElements->getLength(); i++) {
-   
-    GameComponentInfo *componentInfo = GameComponentInfo::Load((xercesc::DOMElement *)gameComponentElements->item(i));
-    ret->gameComponents.insert(GameComponentInfoPair(componentInfo->GetName(), componentInfo));
+  xercesc::DOMNodeList *engineComponentElements = document->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
 
+  if (engineComponentElements->getLength() > 0)
+    ret->type = ENGINE_COMPONENT_ADDIN;
+
+  for (int i=0; i<engineComponentElements->getLength(); i++) {
+    EngineComponentInfo *componentInfo = EngineComponentInfo::Load((xercesc::DOMElement *)engineComponentElements->item(i));
+    ret->engineComponents.insert(EngineComponentInfoPair(componentInfo->GetName(), componentInfo));
   }     
 
   document->release();
@@ -41,29 +41,29 @@ AddinInfo *AddinInfo::Load(const char *filename) {
 
 }
 
-GameComponentInfo *AddinInfo::GetGameComponentInfo(const char *name) {
+EngineComponentInfo *AddinInfo::GetEngineComponentInfo(const char *name) {
 
-  GameComponentInfoMapIter item = gameComponents.find(name);
-  if (item == gameComponents.end())
+  EngineComponentInfoMapIter item = engineComponents.find(name);
+  if (item == engineComponents.end())
     return NULL;
   return item->second;
 
 }
 
-GameComponentInfoMapIter AddinInfo::GetGameComponentInfoBegin() { return gameComponents.begin(); }
-GameComponentInfoMapIter AddinInfo::GetGameComponentInfoEnd() { return gameComponents.end(); }
+EngineComponentInfoMapIter AddinInfo::GetEngineComponentInfoBegin() { return engineComponents.begin(); }
+EngineComponentInfoMapIter AddinInfo::GetEngineComponentInfoEnd() { return engineComponents.end(); }
 
 AddinType AddinInfo::GetType() { return this->type; }
 const char *AddinInfo::GetName() { return this->name; }
 const char *AddinInfo::GetLibraryFilename() { return this->libraryFilename; }
 
 
-GameComponentInfo *GameComponentInfo::Load(xercesc::DOMElement *element) {
+EngineComponentInfo *EngineComponentInfo::Load(xercesc::DOMElement *element) {
 
-  GameComponentInfo *ret = new GameComponentInfo();
+  EngineComponentInfo *ret = new EngineComponentInfo();
   ret->name = XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("name"))); 
   return ret;
 
 }
 
-const char *GameComponentInfo::GetName() { return this->name; }
+const char *EngineComponentInfo::GetName() { return this->name; }

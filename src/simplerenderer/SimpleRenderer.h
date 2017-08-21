@@ -3,18 +3,15 @@ File: SimpleRenderer.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __SIMPLERENDERER_SIMPLERENDERER__
-#define __SIMPLERENDERER_SIMPLERENDERER__
+#pragma once
 
-class SimpleRenderer : public GameComponent {
+class SimpleRenderer : public EngineComponent {
 
 public:
 
-  SimpleRenderer(Game *game);
+  SimpleRenderer(Engine *);
 
   virtual void Initialize();
-  virtual void Update(GameTime *gameTime);
+  virtual void Update(GameTime *);
 
 };
-
-#endif

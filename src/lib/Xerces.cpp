@@ -10,7 +10,7 @@ Author: Lars Vidar Magnusson
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLString.hpp>
 
-#include "XercesUtils.h"
+#include "Xerces.h"
 
 xercesc::DOMDocument *XercesParseDocument(const char *filename) {
 

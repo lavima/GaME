@@ -3,16 +3,20 @@ File: Game.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __FRAMEWORK_GAME__
-#define __FRAMEWORK_GAME__
+#pragma once
+
+typedef std::unordered_map<const char *, const char *, CStringHash, CStringCompare> EngineComponentsNeededMap;
+typedef std::pair<const char *, const char *> EngineComponentsNeededMapPair;
+typedef EngineComponentsNeededMap::iterator EngineComponentsNeededMapIter;
 
 class Game {
 
 private:
 
   const char *name;
-  GameComponentMap components;
   Script *gameScript;
+
+  EngineComponentsNeededMap engineComponentsNeeded;
 
   Game() {}
 
@@ -27,11 +31,6 @@ public:
   void Update(GameTime *gameTime);
 
   const char *GetName();
-  
-  void AddComponent(const char *typeName, const char *name);
-  void AddComponent(GameComponent *component);
-  GameComponent *GetComponent(const char *name);
+  EngineComponentsNeededMap *GetEngineComponentsNeeded();
 
 };
-
-#endif

@@ -4,7 +4,6 @@ Author: Lars Vidar Magnusson
 */
 
 #include <stdio.h>
-#include <libgen.h>
 #include <string.h>
 #include <v8.h>
 #include <xercesc/dom/DOM.hpp>
@@ -15,15 +14,15 @@ Author: Lars Vidar Magnusson
 #include "lib/CStringHash.h"
 #include "platform/PlatformConfig.h"
 #include "platform/Platform.h"
-#include "scripting/ScriptContext.h"
+#include "scripting/ScriptEnvironment.h"
 #include "scripting/Script.h"
 #include "framework/GameTime.h"
-#include "framework/GameComponent.h"
 #include "framework/Game.h"
 #include "AddinInfo.h"
 #include "AddinContainer.h"
 #include "Addin.h"
 #include "EngineConfig.h"
+#include "EngineComponent.h"
 #include "Engine.h"
 
 
@@ -33,7 +32,7 @@ Engine::Engine() {
 
   isRunning = false;
   game = NULL;
-  scriptContext = NULL;
+  scriptEnvironment = NULL;
 
 }
 
@@ -51,7 +50,7 @@ void Engine::shutdown() {
 
   xercesc::XMLPlatformUtils::Terminate();
 
-  delete scriptContext;
+  delete scriptEnvironment;
 
 }
 
@@ -65,9 +64,7 @@ Engine *Engine::GetSingleton() {
 }
 
 bool Engine::IsRunning() { return isRunning; }
-
-ScriptContext *Engine::GetScriptContext() { return scriptContext; }
-
+ScriptEnvironment *Engine::GetScriptEnvironment() { return scriptEnvironment; }
 Game *Engine::GetGame() { return game; }
 
 void Engine::Initialize(const char *filename) {
@@ -76,7 +73,7 @@ void Engine::Initialize(const char *filename) {
 
   engineConfig = EngineConfig::Load(filename);
 
-  scriptContext = ScriptContext::Create();
+  scriptEnvironment = ScriptEnvironment::Create(this);
 
   PlatformConfig *platformConfig = engineConfig->GetPlatformConfig();
   if (!platformConfig) 
@@ -111,7 +108,7 @@ void Engine::Stop() {
 
 }
 
-void Engine::RunGame(const char *filename) {
+void Engine::LoadGame(const char *filename) {
 
   game = Game::Load(filename);
 
@@ -126,6 +123,9 @@ void Engine::RunGame(const char *filename) {
     if (game)
       game->Update(&gameTime);
 
+    for (EngineComponentMapIter iter=components.begin(); iter!=components.end(); ++iter)
+      iter->second->Update(&gameTime);
+
     PLATFORM->SwapBuffers();
   }
   
@@ -136,9 +136,11 @@ void Engine::RunGame(const char *filename) {
 
 void Engine::CloseGame() {
 
-  if (!isGameRunning)
+  if (!isGameRunning) {
     printf("Unable to close game, since no game is currently running.\n");
-  isGameRunning = true;
+    return;
+  }
+  isGameRunning = false;
 
 }
 
@@ -170,7 +172,7 @@ bool Engine::LoadAddin(const char *filename) {
   RegisterAddinFun registerAddin = (RegisterAddinFun)address;
   registerAddin(info);
 
-  if (info->GetType() == GAME_COMPONENT_ADDIN) {
+  if (info->GetType() == ENGINE_COMPONENT_ADDIN) {
 
     address = PLATFORM->LoadLibrarySymbol(addin->GetHandle(), ADDIN_CREATECOMPONENT);
     if (!address) {
@@ -181,8 +183,8 @@ bool Engine::LoadAddin(const char *filename) {
 
     addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
 
-    for (auto iter=info->GetGameComponentInfoBegin(); iter!=info->GetGameComponentInfoEnd(); ++iter)
-      createGameComponentMap.insert(CreateGameComponentPair(iter->first, (CreateGameComponentFun)address));
+    for (auto iter=info->GetEngineComponentInfoBegin(); iter!=info->GetEngineComponentInfoEnd(); ++iter)
+      EngineComponent::createEngineComponentMap.insert(CreateEngineComponentPair(iter->first, (CreateEngineComponentFun)address));
     
   }
 
@@ -194,17 +196,28 @@ bool Engine::LoadAddin(const char *filename) {
 
 }
 
-GameComponent *Engine::CreateGameComponent(Game *game, const char *typeName, const char *name) {
+void Engine::AddComponent(const char *typeName, const char *name) {
 
-  CreateGameComponentMapIter item = createGameComponentMap.find(typeName);
-  if (item == createGameComponentMap.end()) {
-    printf("Could not find the specified game component type %s\n", typeName);
-    return NULL;
-  }
+  if (components.find(name) != components.end())
+    printf("The component with the specified name (%s) already exists\n", name);
 
-  CreateGameComponentFun createGameComponent = createGameComponentMap[typeName];
+  components[name] = EngineComponent::Create(typeName, name);
+  
+}
 
-  return createGameComponent(game, typeName, name);
+void Engine::AddComponent(EngineComponent *component) {
+  
+  if (components.find(component->GetName()) != components.end())
+    printf("The component with the specified name (%s) already exists\n", component->GetName());
+
+  components[component->GetName()] = component;
 
 }
 
+EngineComponent *Engine::GetComponent(const char *name) { 
+
+  if (this->components.find(name) == this->components.end())
+    return NULL;
+  return this->components[name];
+
+}

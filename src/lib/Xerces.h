@@ -1,5 +1,5 @@
 /*
-File: XercesUtils.h
+File: Xerces.h
 Author: Lars Vidar Magnusson
 */
 

@@ -11,15 +11,14 @@ Author: Lars Vidar Magnusson
 
 #include <v8.h>
 
+#include "../lib/CommonTypes.h"
 #include "../lib/CStringHash.h"
-#include "ScriptContext.h"
+#include "ScriptEnvironment.h"
 #include "Script.h"
 #include "../framework/GameTime.h"
-#include "../framework/GameComponent.h"
 #include "../framework/Game.h"
-#include "ScriptUtil.h"
   
-Script *Script::Create(ScriptContext *context, const char *filename) {
+Script *Script::Create(ScriptEnvironment *context, const char *filename) {
   
   FILE *file = fopen(filename, "r");
   if (file == NULL)
@@ -39,18 +38,13 @@ Script *Script::Create(ScriptContext *context, const char *filename) {
   Script *newScript = new Script(filename);
   newScript->context = context;
 
-  if (!ScriptUtil::Compile(newScript, sourceBuffer))
-    return NULL;
   
   return newScript;  
 }
 
 bool Script::Run() {
 
-  v8::HandleScope handleScope;
 
-  v8::String::Utf8Value retString(ScriptUtil::Run(this));
-  printf("%s\n", ScriptUtil::ToCString(retString));
 
   return true;
 }

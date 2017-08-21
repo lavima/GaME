@@ -7,14 +7,14 @@ Author: Lars Vidar Magnusson
 #define __ADDININFO__
 
 enum AddinType {
-  GAME_COMPONENT_ADDIN = 1
+  ENGINE_COMPONENT_ADDIN = 1
 };
 
-class GameComponentInfo;
+class EngineComponentInfo;
 
-typedef std::unordered_map<const char *, GameComponentInfo *, CStringHash, CStringCompare> GameComponentInfoMap;
-typedef std::pair<const char *, GameComponentInfo *> GameComponentInfoPair;
-typedef GameComponentInfoMap::iterator GameComponentInfoMapIter;
+typedef std::unordered_map<const char *, EngineComponentInfo *, CStringHash, CStringCompare> EngineComponentInfoMap;
+typedef std::pair<const char *, EngineComponentInfo *> EngineComponentInfoPair;
+typedef EngineComponentInfoMap::iterator EngineComponentInfoMapIter;
 
 class AddinInfo {
 
@@ -24,7 +24,7 @@ private:
   const char *name;
   const char *libraryFilename;
 
-  GameComponentInfoMap gameComponents;
+  EngineComponentInfoMap engineComponents;
 
   AddinInfo() {}
 
@@ -32,9 +32,9 @@ public:
 
   static AddinInfo *Load(const char *filename);
 
-  GameComponentInfo *GetGameComponentInfo(const char *name);
-  GameComponentInfoMapIter GetGameComponentInfoBegin();
-  GameComponentInfoMapIter GetGameComponentInfoEnd();
+  EngineComponentInfo *GetEngineComponentInfo(const char *name);
+  EngineComponentInfoMapIter GetEngineComponentInfoBegin();
+  EngineComponentInfoMapIter GetEngineComponentInfoEnd();
 
   AddinType GetType();
   const char *GetName();
@@ -42,17 +42,17 @@ public:
 
 };
 
-class GameComponentInfo {
+class EngineComponentInfo {
 
 private:
 
   const char *name;
 
-  GameComponentInfo() {}
+  EngineComponentInfo() {}
 
 public:
 
-  static GameComponentInfo *Load(xercesc::DOMElement *element); 
+  static EngineComponentInfo *Load(xercesc::DOMElement *element); 
 
   const char *GetName();
 

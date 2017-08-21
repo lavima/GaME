@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\scripting">
+      <UniqueIdentifier>{14afec3f-42a9-4142-b96d-ffcb3fe9adcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scripting">
+      <UniqueIdentifier>{d85059e7-5a62-4f3e-8599-fb4e41abba1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\framework">
+      <UniqueIdentifier>{20f06117-05d9-4b74-bfee-0b40775f0454}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\framework">
+      <UniqueIdentifier>{376dc3c8-9493-436f-b7ab-6aebe4cd9308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib">
+      <UniqueIdentifier>{08f0eeed-27c0-45f7-836b-29662587a36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\simplerenderer">
+      <UniqueIdentifier>{cfcfe6d6-5be6-4892-bcd1-3d8e56747191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lib">
+      <UniqueIdentifier>{c7c46e11-4820-4b7f-9d54-4f0dfc4259a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\simplerenderer">
+      <UniqueIdentifier>{1cca9f50-b4e5-4542-874c-458c864f711b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\platform">
+      <UniqueIdentifier>{06ddb657-a9d3-4839-9711-b6939e606d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\platform">
+      <UniqueIdentifier>{b92fa063-8001-491a-a685-cf9e6e32b26b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\platform\x11">
+      <UniqueIdentifier>{96564287-195c-496e-89bb-06b7754bd52b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\platform\x11">
+      <UniqueIdentifier>{821789ce-ca7e-40f0-80b9-6963a4fbfeba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\platform\win32">
+      <UniqueIdentifier>{d47d472d-d0f1-4b11-80fc-437b7a659b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\platform\win32">
+      <UniqueIdentifier>{63e86bef-b5d5-4dbb-a009-66e2a9efe23f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Addin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AddinContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AddinInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EngineConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scripting\Script.h">
+      <Filter>Header Files\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\Game.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\GameObject.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\GameTime.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\CStringHash.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\VkDeleter.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\simplerenderer\Addin.h">
+      <Filter>Header Files\simplerenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\simplerenderer\SimpleRenderer.h">
+      <Filter>Header Files\simplerenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\Platform.h">
+      <Filter>Header Files\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\PlatformConfig.h">
+      <Filter>Header Files\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\x11\X11Config.h">
+      <Filter>Header Files\platform\x11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\x11\X11OpenGL.h">
+      <Filter>Header Files\platform\x11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\x11\X11Vulkan.h">
+      <Filter>Header Files\platform\x11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\win32\Win32Config.h">
+      <Filter>Header Files\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\win32\Win32Vulkan.h">
+      <Filter>Header Files\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\Vulkan.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\Xerces.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EngineComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\scripting\ScriptEnvironment.h">
+      <Filter>Header Files\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\CommonTypes.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lib\PathUtil.h">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\AddinContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AddinInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EngineConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scripting\Script.cpp">
+      <Filter>Source Files\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\Game.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\GameObject.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\GameTime.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\simplerenderer\Addin.cpp">
+      <Filter>Source Files\simplerenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\simplerenderer\SimpleRenderer.cpp">
+      <Filter>Source Files\simplerenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\PlatformConfig.cpp">
+      <Filter>Source Files\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\x11\X11Config.cpp">
+      <Filter>Source Files\platform\x11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\x11\X11OpenGL.cpp">
+      <Filter>Source Files\platform\x11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\x11\X11Vulkan.cpp">
+      <Filter>Source Files\platform\x11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\win32\Win32Config.cpp">
+      <Filter>Source Files\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\win32\Win32Vulkan.cpp">
+      <Filter>Source Files\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lib\Xerces.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lib\Vulkan.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EngineComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scripting\ScriptEnvironment.cpp">
+      <Filter>Source Files\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lib\PathUtil.cpp">
+      <Filter>Source Files\lib</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

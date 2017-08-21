@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 #include <xercesc/dom/DOM.hpp>
 
-#include "../../lib/XercesUtils.h"
+#include "../../lib/Xerces.h"
 #include "../PlatformConfig.h"
 #include "X11Config.h"
 

@@ -10,18 +10,19 @@ Author: Lars Vidar Magnusson
 #include <vector>
 #include <unordered_map>
 
+#include "../lib/CommonTypes.h"
 #include "../lib/CStringHash.h"
 #include "../platform/PlatformConfig.h"
 #include "../platform/Platform.h"
-#include "../scripting/ScriptContext.h"
+#include "../scripting/ScriptEnvironment.h"
 #include "../scripting/Script.h"
 #include "../framework/GameTime.h"
-#include "../framework/GameComponent.h"
 #include "../framework/Game.h"
 #include "../AddinInfo.h"
 #include "../AddinContainer.h"
 #include "../Addin.h"
 #include "../EngineConfig.h"
+#include "../EngineComponent.h"
 #include "../Engine.h"
 #include "Addin.h"
 #include "SimpleRenderer.h"
@@ -32,8 +33,8 @@ void RegisterAddin(AddinInfo *addinInfo) {
 
 }
 
-GameComponent *CreateGameComponent(Game *game, const char *typeName, const char *name) {
+EngineComponent *CreateEngineComponent(Engine *engine, const char *typeName, const char *name) {
 
-  return new SimpleRenderer(game);
+  return new SimpleRenderer(engine);
 
 }
