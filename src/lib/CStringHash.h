@@ -3,8 +3,7 @@ File: CStringHash.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __LIBRARY_CSTRINGHASH__
-#define __LIBRARY_CSTRINGHASH__
+#pragma once
 
 struct CStringHash {
 
@@ -26,5 +25,3 @@ struct CStringCompare {
   }
 
 };
-
-#endif

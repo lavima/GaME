@@ -3,18 +3,16 @@ File: Log.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
-#include <string.h>
 
-#include <vector>
+#include "GaME.h"
 
-#include "Log.h"
 
 Log *Log::singleton = NULL;
 
-Log *Log::GetSingleton() {
+inline Log &Log::GetSingleton() { return *(GetSingletonPtr()); }
+
+Log *Log::GetSingletonPtr() {
 
   if (singleton == NULL)
     singleton = new Log();  
@@ -23,7 +21,7 @@ Log *Log::GetSingleton() {
 
 }
 
-void Log::AddEvent(EventType type, const char *format, ...) {
+void Log::AddEvent(EventType type, const string &format, ...) {
 
   if (type > level)
     return;
@@ -32,24 +30,24 @@ void Log::AddEvent(EventType type, const char *format, ...) {
 
   char *formatBuffer = NULL;
   if (type == ERROR) {
-    formatBuffer = (char *)malloc(strlen(ERROR_PREFIX) + strlen(format));
+    formatBuffer = (char *)malloc(strlen(ERROR_PREFIX) + strlen(format.c_str()));
     strcpy(formatBuffer, ERROR_PREFIX);
-    strcat(formatBuffer, format);
+    strcat(formatBuffer, format.c_str());
   }
   else if (type == WARNING) {
-    formatBuffer = (char *)malloc(strlen(WARNING_PREFIX) + strlen(format));
+    formatBuffer = (char *)malloc(strlen(WARNING_PREFIX) + strlen(format.c_str()));
     strcpy(formatBuffer, WARNING_PREFIX);
-    strcat(formatBuffer, format);
+    strcat(formatBuffer, format.c_str());
   }
   else if (type == INFO) {
-    formatBuffer = (char *)malloc(strlen(INFO_PREFIX) + strlen(format));
+    formatBuffer = (char *)malloc(strlen(INFO_PREFIX) + strlen(format.c_str()));
     strcpy(formatBuffer, INFO_PREFIX);
-    strcat(formatBuffer, format);
+    strcat(formatBuffer, format.c_str());
   }
 
   const char *finalFormat = NULL;
   if (type == COMMAND)
-    finalFormat = format;
+    finalFormat = format.c_str();
   else
     finalFormat = formatBuffer;
   

@@ -3,10 +3,10 @@ File: Engine.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __ENGINE__
-#define __ENGINE__
+#pragma once
 
 #define ENGINE Engine::GetSingleton()
+#define ENGINE_PTR Engine::GetSingletonPtr()
 
 /*
 * Type definitions used in the Engine class.
@@ -22,17 +22,16 @@ private:
 
   static Engine *singleton;
 
+  AddinVector addins;
+  EngineComponentMap components;
+  
   EngineConfig *engineConfig;
   ScriptEnvironment *scriptEnvironment;
 
+  Game *game;
+
   bool isRunning;
   bool isGameRunning;
-
-  Game *game;
-  AddinVector addins;
-
-  EngineComponentMap components;
-  
 
   Engine();
 
@@ -40,24 +39,23 @@ private:
 
 public:
 
-  static Engine *GetSingleton();
+  static Engine &GetSingleton();
+  static Engine *GetSingletonPtr();
 
   bool IsRunning();
-  ScriptEnvironment *GetScriptEnvironment();
+  ScriptEnvironment &GetScriptEnvironment();
   Game *GetGame();  
 
-  void Initialize(const char *filename); 
+  void Initialize(const string &filename); 
   void Stop();
 
-  void LoadGame(const char *filename);
+  void LoadGame(const string &filename);
   void CloseGame();
 
-  bool LoadAddin(const char *filename);
+  bool LoadAddin(const string &filename);
 
-  void AddComponent(const char *typeName, const char *name);
+  void AddComponent(const string &typeName, const string &name);
   void AddComponent(EngineComponent *component);
-  EngineComponent *GetComponent(const char *name);
+  EngineComponent &GetComponent(const string &name);
 
 };
-
-#endif

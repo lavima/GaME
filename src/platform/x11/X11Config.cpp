@@ -3,18 +3,14 @@ File: X11Config.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdio.h>
+#include "../../GaME.h"
 
-#include <xercesc/dom/DOM.hpp>
-
-#include "../../lib/Xerces.h"
-#include "../PlatformConfig.h"
 #include "X11Config.h"
 
 X11Config *X11Config::Load(xercesc::DOMElement *element) {
 
-  const char * typeName = XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("type")));
-  if (strcmp(typeName, "X11") != 0) {
+  const string typeName = string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("type"))));
+  if (typeName != string("X11")) {
     printf("ERROR: Wrong platform configuration type.\n");
     return NULL;
   }

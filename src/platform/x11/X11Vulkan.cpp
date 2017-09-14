@@ -225,11 +225,11 @@ void X11Vulkan::HandleEvents() {
 void X11Vulkan::SwapBuffers() {
 }
 
-void *X11Vulkan::LoadLibrary(const char *filename) {
+void *X11Vulkan::LoadLibrary(const string &filename) {
 
   void *handle = dlopen(filename, RTLD_LAZY);
   if (!handle)
-    printf("Could not load the dynamic library: %s\n", filename);
+    printf("Could not load the dynamic library: %s\n", filename.c_str());
 
   return handle;
 
@@ -242,7 +242,7 @@ void X11Vulkan::UnloadLibrary(void *handle) {
 
 }
 
-void *X11Vulkan::LoadLibrarySymbol(void *handle, const char *name) {
+void *X11Vulkan::LoadLibrarySymbol(void *handle, const string &name) {
 
     void *symbolHandle = dlsym(handle, name);
 

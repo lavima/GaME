@@ -3,13 +3,15 @@ File: X11SystemOpenGL.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __SYSTEM_X11_X11SYSTEMOPENGL__
-#define __SYSTEM_X11_X11SYSTEMOPENGL__
+#ifdef OS_XLIB
+
+#pragma once
 
 #define KEY_EVENT_MASK (KeyPressMask | KeyReleaseMask)
 #define MOUSE_EVENT_MASK (ButtonPressMask | ButtonReleaseMask | PointerMotionMask | ButtonMotionMask )
 #define X_EVENT_MASK (KEY_EVENT_MASK | MOUSE_EVENT_MASK | VisibilityChangeMask | StructureNotifyMask )
 
+using namespace std;
 
 class X11SystemOpenGL : public System {
 
@@ -52,14 +54,14 @@ public:
 
   void SwapBuffers();
 
-  void *LoadLibrary(const char *filename); 
+  void *LoadLibrary(const string &filename); 
 
   void UnloadLibrary(void *handle);
 
-  void *LoadLibrarySymbol(void *handle, const char *name);
+  void *LoadLibrarySymbol(void *handle, const string &name);
 
   unsigned long long GetSystemTime();
 
 };
 
-#endif
+#endif 

@@ -3,11 +3,8 @@ File: Xerces.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __XERCESUTILS__
-#define __XERCESUTILS__
+#pragma once
 
 #define XERCESTRANSCODE(STRING) xercesc::XMLString::transcode(STRING)
 
-xercesc::DOMDocument *XercesParseDocument(const char *filename);
-
-#endif
+xercesc::DOMDocument *XercesParseDocument(const std::string &filename);

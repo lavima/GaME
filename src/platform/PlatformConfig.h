@@ -3,8 +3,7 @@ File: PlatformConfig.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __PLATFORMCONFIG__
-#define __PLATFORMCONFIG__
+#pragma once
 
 class PlatformConfig {
 
@@ -22,5 +21,3 @@ public:
   bool GetHandlesInput();
 
 };
-
-#endif

@@ -7,12 +7,12 @@ Author: Lars Vidar Magnusson
 
 class EngineComponent;
 
-typedef std::unordered_map<const char *, EngineComponent *, CStringHash, CStringCompare> EngineComponentMap;
-typedef std::pair<const char *, EngineComponentMap *> EngineComponentPair;
+typedef std::unordered_map<string, EngineComponent *> EngineComponentMap;
+typedef std::pair<string, EngineComponentMap *> EngineComponentPair;
 typedef EngineComponentMap::iterator EngineComponentMapIter;
 
-typedef std::unordered_map<const char *, CreateEngineComponentFun, CStringHash, CStringCompare> CreateEngineComponentMap;
-typedef std::pair<const char *, CreateEngineComponentFun> CreateEngineComponentPair;
+typedef std::unordered_map<string, CreateEngineComponentFun> CreateEngineComponentMap;
+typedef std::pair<string, CreateEngineComponentFun> CreateEngineComponentPair;
 typedef CreateEngineComponentMap::iterator CreateEngineComponentMapIter;
 
 class EngineComponent {
@@ -21,8 +21,8 @@ class EngineComponent {
 
 private:
 
-  const char *typeName;
-  const char *name;
+  const string *typeName;
+  const string *name;
 
   static CreateEngineComponentMap createEngineComponentMap;
 
@@ -32,11 +32,11 @@ protected:
 
 public:
 
-  static EngineComponent *Create(const char *typeName, const char *name);
+  static EngineComponent *Create(const string &typeName, const string &name);
 
-  const char *GetName();
+  const string &GetName();
 
   virtual void Initialize() = 0;
-  virtual void Update(GameTime *gameTime) = 0;
+  virtual void Update(GameTime &gameTime) = 0;
 
 };

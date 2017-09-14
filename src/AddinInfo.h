@@ -3,8 +3,7 @@ File: AddinInfo.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __ADDININFO__
-#define __ADDININFO__
+#pragma once
 
 enum AddinType {
   ENGINE_COMPONENT_ADDIN = 1
@@ -12,17 +11,19 @@ enum AddinType {
 
 class EngineComponentInfo;
 
-typedef std::unordered_map<const char *, EngineComponentInfo *, CStringHash, CStringCompare> EngineComponentInfoMap;
-typedef std::pair<const char *, EngineComponentInfo *> EngineComponentInfoPair;
+typedef std::unordered_map<string, EngineComponentInfo *> EngineComponentInfoMap;
+typedef std::pair<string, EngineComponentInfo *> EngineComponentInfoPair;
 typedef EngineComponentInfoMap::iterator EngineComponentInfoMapIter;
 
 class AddinInfo {
 
+    friend class Engine;
+
 private:
 
   AddinType type;
-  const char *name;
-  const char *libraryFilename;
+  const string *name;
+  const string *libraryFilename;
 
   EngineComponentInfoMap engineComponents;
 
@@ -30,15 +31,13 @@ private:
 
 public:
 
-  static AddinInfo *Load(const char *filename);
+  static AddinInfo *Load(const string &filename);
 
-  EngineComponentInfo *GetEngineComponentInfo(const char *name);
-  EngineComponentInfoMapIter GetEngineComponentInfoBegin();
-  EngineComponentInfoMapIter GetEngineComponentInfoEnd();
+  EngineComponentInfo &GetEngineComponentInfo(const string &name);
 
   AddinType GetType();
-  const char *GetName();
-  const char *GetLibraryFilename();
+  const string &GetName();
+  const string &GetLibraryFilename();
 
 };
 
@@ -46,7 +45,7 @@ class EngineComponentInfo {
 
 private:
 
-  const char *name;
+  const string *name;
 
   EngineComponentInfo() {}
 
@@ -54,8 +53,6 @@ public:
 
   static EngineComponentInfo *Load(xercesc::DOMElement *element); 
 
-  const char *GetName();
+  const string &GetName();
 
 };
-
-#endif 

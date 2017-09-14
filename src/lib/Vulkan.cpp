@@ -3,50 +3,48 @@ File: Vulkan.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include <vulkan/vulkan.h>
 
+#include "../GaME.h"
 #include "Vulkan.h"
 
-const char *Vulkan::GetErrorString(VkResult result) {
+const string &Vulkan::GetErrorString(VkResult result) {
   if (result == VK_SUCCESS)
-    return "Success";
+    return string("Success");
   else if (result == VK_NOT_READY)
-    return "Not Ready";
+    return string("Not Ready");
   else if (result == VK_TIMEOUT)
-    return "Timeout";
+    return string("Timeout");
   else if (result == VK_EVENT_SET)
-    return "Event Set";
+    return string("Event Set");
   else if (result == VK_EVENT_RESET)
-    return "Event Reset";
+    return string("Event Reset");
   else if (result == VK_INCOMPLETE)
-    return "Incomplete";
+    return string("Incomplete");
   else if (result == VK_ERROR_OUT_OF_HOST_MEMORY)
-    return "Out of Host Memory";
+    return string("Out of Host Memory");
   else if (result == VK_ERROR_OUT_OF_DEVICE_MEMORY)
-    return "Out of Device Memory";
+    return string("Out of Device Memory");
   else if (result == VK_ERROR_INITIALIZATION_FAILED)
-    return "Initialization Failed";
+    return string("Initialization Failed");
   else if (result == VK_ERROR_DEVICE_LOST)
-    return "Device Lost";
+    return string("Device Lost");
   else if (result == VK_ERROR_MEMORY_MAP_FAILED)
-    return "Memory Map Failed";
+    return string("Memory Map Failed");
   else if (result == VK_ERROR_LAYER_NOT_PRESENT)
-    return "Layer Not Present";
+    return string("Layer Not Present");
   else if (result == VK_ERROR_EXTENSION_NOT_PRESENT)
-    return "Extension Not Present";
+    return string("Extension Not Present");
   else if (result == VK_ERROR_FEATURE_NOT_PRESENT)
-    return "Feature Not Present";
+    return string("Feature Not Present");
   else if (result == VK_ERROR_INCOMPATIBLE_DRIVER)
-    return "Incompatible Driver";
+    return string("Incompatible Driver");
   else if (result == VK_ERROR_TOO_MANY_OBJECTS)
-    return "Too Many Objects";
+    return string("Too Many Objects");
   else if (result == VK_ERROR_FORMAT_NOT_SUPPORTED)
-    return "Format Not Supported";
+    return string("Format Not Supported");
   else if (result == VK_ERROR_FRAGMENTED_POOL)
-    return "Fragmented Pool";
+    return string("Fragmented Pool");
   else
-    return "UNKNOWN Vulkan Error";
+    return string("UNKNOWN Vulkan Error");
 }

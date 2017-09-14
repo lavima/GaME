@@ -3,17 +3,16 @@ File: AddinContainer.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __ADDINCONTAINER__
-#define __ADDINCONTAINER__
+#pragma once
 
-typedef std::unordered_map<const char *, void *, CStringHash, CStringCompare> SymbolMap;
-typedef std::pair<const char *, void *> SymbolMapPair;
+typedef std::unordered_map<string, void *> SymbolMap;
+typedef std::pair<string, void *> SymbolMapPair;
 
 struct AddinContainer {
   
 private:
 
-  const char *filename;
+  const string *filename;
   AddinInfo *info;
   void *handle;
 
@@ -23,17 +22,15 @@ private:
 
 public:
   
-  static AddinContainer *Create(const char *filename);
+  static AddinContainer *Create(const string &filename);
 
-  bool HasSymbol(const char *name);
-  void AddSymbol(const char *name, void *address);
-  void *GetSymbol(const char *name);
+  bool HasSymbol(const string &name);
+  void AddSymbol(const string &name, void *address);
+  void *GetSymbol(const string &name);
 
-  const char *GetFilename();
-  AddinInfo *GetInfo();
+  const string &GetFilename();
+  AddinInfo &GetInfo();
   void *GetHandle();
   void SetHandle(void *handle);
-
+    
 };
-
-#endif

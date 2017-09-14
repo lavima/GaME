@@ -3,27 +3,7 @@ File: Engine.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <v8.h>
-#include <xercesc/dom/DOM.hpp>
-
-#include <vector>
-#include <unordered_map>
-
-#include "lib/CStringHash.h"
-#include "platform/PlatformConfig.h"
-#include "platform/Platform.h"
-#include "scripting/ScriptEnvironment.h"
-#include "scripting/Script.h"
-#include "framework/GameTime.h"
-#include "framework/Game.h"
-#include "AddinInfo.h"
-#include "AddinContainer.h"
-#include "Addin.h"
-#include "EngineConfig.h"
-#include "EngineComponent.h"
-#include "Engine.h"
+#include "GaME.h"
 
 
 Engine *Engine::singleton = NULL;
@@ -38,12 +18,12 @@ Engine::Engine() {
 
 void Engine::shutdown() {
 
-  PLATFORM->Shutdown();
+  PLATFORM.Shutdown();
 
   std::vector<AddinContainer *>::iterator iter;
   for (iter = addins.begin(); iter != addins.end(); iter++) {
 
-    PLATFORM->UnloadLibrary((*iter)->GetHandle());
+    PLATFORM.UnloadLibrary((*iter)->GetHandle());
     delete *iter;
 
   }
@@ -54,7 +34,9 @@ void Engine::shutdown() {
 
 }
 
-Engine *Engine::GetSingleton() {
+inline Engine &Engine::GetSingleton() { return *(GetSingletonPtr()); }
+
+Engine *Engine::GetSingletonPtr() {
 
   if (singleton == NULL)
     singleton = new Engine();  
@@ -64,25 +46,22 @@ Engine *Engine::GetSingleton() {
 }
 
 bool Engine::IsRunning() { return isRunning; }
-ScriptEnvironment *Engine::GetScriptEnvironment() { return scriptEnvironment; }
+ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
 Game *Engine::GetGame() { return game; }
 
-void Engine::Initialize(const char *filename) {
+void Engine::Initialize(const string &filename) {
 
   printf("Initiliazing engine with %s\n", filename);
 
   engineConfig = EngineConfig::Load(filename);
 
-  scriptEnvironment = ScriptEnvironment::Create(this);
+  scriptEnvironment = ScriptEnvironment::Create(*this);
 
-  PlatformConfig *platformConfig = engineConfig->GetPlatformConfig();
-  if (!platformConfig) 
-    printf("WARNING: Missing valid platform configuration.\n");
-  else if (!PLATFORM->Initialize(platformConfig))
+  if (!PLATFORM.Initialize(engineConfig->GetPlatformConfig()))
     printf("WARNING: Failed to initialize the platform.\n");
 
   for (int i=0; i<engineConfig->GetNumAddins(); i++)
-    LoadAddin(engineConfig->GetAddin(i)->GetSource());
+    LoadAddin(engineConfig->GetAddin(i).GetSource());
 
   isRunning = true;
 
@@ -108,7 +87,7 @@ void Engine::Stop() {
 
 }
 
-void Engine::LoadGame(const char *filename) {
+void Engine::LoadGame(const string &filename) {
 
   game = Game::Load(filename);
 
@@ -116,17 +95,17 @@ void Engine::LoadGame(const char *filename) {
 
   isGameRunning = isRunning;
   while (isRunning && isGameRunning) {
-    PLATFORM->HandleEvents();
+    PLATFORM.HandleEvents();
 
     GameTime gameTime;
 
     if (game)
-      game->Update(&gameTime);
+      game->Update(gameTime);
 
     for (EngineComponentMapIter iter=components.begin(); iter!=components.end(); ++iter)
-      iter->second->Update(&gameTime);
+      iter->second->Update(gameTime);
 
-    PLATFORM->SwapBuffers();
+    PLATFORM.SwapBuffers();
   }
   
   if (!isRunning)
@@ -144,23 +123,23 @@ void Engine::CloseGame() {
 
 }
 
-bool Engine::LoadAddin(const char *filename) {
+bool Engine::LoadAddin(const string &filename) {
 
   AddinContainer *addin = AddinContainer::Create(filename);
-  AddinInfo *info = addin->GetInfo();
+  AddinInfo info = addin->GetInfo();
 
   char *libraryDirectory = dirname(strdup(filename));
-  char *libraryFilename = new char[strlen(libraryDirectory) + strlen(info->GetLibraryFilename()) + 1];
-  sprintf(libraryFilename, "%s/%s", libraryDirectory, info->GetLibraryFilename());
+  char *libraryFilename = new char[strlen(libraryDirectory) + strlen(info.GetLibraryFilename()) + 1];
+  sprintf(libraryFilename, "%s/%s", libraryDirectory, info.GetLibraryFilename());
 
-  addin->SetHandle(PLATFORM->LoadLibrary(libraryFilename));
+  addin->SetHandle(PLATFORM.LoadLibrary(libraryFilename));
   if (!addin->GetHandle()) {
     printf("Failed to load the addin.\n");
     delete addin;
     return false;
   }
 
-  void *address = PLATFORM->LoadLibrarySymbol(addin->GetHandle(), ADDIN_REGISTERADDIN);
+  void *address = PLATFORM.LoadLibrarySymbol(addin->GetHandle(), ADDIN_REGISTERADDIN);
   if (!address) {
     printf("Failed to load %s.\n", ADDIN_REGISTERADDIN);
     delete addin;
@@ -172,9 +151,9 @@ bool Engine::LoadAddin(const char *filename) {
   RegisterAddinFun registerAddin = (RegisterAddinFun)address;
   registerAddin(info);
 
-  if (info->GetType() == ENGINE_COMPONENT_ADDIN) {
+  if (info.GetType() == ENGINE_COMPONENT_ADDIN) {
 
-    address = PLATFORM->LoadLibrarySymbol(addin->GetHandle(), ADDIN_CREATECOMPONENT);
+    address = PLATFORM.LoadLibrarySymbol(addin->GetHandle(), ADDIN_CREATECOMPONENT);
     if (!address) {
       printf("Failed to load %s.\n", ADDIN_CREATECOMPONENT);
       delete addin;
@@ -183,7 +162,7 @@ bool Engine::LoadAddin(const char *filename) {
 
     addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
 
-    for (auto iter=info->GetEngineComponentInfoBegin(); iter!=info->GetEngineComponentInfoEnd(); ++iter)
+    for (auto iter=info.GetEngineComponentInfoBegin(); iter!=info.GetEngineComponentInfoEnd(); ++iter)
       EngineComponent::createEngineComponentMap.insert(CreateEngineComponentPair(iter->first, (CreateEngineComponentFun)address));
     
   }
@@ -196,10 +175,10 @@ bool Engine::LoadAddin(const char *filename) {
 
 }
 
-void Engine::AddComponent(const char *typeName, const char *name) {
+void Engine::AddComponent(const string &typeName, const string &name) {
 
   if (components.find(name) != components.end())
-    printf("The component with the specified name (%s) already exists\n", name);
+    printf("The component with the specified name (%s) already exists\n", name.c_str());
 
   components[name] = EngineComponent::Create(typeName, name);
   
@@ -214,7 +193,7 @@ void Engine::AddComponent(EngineComponent *component) {
 
 }
 
-EngineComponent *Engine::GetComponent(const char *name) { 
+EngineComponent *Engine::GetComponent(const string &name) { 
 
   if (this->components.find(name) == this->components.end())
     return NULL;

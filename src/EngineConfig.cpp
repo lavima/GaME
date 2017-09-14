@@ -3,19 +3,7 @@ File: EngineConfig.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdio.h>
-
-#include <vector>
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/XMLString.hpp>
-
-#include "lib/Xerces.h"
-#include "platform/PlatformConfig.h"
-#include "platform/Platform.h"
-#include "EngineConfig.h"
+#include "GaME.h"
 
 EngineConfig::~EngineConfig() {
 
@@ -27,7 +15,7 @@ EngineConfig::~EngineConfig() {
 
 }
 
-EngineConfig *EngineConfig::Load(const char *filename) {
+EngineConfig *EngineConfig::Load(const string &filename) {
 
   EngineConfig *newEngineConfig = new EngineConfig();
   newEngineConfig->document = XercesParseDocument(filename);
@@ -40,11 +28,11 @@ EngineConfig *EngineConfig::Load(const char *filename) {
     configElement = (xercesc::DOMElement *)
       newEngineConfig->document->getDocumentElement()->insertBefore(configElement, NULL);
     
-    newEngineConfig->platformConfig = PLATFORM->LoadConfig(configElement);
+    newEngineConfig->platformConfig = PLATFORM.LoadConfig(configElement);
 
   }
   else 
-    newEngineConfig->platformConfig = PLATFORM->LoadConfig((xercesc::DOMElement *)platformConfigNodes->item(0));
+    newEngineConfig->platformConfig = PLATFORM.LoadConfig((xercesc::DOMElement *)platformConfigNodes->item(0));
  
   xercesc::DOMNodeList *addinNodes = newEngineConfig->document->getElementsByTagName(XERCESTRANSCODE("Addin"));
   for (int i=0; i<addinNodes->getLength(); i++)
@@ -54,19 +42,18 @@ EngineConfig *EngineConfig::Load(const char *filename) {
 
 }
 
-PlatformConfig *EngineConfig::GetPlatformConfig() { return platformConfig; }
+PlatformConfig &EngineConfig::GetPlatformConfig() { return *platformConfig; }
 int EngineConfig::GetNumAddins() { return addins.size(); }
-AddinConfig *EngineConfig::GetAddin(int index) { return addins[index]; }
+AddinConfig &EngineConfig::GetAddin(int index) { return *(addins[index]); }
 
 AddinConfig *AddinConfig::Load(xercesc::DOMElement *element) {
 
   AddinConfig *ret = new AddinConfig();
 
-  ret->source = XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("source"))); 
+  ret->source = new string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("source")))); 
   
   return ret;
 
 }
 
-const char *AddinConfig::GetSource() { return this->source; }
-
+const string &AddinConfig::GetSource() { return *(this->source); }

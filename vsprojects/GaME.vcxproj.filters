@@ -87,12 +87,6 @@
     <ClInclude Include="..\src\framework\GameTime.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lib\CStringHash.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lib\VkDeleter.h">
-      <Filter>Header Files\lib</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\simplerenderer\Addin.h">
       <Filter>Header Files\simplerenderer</Filter>
     </ClInclude>
@@ -135,8 +129,8 @@
     <ClInclude Include="..\src\lib\CommonTypes.h">
       <Filter>Header Files\lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lib\PathUtil.h">
-      <Filter>Header Files\lib</Filter>
+    <ClInclude Include="..\src\GaME.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +159,6 @@
       <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="..\src\framework\GameObject.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\framework\GameTime.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="..\src\simplerenderer\Addin.cpp">
@@ -205,9 +196,6 @@
     </ClCompile>
     <ClCompile Include="..\src\scripting\ScriptEnvironment.cpp">
       <Filter>Source Files\scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lib\PathUtil.cpp">
-      <Filter>Source Files\lib</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

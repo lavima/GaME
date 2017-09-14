@@ -5,15 +5,17 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-typedef std::unordered_map<const char *, const char *, CStringHash, CStringCompare> EngineComponentsNeededMap;
-typedef std::pair<const char *, const char *> EngineComponentsNeededMapPair;
+using namespace std;
+
+typedef unordered_map<string, const string> EngineComponentsNeededMap;
+typedef pair<string, const string> EngineComponentsNeededMapPair;
 typedef EngineComponentsNeededMap::iterator EngineComponentsNeededMapIter;
 
 class Game {
 
 private:
 
-  const char *name;
+  const string *name;
   Script *gameScript;
 
   EngineComponentsNeededMap engineComponentsNeeded;
@@ -22,15 +24,16 @@ private:
 
 public:
 
-  static Game *Load(const char *filename);
+  static Game *Load(const string &filename);
 
   void Initialize();
 
   void LoadContent();
+  void UnloadContent();
 
-  void Update(GameTime *gameTime);
+  void Update(GameTime &gameTime);
 
-  const char *GetName();
-  EngineComponentsNeededMap *GetEngineComponentsNeeded();
+  const string &GetName();
+  EngineComponentsNeededMap &GetEngineComponentsNeeded();
 
 };

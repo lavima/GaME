@@ -10,22 +10,22 @@ class Script {
 private:
   
   ScriptEnvironment *context;
-  const char *name;
+  const std::string *name;
 
-  v8::Persistent<v8::Script> script;
+  v8::Persistent<v8::Script> *script;
 
-  Script(const char *name) {
-    this->name = name;
+  Script(const std::string &name) {
+    this->name = &name;
   }
 
 public:
 
-  static Script *Create(ScriptEnvironment *context, const char *filename);
+  static Script *Create(ScriptEnvironment &context, const std::string &filename);
   
-  const char *GetName() { return name; }
+  const std::string &GetName() { return *name; }
 
   bool Run();
 
-  void InvokeMethod(const char *methodName);
+  void InvokeMethod(const std::string &methodName);
   
 };

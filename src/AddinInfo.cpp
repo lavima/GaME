@@ -3,27 +3,16 @@ File: AddinInfo.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdlib.h>
-#include <string.h>
+#include "GaME.h"
 
-#include <utility>
-#include <vector>
-#include <unordered_map>
-
-#include <xercesc/dom/DOM.hpp>
-
-#include "lib/Xerces.h"
-#include "lib/CStringHash.h"
-#include "AddinInfo.h"
-
-AddinInfo *AddinInfo::Load(const char *filename) {
+AddinInfo *AddinInfo::Load(const string &filename) {
 
   xercesc::DOMDocument *document = XercesParseDocument(filename);
 
   AddinInfo *ret = new AddinInfo();
 
-  ret->name = XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("name"))); 
-  ret->libraryFilename = XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("library")));
+  ret->name = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("name")))); 
+  ret->libraryFilename = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("library"))));
 
   xercesc::DOMNodeList *engineComponentElements = document->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
 
@@ -41,7 +30,7 @@ AddinInfo *AddinInfo::Load(const char *filename) {
 
 }
 
-EngineComponentInfo *AddinInfo::GetEngineComponentInfo(const char *name) {
+EngineComponentInfo *AddinInfo::GetEngineComponentInfo(const string &name) {
 
   EngineComponentInfoMapIter item = engineComponents.find(name);
   if (item == engineComponents.end())
@@ -54,16 +43,16 @@ EngineComponentInfoMapIter AddinInfo::GetEngineComponentInfoBegin() { return eng
 EngineComponentInfoMapIter AddinInfo::GetEngineComponentInfoEnd() { return engineComponents.end(); }
 
 AddinType AddinInfo::GetType() { return this->type; }
-const char *AddinInfo::GetName() { return this->name; }
-const char *AddinInfo::GetLibraryFilename() { return this->libraryFilename; }
+const string &AddinInfo::GetName() { return *(this->name); }
+const string &AddinInfo::GetLibraryFilename() { return *(this->libraryFilename); }
 
 
 EngineComponentInfo *EngineComponentInfo::Load(xercesc::DOMElement *element) {
 
   EngineComponentInfo *ret = new EngineComponentInfo();
-  ret->name = XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("name"))); 
+  ret->name = new string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("name")))); 
   return ret;
 
 }
 
-const char *EngineComponentInfo::GetName() { return this->name; }
+const string &EngineComponentInfo::GetName() { return *(this->name); }

@@ -3,40 +3,24 @@ File: Script.h
 Author: Lars Vidar Magnusson
 */
 
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-
-#include <unordered_map>
-
-#include <v8.h>
-
-#include "../lib/CommonTypes.h"
-#include "../lib/CStringHash.h"
-#include "ScriptEnvironment.h"
-#include "Script.h"
-#include "../framework/GameTime.h"
-#include "../framework/Game.h"
+#include "../GaME.h"
   
-Script *Script::Create(ScriptEnvironment *context, const char *filename) {
+Script *Script::Create(ScriptEnvironment &context, const string &filename) {
   
-  FILE *file = fopen(filename, "r");
-  if (file == NULL)
-    return NULL;
+  ifstream file(filename, ios::in);
 
-  fseek(file, 0, SEEK_END);
-  size_t fileSize = ftell(file);
-  rewind(file);
+  if (!file) 
+    return nullptr;
+  string source;
+  file.seekg(0, std::ios::end);
+  source.resize(file.tellg());
+  file.seekg(0, std::ios::beg);
+  file.read(&source[0], source.size());
+  file.close();
 
-  char *sourceBuffer = new char[fileSize + 1];
-  int numCharsRead = fread(sourceBuffer, 1, fileSize, file);
-
-  assert(numCharsRead == fileSize);
-
-  sourceBuffer[numCharsRead] = '\0';
 
   Script *newScript = new Script(filename);
-  newScript->context = context;
+  newScript->context = &context;
 
   
   return newScript;  
@@ -44,12 +28,10 @@ Script *Script::Create(ScriptEnvironment *context, const char *filename) {
 
 bool Script::Run() {
 
-
-
   return true;
 }
 
-void Script::InvokeMethod(const char *methodName) {
+void Script::InvokeMethod(const string &methodName) {
 
   
 

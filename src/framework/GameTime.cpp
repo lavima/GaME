@@ -3,4 +3,8 @@ File: GameTime.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include "GameTime.h"
+#include "../GaME.h"
+
+struct GameTime {
+  long int TimePassed;
+};

@@ -3,8 +3,7 @@ File: Log.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __LOG__
-#define __LOG__
+#pragma once
 
 enum EventType {
   COMMAND = 1,
@@ -23,6 +22,7 @@ typedef std::vector<LogListener *> LogListenerVector;
 typedef LogListenerVector::iterator LogListenerVectorIter;
 
 #define LOG Log::GetSingleton()
+#define LOG_PTR Log::GetSingletonPtr()
 
 class Log {
 
@@ -41,9 +41,10 @@ private:
 
 public:
 
-  static Log *GetSingleton();
+  static Log &GetSingleton();
+  static Log *GetSingletonPtr();
 
-  void AddEvent(EventType type, const char *format, ...);
+  void AddEvent(EventType type, const std::string &format, ...);
 
   void AddListener(int typeFlag, LogListener *listener);
 
@@ -56,8 +57,6 @@ class LogListener {
 
 public:
   
-  virtual void NewEvent(const char *text) = 0;
+  virtual void NewEvent(const std::string &text) = 0;
 
 };
-
-#endif

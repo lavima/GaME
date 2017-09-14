@@ -3,8 +3,7 @@ File: EngineConfig.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __ENGINECONFIG__
-#define __ENGINECONFIG__
+#pragma once
 
 class AddinConfig;
 
@@ -25,11 +24,11 @@ private:
 
 public:
 
-  static EngineConfig *Load(const char *filename);
+  static EngineConfig *Load(const string &filename);
 
-  PlatformConfig *GetPlatformConfig();
+  PlatformConfig &GetPlatformConfig();
   int GetNumAddins();
-  AddinConfig *GetAddin(int index);
+  AddinConfig &GetAddin(int index);
 
 };
 
@@ -37,7 +36,7 @@ class AddinConfig {
 
 private:
 
-  const char *source;
+  const string *source;
 
   AddinConfig() {}
 
@@ -45,8 +44,6 @@ public:
 
   static AddinConfig *Load(xercesc::DOMElement *element);
 
-  const char *GetSource();
+  const string &GetSource();
 
 };
-
-#endif

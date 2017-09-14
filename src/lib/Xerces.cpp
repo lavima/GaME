@@ -3,16 +3,9 @@ File: XercesUtils.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLString.hpp>
+#include "../GaME.h"
 
-#include "Xerces.h"
-
-xercesc::DOMDocument *XercesParseDocument(const char *filename) {
+xercesc::DOMDocument *XercesParseDocument(const string &filename) {
 
   try {
     xercesc::XMLPlatformUtils::Initialize();
@@ -27,7 +20,7 @@ xercesc::DOMDocument *XercesParseDocument(const char *filename) {
   parser->setErrorHandler(errorHandler);
 
   try {
-    parser->parse(filename);
+    parser->parse(filename.c_str());
   }
   catch (const xercesc::XMLException& toCatch) {
     return NULL;

@@ -31,7 +31,7 @@ Author: Lars Vidar Magnusson
 
 CreateEngineComponentMap EngineComponent::createEngineComponentMap;
 
-EngineComponent *EngineComponent::Create(const char *typeName, const char *name) {
+EngineComponent *EngineComponent::Create(const string &typeName, const string &name) {
 
   CreateEngineComponentMapIter item = createEngineComponentMap.find(typeName);
   if (item == createEngineComponentMap.end()) {

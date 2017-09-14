@@ -79,6 +79,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>D:\VulkanSDK\1.0.51.0\Include;D:\Google\v8\include;D:\xerces-c-3.1.4\src;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -109,7 +111,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>OS_WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OS_WIN32_VULKAN;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,10 +164,8 @@
     <ClInclude Include="..\src\EngineComponent.h" />
     <ClInclude Include="..\src\framework\GameObject.h" />
     <ClInclude Include="..\src\framework\GameTime.h" />
+    <ClInclude Include="..\src\GaME.h" />
     <ClInclude Include="..\src\lib\CommonTypes.h" />
-    <ClInclude Include="..\src\lib\CStringHash.h" />
-    <ClInclude Include="..\src\lib\PathUtil.h" />
-    <ClInclude Include="..\src\lib\VkDeleter.h" />
     <ClInclude Include="..\src\lib\Vulkan.h" />
     <ClInclude Include="..\src\lib\Xerces.h" />
     <ClInclude Include="..\src\Log.h" />
@@ -189,8 +189,6 @@
     <ClCompile Include="..\src\framework\Game.cpp" />
     <ClCompile Include="..\src\EngineComponent.cpp" />
     <ClCompile Include="..\src\framework\GameObject.cpp" />
-    <ClCompile Include="..\src\framework\GameTime.cpp" />
-    <ClCompile Include="..\src\lib\PathUtil.cpp" />
     <ClCompile Include="..\src\lib\Vulkan.cpp" />
     <ClCompile Include="..\src\lib\Xerces.cpp" />
     <ClCompile Include="..\src\Log.cpp" />

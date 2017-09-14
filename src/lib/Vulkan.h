@@ -5,7 +5,9 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+using namespace std;
+
 class Vulkan {
 public:
-  static const char *GetErrorString(VkResult);
+  static const string &GetErrorString(VkResult);
 };

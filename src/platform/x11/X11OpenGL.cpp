@@ -221,7 +221,7 @@ void X11SystemOpenGL::SwapBuffers() {
   glXSwapBuffers(clientData.display, clientData.window);
 }
 
-void *X11SystemOpenGL::LoadLibrary(const char *filename) {
+void *X11SystemOpenGL::LoadLibrary(const string &filename) {
 
   void *handle = dlopen(filename, RTLD_LAZY);
   if (!handle)
@@ -238,7 +238,7 @@ void X11SystemOpenGL::UnloadLibrary(void *handle) {
 
 }
 
-void *X11SystemOpenGL::LoadLibrarySymbol(void *handle, const char *name) {
+void *X11SystemOpenGL::LoadLibrarySymbol(void *handle, const string &name) {
 
     void *symbolHandle = dlsym(handle, name);
 

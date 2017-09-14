@@ -9,9 +9,9 @@ class SimpleRenderer : public EngineComponent {
 
 public:
 
-  SimpleRenderer(Engine *);
+  SimpleRenderer(Engine &);
 
   virtual void Initialize();
-  virtual void Update(GameTime *);
+  virtual void Update(GameTime &);
 
 };

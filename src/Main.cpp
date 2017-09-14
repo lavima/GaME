@@ -38,9 +38,9 @@ int main(int argc, const char *argv[]) {
     return 1;
   }
 
-  ENGINE->Initialize(argv[1]);
+  ENGINE.Initialize(argv[1]);
 
-  ENGINE->LoadGame(argv[2]);
+  ENGINE.LoadGame(argv[2]);
 
   return 0;
 }

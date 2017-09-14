@@ -3,37 +3,16 @@ File: Win32Vulkan.cpp
 Author: Lars Vidar Magnusson
 */
 
-#ifdef OS_WIN32
+#ifdef OS_WIN32_VULKAN
 
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-#include <v8.h>
-#include <xercesc/dom/DOM.hpp>
+#include "../../GaME.h"
 
 #include <windows.h>
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 
-#include <vector>
-#include <unordered_map>
-
-#include "../../lib/CommonTypes.h"
-#include "../../lib/CStringHash.h"
 #include "../../lib/Vulkan.h"
-#include "../PlatformConfig.h"
-#include "../Platform.h"
-#include "../../scripting/ScriptEnvironment.h"
-#include "../../scripting/Script.h"
-#include "../../framework/GameTime.h"
-#include "../../framework/Game.h"
-#include "../../AddinInfo.h"
-#include "../../AddinContainer.h"
-#include "../../Addin.h"
-#include "../../EngineConfig.h"
-#include "../../EngineComponent.h"
-#include "../../Engine.h"
 #include "Win32Config.h"
 #include "Win32Vulkan.h"
 
@@ -41,7 +20,9 @@ Platform *Platform::singleton = nullptr;
 
 LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-Platform *Platform::GetSingleton() {
+inline Platform &Platform::GetSingleton() { return *(GetSingletonPtr()); }
+
+Platform *Platform::GetSingletonPtr() {
 
 	if (singleton == nullptr)
 		singleton = new Win32Vulkan();
@@ -56,9 +37,9 @@ PlatformConfig *Win32Vulkan::LoadConfig(xercesc::DOMElement *element) {
 
 }
 
-bool Win32Vulkan::Initialize(PlatformConfig *config) {
+bool Win32Vulkan::Initialize(PlatformConfig &config) {
 
-	this->config = (Win32Config *)config;
+	this->config = (Win32Config *)&config;
 
 	RECT		windowRect;				
 	windowRect.left = 0;			
@@ -187,14 +168,14 @@ void Win32Vulkan::HandleEvents() {
 void Win32Vulkan::SwapBuffers() {
 }
 
-void * Win32Vulkan::LoadLibrary(const char * filename) {
-  return nullptr;
+void * Win32Vulkan::LoadLibrary(const string &filename) {
+  return 0;
 }
 
 void Win32Vulkan::UnloadLibrary(void * handle) {
 }
 
-void * Win32Vulkan::LoadLibrarySymbol(void * handle, const char * name) {
+void * Win32Vulkan::LoadLibrarySymbol(void * handle, const string &name) {
   return nullptr;
 }
 
@@ -202,4 +183,4 @@ unsigned long long Win32Vulkan::GetSystemTime() {
   return 0;
 }
 
-#endif // OS_WIN32
+#endif // OS_WIN32_VULKAN

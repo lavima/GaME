@@ -10,6 +10,13 @@
 * Use standard types when possible
 * All generic containers should be explicitly defined as a type e.g. typedef std::vector<int> IntVector
 
+== Pointers and References ==
+
+The general rule is to use references in all situations where the sender/reciever do not have to worry about 
+where in memory the object resides, and if the memory needs to be deallocated. A pointer should be used in all cases
+where the client is responsible for clearing the memory. A pointer should also be used when passing an interface
+implementation pointer.
+
 == Naming Conventions ==
 
 * Use descriptive names 

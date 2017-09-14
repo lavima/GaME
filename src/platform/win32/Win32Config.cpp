@@ -3,18 +3,15 @@ File: Win32Config.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdio.h>
 
-#include <xercesc/dom/DOM.hpp>
+#include "../../GaME.h"
 
-#include "../../lib/Xerces.h"
-#include "../PlatformConfig.h"
 #include "Win32Config.h"
 
 Win32Config *Win32Config::Load(xercesc::DOMElement *element) {
 
-	const char * typeName = XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("type")));
-	if (strcmp(typeName, "Win32") != 0) {
+	const string typeName = string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("type"))));
+	if (typeName != string("Win32")) {
 		printf("ERROR: Wrong platform configuration type.\n");
 		return NULL;
 	}

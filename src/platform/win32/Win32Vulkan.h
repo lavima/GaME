@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+using namespace std;
+
 class Win32Vulkan : public Platform {
 
 private:
@@ -25,7 +27,6 @@ private:
 
 	};
 
-
 	Win32Config *config;
 
 	Win32Data win32;
@@ -34,7 +35,7 @@ public:
 
 	PlatformConfig *LoadConfig(xercesc::DOMElement *element);
 
-	bool Initialize(PlatformConfig *config);
+	bool Initialize(PlatformConfig &config);
 
 	void Shutdown();
 
@@ -42,11 +43,11 @@ public:
 
 	void SwapBuffers();
 
-	void *LoadLibrary(const char *filename);
+	void *LoadLibrary(const string &filename);
 
 	void UnloadLibrary(void *handle);
 
-	void *LoadLibrarySymbol(void *handle, const char *name);
+	void *LoadLibrarySymbol(void *handle, const string &name);
 
 	unsigned long long GetSystemTime();
 

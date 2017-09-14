@@ -3,15 +3,12 @@ File: Addin.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __SIMPLERENDERER_ADDIN__
-#define __SIMPLERENDERER_ADDIN__
+#pragma once
 
 extern "C" {
 
-void RegisterAddin(AddinInfo *addinInfo);
+void RegisterAddin(AddinInfo &addinInfo);
 
-EngineComponent *CreateEngineComponent(Game *game, const char *typeName, const char *name);
+EngineComponent *CreateEngineComponent(Engine &engine, const string &typeName, const string &name);
 
 }
-
-#endif
