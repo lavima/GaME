@@ -42,3 +42,6 @@ EngineComponent *EngineComponent::Create(const string &typeName, const string &n
   return createEngineComponent(ENGINE, typeName, name);
 
 }
+
+const string & EngineComponent::GetTypeName() { return *(this->name); }
+const string & EngineComponent::GetName() { return *(this->name); }

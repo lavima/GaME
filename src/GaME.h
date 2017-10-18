@@ -22,7 +22,7 @@
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Script.h"
 #include "framework/GameTime.h"
-#include "framework/GameObject.h"
+#include "framework/Entity.h"
 #include "framework/Game.h"
 #include "platform/PlatformConfig.h"
 #include "platform/Platform.h"

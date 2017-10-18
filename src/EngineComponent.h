@@ -34,6 +34,7 @@ public:
 
   static EngineComponent *Create(const string &typeName, const string &name);
 
+  const string &GetTypeName();
   const string &GetName();
 
   virtual void Initialize() = 0;

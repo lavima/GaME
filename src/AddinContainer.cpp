@@ -34,6 +34,6 @@ void *AddinContainer::GetSymbol(const string &name) {
 }
 
 const string &AddinContainer::GetFilename() { return *(this->filename); }
-AddinInfo *AddinContainer::GetInfo() { return this->info; }
+AddinInfo &AddinContainer::GetInfo() { return *(this->info); }
 void *AddinContainer::GetHandle() { return this->handle; }
 void AddinContainer::SetHandle(void *handle) { this->handle = handle; }

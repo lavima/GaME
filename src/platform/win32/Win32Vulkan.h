@@ -43,6 +43,9 @@ public:
 
 	void SwapBuffers();
 
+#ifdef LoadLibrary
+#undef LoadLibrary
+#endif
 	void *LoadLibrary(const string &filename);
 
 	void UnloadLibrary(void *handle);

@@ -23,6 +23,8 @@ private:
 
   AddinType type;
   const string *name;
+  const string *description;
+  const string *version;
   const string *libraryFilename;
 
   EngineComponentInfoMap engineComponents;
@@ -33,12 +35,12 @@ public:
 
   static AddinInfo *Load(const string &filename);
 
-  EngineComponentInfo &GetEngineComponentInfo(const string &name);
-
   AddinType GetType();
   const string &GetName();
+  const string &GetDescription();
+  const string &GetVersion();
   const string &GetLibraryFilename();
-
+  const EngineComponentInfoMap &GetEngineComponents();
 };
 
 class EngineComponentInfo {
@@ -46,6 +48,8 @@ class EngineComponentInfo {
 private:
 
   const string *name;
+  const string *description;
+  const string *version;
 
   EngineComponentInfo() {}
 
@@ -54,5 +58,7 @@ public:
   static EngineComponentInfo *Load(xercesc::DOMElement *element); 
 
   const string &GetName();
+  const string &GetDescription();
+  const string &GetVersion();
 
 };

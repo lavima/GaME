@@ -1,6 +1,10 @@
+2017-10-18 Lars Vidar Magnusson <lavima@gmail.com>
+	* Added include and lib directories for external libs
+	* Continued work on the windows implementation
+
 2017-09-14 Lars Vidar Magnusson <lavima@gmail.com>
  * Stil working on Win32 implementation. Have done some changes to the
- 	 overall engine design. More detail will follow in the final commit.
+	 overall engine design. More detail will follow in the final commit.
 
 2017-08-21 Lars Vidar Magnusson <lavima@gmail.com>
  * Working on Win32 implementation

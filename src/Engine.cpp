@@ -34,7 +34,7 @@ void Engine::shutdown() {
 
 }
 
-inline Engine &Engine::GetSingleton() { return *(GetSingletonPtr()); }
+Engine &Engine::GetSingleton() { return *(GetSingletonPtr()); }
 
 Engine *Engine::GetSingletonPtr() {
 
@@ -128,9 +128,9 @@ bool Engine::LoadAddin(const string &filename) {
   AddinContainer *addin = AddinContainer::Create(filename);
   AddinInfo info = addin->GetInfo();
 
-  char *libraryDirectory = dirname(strdup(filename));
-  char *libraryFilename = new char[strlen(libraryDirectory) + strlen(info.GetLibraryFilename()) + 1];
-  sprintf(libraryFilename, "%s/%s", libraryDirectory, info.GetLibraryFilename());
+  size_t last = filename.find_last_of("/\\", 0);
+  string libraryDirectory = filename.substr(0, last);
+  string libraryFilename = filename.substr(last + 1);
 
   addin->SetHandle(PLATFORM.LoadLibrary(libraryFilename));
   if (!addin->GetHandle()) {
@@ -162,14 +162,14 @@ bool Engine::LoadAddin(const string &filename) {
 
     addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
 
-    for (auto iter=info.GetEngineComponentInfoBegin(); iter!=info.GetEngineComponentInfoEnd(); ++iter)
+    for (auto iter=info.GetEngineComponents().begin(); iter!=info.GetEngineComponents().end(); ++iter)
       EngineComponent::createEngineComponentMap.insert(CreateEngineComponentPair(iter->first, (CreateEngineComponentFun)address));
     
   }
 
   addins.push_back(addin);
 
-  printf("Sucessfully loaded addin %s from %s\n", addin->GetInfo()->GetName(), filename);
+  printf("Sucessfully loaded addin %s from %s\n", addin->GetInfo().GetName(), filename);
 
   return true;
 

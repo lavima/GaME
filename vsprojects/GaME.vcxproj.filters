@@ -55,6 +55,9 @@
     <Filter Include="Source Files\platform\win32">
       <UniqueIdentifier>{63e86bef-b5d5-4dbb-a009-66e2a9efe23f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{5e4fa870-775d-432d-af3d-7e94ea04d989}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Addin.h">
@@ -79,9 +82,6 @@
       <Filter>Header Files\scripting</Filter>
     </ClInclude>
     <ClInclude Include="..\src\framework\Game.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\framework\GameObject.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="..\src\framework\GameTime.h">
@@ -132,6 +132,9 @@
     <ClInclude Include="..\src\GaME.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\framework\Entity.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AddinContainer.cpp">
@@ -156,9 +159,6 @@
       <Filter>Source Files\scripting</Filter>
     </ClCompile>
     <ClCompile Include="..\src\framework\Game.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\framework\GameObject.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="..\src\simplerenderer\Addin.cpp">
@@ -196,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="..\src\scripting\ScriptEnvironment.cpp">
       <Filter>Source Files\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\Entity.cpp">
+      <Filter>Source Files\framework</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

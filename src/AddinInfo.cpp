@@ -30,21 +30,12 @@ AddinInfo *AddinInfo::Load(const string &filename) {
 
 }
 
-EngineComponentInfo *AddinInfo::GetEngineComponentInfo(const string &name) {
-
-  EngineComponentInfoMapIter item = engineComponents.find(name);
-  if (item == engineComponents.end())
-    return NULL;
-  return item->second;
-
-}
-
-EngineComponentInfoMapIter AddinInfo::GetEngineComponentInfoBegin() { return engineComponents.begin(); }
-EngineComponentInfoMapIter AddinInfo::GetEngineComponentInfoEnd() { return engineComponents.end(); }
-
 AddinType AddinInfo::GetType() { return this->type; }
 const string &AddinInfo::GetName() { return *(this->name); }
+const string &AddinInfo::GetDescription() { return *(this->description); }
+const string &AddinInfo::GetVersion() { return *(this->version); }
 const string &AddinInfo::GetLibraryFilename() { return *(this->libraryFilename); }
+const EngineComponentInfoMap & AddinInfo::GetEngineComponents() { return this->engineComponents; }
 
 
 EngineComponentInfo *EngineComponentInfo::Load(xercesc::DOMElement *element) {
@@ -56,3 +47,5 @@ EngineComponentInfo *EngineComponentInfo::Load(xercesc::DOMElement *element) {
 }
 
 const string &EngineComponentInfo::GetName() { return *(this->name); }
+const string & EngineComponentInfo::GetDescription() { return *(this->description); }
+const string & EngineComponentInfo::GetVersion() { return *(this->version); }

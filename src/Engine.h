@@ -56,6 +56,6 @@ public:
 
   void AddComponent(const string &typeName, const string &name);
   void AddComponent(EngineComponent *component);
-  EngineComponent &GetComponent(const string &name);
+  EngineComponent *GetComponent(const string &name);
 
 };
