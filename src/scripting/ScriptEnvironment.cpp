@@ -6,6 +6,12 @@ Author: Lars Vidar Magnusson
 #include "../GaME.h"
 
 
+ScriptEnvironment::ScriptEnvironment(Engine &engine) {
+
+    this->engine = &engine;
+
+}
+
 ScriptEnvironment::~ScriptEnvironment() {
   
   isolate->Dispose();
@@ -15,36 +21,41 @@ ScriptEnvironment::~ScriptEnvironment() {
 
 ScriptEnvironment *ScriptEnvironment::Create(Engine &engine) {
 
-  ScriptEnvironment *newEnvironment = new ScriptEnvironment();
-  newEnvironment->engine = &engine;
-  newEnvironment->allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+  ScriptEnvironment *env = new ScriptEnvironment(engine);
+
+  v8::V8::InitializeICUDefaultLocation(engine.GetInfo().ExecutablePath.c_str());
+  v8::V8::InitializeExternalStartupData(engine.GetInfo().ExecutablePath.c_str());
+  std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
+  v8::V8::InitializePlatform(platform.get());
+  v8::V8::Initialize();
 
   v8::Isolate::CreateParams createParams;
-  createParams.array_buffer_allocator = newEnvironment->allocator;
+  env->allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+  createParams.array_buffer_allocator = env->allocator;
 
-  v8::Isolate *isolate = newEnvironment->isolate = v8::Isolate::New(createParams);
+  env->isolate = v8::Isolate::New(createParams);
   {
 
-    v8::Isolate::Scope isolateScope(isolate);
-    v8::HandleScope handleScope(isolate);
+    v8::Isolate::Scope isolateScope(env->isolate);
+    v8::HandleScope handleScope(env->isolate);
 
-    v8::Handle<v8::ObjectTemplate> engine = v8::ObjectTemplate::New();
-    engine->Set(v8::String::NewFromUtf8(isolate, "loadGame", v8::NewStringType::kNormal).ToLocalChecked(),
-      v8::FunctionTemplate::New(isolate, engineLoadGame));
-    engine->Set(v8::String::NewFromUtf8(isolate, "loadAddin", v8::NewStringType::kNormal).ToLocalChecked(),
-      v8::FunctionTemplate::New(isolate, engineLoadAddin));
+    v8::Handle<v8::ObjectTemplate> engine = v8::ObjectTemplate::New(env->isolate);
+    engine->Set(v8::String::NewFromUtf8(env->isolate, "loadGame", v8::NewStringType::kNormal).ToLocalChecked(),
+      v8::FunctionTemplate::New(env->isolate, engineLoadGame));
+    engine->Set(v8::String::NewFromUtf8(env->isolate, "loadAddin", v8::NewStringType::kNormal).ToLocalChecked(),
+      v8::FunctionTemplate::New(env->isolate, engineLoadAddin));
 
-    v8::Handle<v8::ObjectTemplate> game = v8::ObjectTemplate::New();
+    v8::Handle<v8::ObjectTemplate> game = v8::ObjectTemplate::New(env->isolate);
 
-    v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
-    global->Set(v8::String::NewFromUtf8(isolate, "engine", v8::NewStringType::kNormal).ToLocalChecked(), engine);
-    global->Set(v8::String::NewFromUtf8(isolate, "game", v8::NewStringType::kNormal).ToLocalChecked(), game);
+    v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(env->isolate);
+    global->Set(v8::String::NewFromUtf8(env->isolate, "engine", v8::NewStringType::kNormal).ToLocalChecked(), engine);
+    global->Set(v8::String::NewFromUtf8(env->isolate, "game", v8::NewStringType::kNormal).ToLocalChecked(), game);
 
-    v8::Handle<v8::ObjectTemplate> platformConfig = v8::ObjectTemplate::New();
+    v8::Handle<v8::ObjectTemplate> platformConfig = v8::ObjectTemplate::New(env->isolate);
 
   }
 
-  return newEnvironment;
+  return env;
 
 }
 

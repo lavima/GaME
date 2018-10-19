@@ -3,8 +3,9 @@ File: X11Config.h
 Author: Lars Vidar Magnusson
 */
 
-#ifndef __PLATFORM_X11_X11CONFIG__
-#define __PLATFORM_X11_X11CONFIG__
+#ifdef OS_XLIB
+
+#pragma once
 
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 600

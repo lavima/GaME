@@ -8,27 +8,27 @@ Author: Lars Vidar Magnusson
 class AddinConfig;
 
 /**
- * Engine Configuration with XML backend. 
+ * Engine Configuration with XML backend.
  */
 class EngineConfig {
 
 private:
 
-  xercesc::DOMDocument *document;
+    xercesc::DOMDocument *document;
 
-  PlatformConfig *platformConfig;
-  std::vector<AddinConfig *> addins;
-  
-  EngineConfig() {}
-  ~EngineConfig();
+    PlatformConfig *platformConfig;
+    std::vector<AddinConfig *> addins;
+
+    EngineConfig() {}
+    ~EngineConfig();
 
 public:
 
-  static EngineConfig *Load(const string &filename);
+    static EngineConfig *Load(const string &filename);
 
-  PlatformConfig &GetPlatformConfig();
-  int GetNumAddins();
-  AddinConfig &GetAddin(int index);
+    PlatformConfig &GetPlatformConfig();
+    int GetNumAddins();
+    AddinConfig &GetAddin(int index);
 
 };
 
@@ -36,14 +36,14 @@ class AddinConfig {
 
 private:
 
-  const string *source;
+    const string *source;
 
-  AddinConfig() {}
+    AddinConfig() {}
 
 public:
 
-  static AddinConfig *Load(xercesc::DOMElement *element);
+    static AddinConfig *Load(xercesc::DOMElement *element);
 
-  const string &GetSource();
+    const string &GetSource();
 
 };

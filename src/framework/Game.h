@@ -11,29 +11,42 @@ typedef unordered_map<string, const string> EngineComponentsNeededMap;
 typedef pair<string, const string> EngineComponentsNeededMapPair;
 typedef EngineComponentsNeededMap::iterator EngineComponentsNeededMapIter;
 
+struct GameInfo {
+
+    int MajorVersion;
+    int MinorVersion = 0;
+    int Release = 1;
+
+    string Name;
+
+    const string &GetVersionString() { return StringUtil::Format("%d-%d-%d", MajorVersion, MinorVersion, Release); }
+
+};
+
 class Game {
 
 private:
 
-  const string *name;
-  Script *gameScript;
+    GameInfo info;
 
-  EngineComponentsNeededMap engineComponentsNeeded;
+    Script *gameScript;
 
-  Game() {}
+    EngineComponentsNeededMap engineComponentsNeeded;
+
+    Game() {}
 
 public:
 
-  static Game *Load(const string &filename);
+    static Game *Load(const string &filename);
 
-  void Initialize();
+    void Initialize();
 
-  void LoadContent();
-  void UnloadContent();
+    void LoadContent();
+    void UnloadContent();
 
-  void Update(GameTime &gameTime);
+    void Update(GameTime &gameTime);
 
-  const string &GetName();
-  EngineComponentsNeededMap &GetEngineComponentsNeeded();
+    const GameInfo &GetInfo();
+    EngineComponentsNeededMap &GetEngineComponentsNeeded();
 
 };

@@ -18,7 +18,7 @@ private:
 
   v8::UniquePersistent<v8::Context> *globalContext;
 
-  ScriptEnvironment() {}
+  ScriptEnvironment(Engine &engine);
 
   static void engineLoadAddin(const v8::FunctionCallbackInfo<v8::Value>&);
   static void engineLoadGame(const v8::FunctionCallbackInfo<v8::Value>&);

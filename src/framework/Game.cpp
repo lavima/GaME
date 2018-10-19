@@ -11,9 +11,22 @@ Game *Game::Load(const string &filename) {
 
   xercesc::DOMDocument *document = XercesParseDocument(filename);
 
-  Game *ret = new Game();
+  Game *ret = new Game(); 
 
-  ret->name = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("name")))); 
+  /*xercesc::DOMNodeList *infoNodes = document->getElementsByTagName(XERCESTRANSCODE("Info"));
+  if (infoNodes->getLength())
+      return nullptr;
+  xercesc::DOMElement *infoElement = (xercesc::DOMElement *)infoNodes->item(0);
+
+  xercesc::DOMNode *nameNode = infoElement->getElementsByTagName(XERCESTRANSCODE("Name"))->item(0);
+  ret->info.Name.assign(XERCESTRANSCODE(nameNode->getNodeValue()));
+
+  xercesc::DOMNode *majorVersionNode = infoElement->getElementsByTagName(XERCESTRANSCODE("MajorVersion"))->item(0);
+  ret->info.MajorVersion = atoi(XERCESTRANSCODE(majorVersionNode->getNodeValue()));
+  xercesc::DOMNode *minorVersionNode = infoElement->getElementsByTagName(XERCESTRANSCODE("MinorVersion"))->item(0);
+  ret->info.MinorVersion = atoi(XERCESTRANSCODE(minorVersionNode->getNodeValue()));
+  xercesc::DOMNode *releaseNode = infoElement->getElementsByTagName(XERCESTRANSCODE("Release"))->item(0);
+  ret->info.Release = atoi(XERCESTRANSCODE(releaseNode->getNodeValue()));*/
 
   xercesc::DOMNodeList *componentNodes = document->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
   for (int i=0; i<componentNodes->getLength(); i++) {
@@ -44,4 +57,4 @@ void Game::Update(GameTime &gameTime) {
 
 }
 
-const string &Game::GetName() { return *(this->name); }
+const GameInfo &Game::GetInfo() { return info; }

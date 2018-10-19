@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <EngineConfig>
-  <PlatformConfig type="X11">
+  <GraphicalPlatformConfig type="Win32Vulkan">
     <Width>1024</Width>
     <Height>600</Height>
     <Fullscreen>false</Fullscreen>
-  </PlatformConfig>
-  <Addin source="simplerenderer/SimpleRenderer.xml" />
+  </GraphicalPlatformConfig>
+  <Addin source="content/SimpleRenderer.xml" />
 </EngineConfig>

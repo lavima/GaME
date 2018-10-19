@@ -3,6 +3,8 @@ File: X11Config.cpp
 Author: Lars Vidar Magnusson
 */
 
+#ifdef OS_XLIB
+
 #include "../../GaME.h"
 
 #include "X11Config.h"
@@ -55,3 +57,5 @@ bool X11Config::GetFullscreen() { return this->fullscreen; }
 void X11Config::SetFullscreen(bool fullscreen) {
   this->fullscreen = fullscreen;
 }
+
+#endif // OS_XLIB

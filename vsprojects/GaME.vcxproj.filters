@@ -11,7 +11,7 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <Extensions>xml;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Header Files\scripting">
       <UniqueIdentifier>{14afec3f-42a9-4142-b96d-ffcb3fe9adcf}</UniqueIdentifier>
@@ -49,21 +49,22 @@
     <Filter Include="Source Files\platform\x11">
       <UniqueIdentifier>{821789ce-ca7e-40f0-80b9-6963a4fbfeba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\platform\win32">
-      <UniqueIdentifier>{d47d472d-d0f1-4b11-80fc-437b7a659b51}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\platform\win32">
-      <UniqueIdentifier>{63e86bef-b5d5-4dbb-a009-66e2a9efe23f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\util">
       <UniqueIdentifier>{5e4fa870-775d-432d-af3d-7e94ea04d989}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{3b2c8a50-409d-4402-ab77-6af2489a13c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\tests">
+      <UniqueIdentifier>{b25a4753-0fe8-4e97-8912-3f4654f2fb02}</UniqueIdentifier>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Resource Files\simplerenderer">
+      <UniqueIdentifier>{5761d5e1-127f-4477-a340-20969ce12590}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Addin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AddinContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\AddinInfo.h">
@@ -87,9 +88,6 @@
     <ClInclude Include="..\src\framework\GameTime.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\simplerenderer\Addin.h">
-      <Filter>Header Files\simplerenderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\simplerenderer\SimpleRenderer.h">
       <Filter>Header Files\simplerenderer</Filter>
     </ClInclude>
@@ -107,12 +105,6 @@
     </ClInclude>
     <ClInclude Include="..\src\platform\x11\X11Vulkan.h">
       <Filter>Header Files\platform\x11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\platform\win32\Win32Config.h">
-      <Filter>Header Files\platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\platform\win32\Win32Vulkan.h">
-      <Filter>Header Files\platform\win32</Filter>
     </ClInclude>
     <ClInclude Include="..\src\lib\Vulkan.h">
       <Filter>Header Files\lib</Filter>
@@ -135,11 +127,26 @@
     <ClInclude Include="..\src\framework\Entity.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\util\CommandLine.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\FontLoader.h">
+      <Filter>Header Files\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\StringUtil.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\platform\Win32Vulkan.h">
+      <Filter>Header Files\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\simplerenderer\SimpleRendererAddin.h">
+      <Filter>Header Files\simplerenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\FilePath.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AddinContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\AddinInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -161,9 +168,6 @@
     <ClCompile Include="..\src\framework\Game.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\simplerenderer\Addin.cpp">
-      <Filter>Source Files\simplerenderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\simplerenderer\SimpleRenderer.cpp">
       <Filter>Source Files\simplerenderer</Filter>
     </ClCompile>
@@ -178,12 +182,6 @@
     </ClCompile>
     <ClCompile Include="..\src\platform\x11\X11Vulkan.cpp">
       <Filter>Source Files\platform\x11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\platform\win32\Win32Config.cpp">
-      <Filter>Source Files\platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\platform\win32\Win32Vulkan.cpp">
-      <Filter>Source Files\platform\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\src\lib\Xerces.cpp">
       <Filter>Source Files\lib</Filter>
@@ -200,5 +198,37 @@
     <ClCompile Include="..\src\framework\Entity.cpp">
       <Filter>Source Files\framework</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Addin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\CommandLine.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\StringUtil.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\Platform.cpp">
+      <Filter>Source Files\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\platform\Win32Vulkan.cpp">
+      <Filter>Source Files\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\simplerenderer\SimpleRendererAddin.cpp">
+      <Filter>Source Files\simplerenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\FilePath.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <TestContent Include="..\tests\TestGame.xml">
+      <Filter>Resource Files\tests</Filter>
+    </TestContent>
+    <TestContent Include="..\tests\TestEngine.xml">
+      <Filter>Resource Files\tests</Filter>
+    </TestContent>
+    <Content Include="..\src\simplerenderer\SimpleRenderer.xml">
+      <Filter>Resource Files\simplerenderer</Filter>
+    </Content>
   </ItemGroup>
 </Project>

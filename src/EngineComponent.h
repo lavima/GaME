@@ -17,27 +17,29 @@ typedef CreateEngineComponentMap::iterator CreateEngineComponentMapIter;
 
 class EngineComponent {
 
-  friend class Engine;
+    friend class Engine;
 
 private:
 
-  const string *typeName;
-  const string *name;
+    Engine *engine;
 
-  static CreateEngineComponentMap createEngineComponentMap;
+    const string *typeName;
+    const string *name;
+
+    static CreateEngineComponentMap createEngineComponentMap;
 
 protected:
 
-  EngineComponent() {}
+    EngineComponent(Engine &engine);
 
 public:
 
-  static EngineComponent *Create(const string &typeName, const string &name);
+    static EngineComponent *Create(Engine &engine, const string &typeName, const string &name);
 
-  const string &GetTypeName();
-  const string &GetName();
+    const string &GetTypeName();
+    const string &GetName();
 
-  virtual void Initialize() = 0;
-  virtual void Update(GameTime &gameTime) = 0;
+    virtual void Initialize() = 0;
+    virtual void Update(GameTime &gameTime) = 0;
 
 };

@@ -7,6 +7,11 @@ Author: Lars Vidar Magnusson
 
 class SimpleRenderer : public EngineComponent {
 
+private:
+
+    VkInstance vkInstance;
+    VkApplicationInfo vkAppInfo;
+
 public:
 
   SimpleRenderer(Engine &);

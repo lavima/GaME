@@ -13,6 +13,7 @@ Author: Lars Vidar Magnusson
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMText.hpp>
 
+#include "util/StringUtil.h"
 #include "lib/CStringHash.h"
 #include "lib/Xerces.h"
 #include "scripting/ScriptEnvironment.h"
@@ -31,7 +32,13 @@ Author: Lars Vidar Magnusson
 
 CreateEngineComponentMap EngineComponent::createEngineComponentMap;
 
-EngineComponent *EngineComponent::Create(const string &typeName, const string &name) {
+EngineComponent::EngineComponent(Engine &engine) {
+
+    this->engine = &engine;
+
+}
+
+EngineComponent *EngineComponent::Create(Engine &engine, const string &typeName, const string &name) {
 
   CreateEngineComponentMapIter item = createEngineComponentMap.find(typeName);
   if (item == createEngineComponentMap.end()) {
@@ -39,7 +46,7 @@ EngineComponent *EngineComponent::Create(const string &typeName, const string &n
     return NULL;
   }
   CreateEngineComponentFun createEngineComponent = createEngineComponentMap[typeName];
-  return createEngineComponent(ENGINE, typeName, name);
+  return createEngineComponent(engine, typeName, name);
 
 }
 

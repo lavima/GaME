@@ -3,44 +3,50 @@ File: Main.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <v8.h>
-#include <xercesc/dom/DOM.hpp>
-
-#include <vector>
-#include <unordered_map>
-
-#include "lib/CommonTypes.h"
-#include "lib/CStringHash.h"
-#include "platform/PlatformConfig.h"
-#include "platform/Platform.h"
-#include "scripting/ScriptEnvironment.h"
-#include "scripting/Script.h"
-#include "framework/GameTime.h"
-#include "framework/Game.h"
-#include "AddinInfo.h"
-#include "AddinContainer.h"
-#include "Addin.h"
-#include "EngineConfig.h"
-#include "EngineComponent.h"
-#include "Engine.h"
+#include "GaME.h"
 
 /*
  * Program entry.
- * 
+ *
  * Usage: game ENGINECONFIG GAMESPEC
  */
+#ifdef OS_WIN
+
+int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+
+    string commandLine = GetCommandLineA();
+
+#endif // OS_WIN
+#ifdef OS_XLIB
+
 int main(int argc, const char *argv[]) {
 
-  if (argc != 3) {
-    printf("Usage: game ENGINECONFIG GAMESPEC\n");
-    return 1;
-  }
+    string commandLine = "";
 
-  ENGINE.Initialize(argv[1]);
+#endif // OS_XLIB
 
-  ENGINE.LoadGame(argv[2]);
+    CommandArgument arg1 = { "GameFilename", "Filename of the game to load at startup", 0, 1 };
+    ArgumentVector argumentSpec = { arg1 };
+    CommandOption opt1 = { COMMANDOPTION_VALUE, "config", "Filename of the engine configuration" };
+    OptionVector optionSpec = { opt1 };
 
-  return 0;
+    unique_ptr<CommandLineResult> result(CommandLine::Parse(argumentSpec, optionSpec, commandLine));
+
+    if (result.get()->NumErrors) {
+        cerr << "Wrong use.\n" << CommandLine::GetDescriptionString(argumentSpec, optionSpec);
+        return 0;
+    }
+
+    NameValueMap &options = result.get()->Options;    
+    
+    EngineConfig *config = EngineConfig::Load(options.count("config") ? options["config"] : "engine.config");
+
+    unique_ptr<Platform> platform(Platform::Create(config->GetPlatformConfig()));
+    
+    unique_ptr<Engine> engine(new Engine(*platform.get(), *config));
+    engine.get()->Initialize();
+    
+    engine.get()->LoadGame(result.get()->Arguments["GameFilename"][0]);
+
+    return 0;
 }

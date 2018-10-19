@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
-<Game name="TestGame">
+<Game>
+  <Info>
+    <Name>Test Game</Name>
+    <MajorVersion>0</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    <Release>1</Release>
+  </Info>
   <GameComponent type="SimpleRenderer" />
 </Game>

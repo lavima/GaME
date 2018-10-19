@@ -5,7 +5,7 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-#include "Addin.h"
+#include "SimpleRendererAddin.h"
 #include "SimpleRenderer.h"
 
 

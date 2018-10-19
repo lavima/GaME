@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build;CopyGaMEContent" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -23,7 +23,8 @@
     <ProjectGuid>{03513B3A-1BE4-4C46-AD61-3C11B0C8DBA9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GaME</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -79,10 +80,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\include\xerces-3.2.0;..\include\vulkan-1.0.61.1;..\include\v8;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Documents\xerces-c-3.2.1\src;C:\VulkanSDK\1.1.77.0\Include;D:\Documents\v8\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</IntDir>
-    <LibraryPath>..\libs\x64\windows;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -94,6 +95,9 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>D:\VulkanSDK\1.0.51.0\Include;D:\Google\v8\include;D:\xerces-c-3.1.4\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <ItemDefinitionGroup>
+    <TestContent />
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
@@ -114,12 +118,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>OS_WIN32_VULKAN;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OS_WIN;OS_WIN_VULKAN;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.51.0\Lib;D:\xerces-c-3.1.4\Build\Win64\VC14\Static Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>xerces-c_3D.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Documents\v8\out.gn\x64.debug\obj;C:\VulkanSDK\1.1.77.0\Lib;D:\Documents\xerces-c-3.2.1\src\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>shlwapi.lib;dbghelp.lib;winmm.lib;v8_base.lib;v8_external_snapshot.lib;v8_libplatform.lib;v8_libbase.lib;v8_libsampler.lib;third_party/icu/icuuc.lib;third_party/icu/icui18n.lib;src/inspector/inspector.lib;xerces-c_3D.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,7 +165,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Addin.h" />
-    <ClInclude Include="..\src\AddinContainer.h" />
     <ClInclude Include="..\src\AddinInfo.h" />
     <ClInclude Include="..\src\Engine.h" />
     <ClInclude Include="..\src\EngineConfig.h" />
@@ -172,20 +177,23 @@
     <ClInclude Include="..\src\lib\Vulkan.h" />
     <ClInclude Include="..\src\lib\Xerces.h" />
     <ClInclude Include="..\src\Log.h" />
+    <ClInclude Include="..\src\platform\FontLoader.h" />
     <ClInclude Include="..\src\platform\Platform.h" />
     <ClInclude Include="..\src\platform\PlatformConfig.h" />
-    <ClInclude Include="..\src\platform\win32\Win32Config.h" />
-    <ClInclude Include="..\src\platform\win32\Win32Vulkan.h" />
+    <ClInclude Include="..\src\platform\Win32Vulkan.h" />
     <ClInclude Include="..\src\platform\x11\X11Config.h" />
     <ClInclude Include="..\src\platform\x11\X11OpenGL.h" />
     <ClInclude Include="..\src\platform\x11\X11Vulkan.h" />
     <ClInclude Include="..\src\scripting\Script.h" />
     <ClInclude Include="..\src\scripting\ScriptEnvironment.h" />
-    <ClInclude Include="..\src\simplerenderer\Addin.h" />
+    <ClInclude Include="..\src\simplerenderer\SimpleRendererAddin.h" />
     <ClInclude Include="..\src\simplerenderer\SimpleRenderer.h" />
+    <ClInclude Include="..\src\util\CommandLine.h" />
+    <ClInclude Include="..\src\util\FilePath.h" />
+    <ClInclude Include="..\src\util\StringUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AddinContainer.cpp" />
+    <ClCompile Include="..\src\Addin.cpp" />
     <ClCompile Include="..\src\AddinInfo.cpp" />
     <ClCompile Include="..\src\Engine.cpp" />
     <ClCompile Include="..\src\EngineConfig.cpp" />
@@ -196,18 +204,31 @@
     <ClCompile Include="..\src\lib\Xerces.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\platform\Platform.cpp" />
     <ClCompile Include="..\src\platform\PlatformConfig.cpp" />
-    <ClCompile Include="..\src\platform\win32\Win32Config.cpp" />
-    <ClCompile Include="..\src\platform\win32\Win32Vulkan.cpp" />
+    <ClCompile Include="..\src\platform\Win32Vulkan.cpp" />
     <ClCompile Include="..\src\platform\x11\X11Config.cpp" />
     <ClCompile Include="..\src\platform\x11\X11OpenGL.cpp" />
     <ClCompile Include="..\src\platform\x11\X11Vulkan.cpp" />
     <ClCompile Include="..\src\scripting\Script.cpp" />
     <ClCompile Include="..\src\scripting\ScriptEnvironment.cpp" />
-    <ClCompile Include="..\src\simplerenderer\Addin.cpp" />
+    <ClCompile Include="..\src\simplerenderer\SimpleRendererAddin.cpp" />
     <ClCompile Include="..\src\simplerenderer\SimpleRenderer.cpp" />
+    <ClCompile Include="..\src\util\CommandLine.cpp" />
+    <ClCompile Include="..\src\util\FilePath.cpp" />
+    <ClCompile Include="..\src\util\StringUtil.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <GaMEContent Include="..\src\simplerenderer\SimpleRenderer.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <GaMEContent Include="..\tests\TestEngine.xml" />
+    <GaMEContent Include="..\tests\TestGame.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="CopyGaMEContent">
+    <Copy SourceFiles="@(GaMEContent)" DestinationFolder="$(OutDir)\content\" />
+  </Target>
 </Project>

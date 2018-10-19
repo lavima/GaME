@@ -5,57 +5,77 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-#define ENGINE Engine::GetSingleton()
-#define ENGINE_PTR Engine::GetSingletonPtr()
-
 /*
 * Type definitions used in the Engine class.
 */
 typedef std::vector<AddinContainer *> AddinVector;
 
+class Engine;
+
+struct EngineInfo {
+
+    const string Name = "GaME";
+    const int MajorVersion = 0;
+    const int MinorVersion = 0;
+    const int Release = 1;
+
+    const string &GetVersionString() { return versionString; }
+
+    string ExecutablePath;
+    string ConfigFilename;
+
+private:
+
+    const string versionString = StringUtil::Format("%d-%d-%d", MajorVersion, MinorVersion, Release);   
+
+};
+
 /*
 * The Engine class represents the actual Game Mechanics Engine (GaME). It is a singleton class and all references
-* should use the ENGINE macro for accessing the singleton instance.
+* should use the ENGINE and ENGINE_PTR macros for accessing the singleton instance.
 */
 class Engine {
 private:
 
-  static Engine *singleton;
+    EngineInfo info;
 
-  AddinVector addins;
-  EngineComponentMap components;
-  
-  EngineConfig *engineConfig;
-  ScriptEnvironment *scriptEnvironment;
+    AddinVector addins;
+    EngineComponentMap components;
 
-  Game *game;
+    EngineConfig *config;
+    ScriptEnvironment *scriptEnvironment;
+    Platform *platform;
 
-  bool isRunning;
-  bool isGameRunning;
+    Game *game;
 
-  Engine();
+    bool isRunning;
+    bool isGameRunning;
 
-  void shutdown();
+    void shutdown();
 
 public:
 
-  static Engine &GetSingleton();
-  static Engine *GetSingletonPtr();
+    Engine(Platform &platform, EngineConfig &config);
 
-  bool IsRunning();
-  ScriptEnvironment &GetScriptEnvironment();
-  Game *GetGame();  
+    bool IsRunning();
 
-  void Initialize(const string &filename); 
-  void Stop();
+    ScriptEnvironment &GetScriptEnvironment();
+    Platform &GetPlatform();
+    Game *GetGame();
 
-  void LoadGame(const string &filename);
-  void CloseGame();
+    void Initialize();
+    void Stop();
 
-  bool LoadAddin(const string &filename);
+    void LoadGame(const string &filename);
+    void CloseGame();
 
-  void AddComponent(const string &typeName, const string &name);
-  void AddComponent(EngineComponent *component);
-  EngineComponent *GetComponent(const string &name);
+    bool LoadAddin(const string &filename);
+
+    void AddComponent(const string &typeName, const string &name);
+    void AddComponent(EngineComponent *component);
+    EngineComponent *GetComponent(const string &name);
+
+    const string &GetCommandLine();
+    const EngineInfo &GetInfo();
 
 };
