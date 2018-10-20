@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 AddinInfo *AddinInfo::Load(const string &filename) {
 
-  xercesc::DOMDocument *document = XercesParseDocument(filename);
+  xercesc::DOMDocument *document = Xerces::ParseDocument(filename);
 
   AddinInfo *ret = new AddinInfo();
 

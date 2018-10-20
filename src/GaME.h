@@ -10,6 +10,7 @@
 #include <v8.h>
 #include <libplatform/libplatform.h>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMText.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>

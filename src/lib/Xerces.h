@@ -7,4 +7,8 @@ Author: Lars Vidar Magnusson
 
 #define XERCESTRANSCODE(STRING) xercesc::XMLString::transcode(STRING)
 
-xercesc::DOMDocument *XercesParseDocument(const std::string &filename);
+class Xerces {
+public:
+    static xercesc::DOMDocument *ParseDocument(const std::string &filename);
+    static const std::string &GetElementText(xercesc::DOMElement *element);
+};

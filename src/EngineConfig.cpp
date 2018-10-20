@@ -18,7 +18,7 @@ EngineConfig::~EngineConfig() {
 EngineConfig *EngineConfig::Load(const string &filename) {
 
     EngineConfig *engineConfig = new EngineConfig();
-    engineConfig->document = XercesParseDocument(filename);
+    engineConfig->document = Xerces::ParseDocument(filename);
 
     engineConfig->platformConfig = PlatformConfig::Load(engineConfig->document);
 

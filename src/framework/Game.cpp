@@ -9,24 +9,23 @@ Game *Game::Load(const string &filename) {
 
   //printf("Loading game from %s\n", filename);
 
-  xercesc::DOMDocument *document = XercesParseDocument(filename);
+  xercesc::DOMDocument *document = Xerces::ParseDocument(filename);
 
   Game *ret = new Game(); 
 
-  /*xercesc::DOMNodeList *infoNodes = document->getElementsByTagName(XERCESTRANSCODE("Info"));
-  if (infoNodes->getLength())
-      return nullptr;
+  xercesc::DOMNodeList *infoNodes = document->getDocumentElement()->getElementsByTagName(XERCESTRANSCODE("Info"));
   xercesc::DOMElement *infoElement = (xercesc::DOMElement *)infoNodes->item(0);
 
-  xercesc::DOMNode *nameNode = infoElement->getElementsByTagName(XERCESTRANSCODE("Name"))->item(0);
-  ret->info.Name.assign(XERCESTRANSCODE(nameNode->getNodeValue()));
+  xercesc::DOMElement *nameElement = (xercesc::DOMElement *)infoElement->getElementsByTagName(XERCESTRANSCODE("Name"))->item(0);
+  unique_ptr<const string> namePtr(Xerces::GetElementText(nameElement));
+  ret->info.Name.assign(*namePtr);
 
   xercesc::DOMNode *majorVersionNode = infoElement->getElementsByTagName(XERCESTRANSCODE("MajorVersion"))->item(0);
   ret->info.MajorVersion = atoi(XERCESTRANSCODE(majorVersionNode->getNodeValue()));
   xercesc::DOMNode *minorVersionNode = infoElement->getElementsByTagName(XERCESTRANSCODE("MinorVersion"))->item(0);
   ret->info.MinorVersion = atoi(XERCESTRANSCODE(minorVersionNode->getNodeValue()));
   xercesc::DOMNode *releaseNode = infoElement->getElementsByTagName(XERCESTRANSCODE("Release"))->item(0);
-  ret->info.Release = atoi(XERCESTRANSCODE(releaseNode->getNodeValue()));*/
+  ret->info.Release = atoi(XERCESTRANSCODE(releaseNode->getNodeValue()));
 
   xercesc::DOMNodeList *componentNodes = document->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
   for (int i=0; i<componentNodes->getLength(); i++) {
