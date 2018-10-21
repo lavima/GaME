@@ -7,5 +7,5 @@ Author: Lars Vidar Magnusson
 
 class Vulkan {
 public:
-  static const string &GetErrorString(VkResult);
+  static const string GetErrorString(VkResult);
 };

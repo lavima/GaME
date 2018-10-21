@@ -41,7 +41,7 @@ int main(int argc, const char *argv[]) {
     
     EngineConfig *config = EngineConfig::Load(options.count("config") ? options["config"] : "engine.config");
 
-    unique_ptr<Platform> platform(Platform::Create(config->GetPlatformConfig()));
+    unique_ptr<Platform> platform(Platform::Load(config->GetPlatformConfig()));
     
     unique_ptr<Engine> engine(new Engine(*platform.get(), *config));
     engine.get()->Initialize();

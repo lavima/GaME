@@ -41,7 +41,7 @@ private:
 
 public:
 
-    static Platform * Create(PlatformConfig &config);
+    static Platform * Load(PlatformConfig &config);
 
     bool Initialize(PlatformConfig &config);
 
@@ -73,7 +73,7 @@ private:
     private:
         static __Register singleton;
     public:
-        __Register() { Platform::RegisterImplementation(TYPENAME_WIN32VULKAN, &(Win32Vulkan::Create)); }
+        __Register() { Platform::RegisterImplementation(TYPENAME_WIN32VULKAN, &(Win32Vulkan::Load)); }
     };
 
     

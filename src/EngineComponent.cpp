@@ -3,32 +3,7 @@ File: EngineComponent.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <string.h>
-
-#include <vector>
-#include <unordered_map>
-
-#include <v8.h>
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMText.hpp>
-
-#include "util/StringUtil.h"
-#include "lib/CStringHash.h"
-#include "lib/Xerces.h"
-#include "scripting/ScriptEnvironment.h"
-#include "scripting/Script.h"
-#include "framework/GameTime.h"
-#include "framework/Game.h"
-#include "platform/PlatformConfig.h"
-#include "platform/Platform.h"
-#include "AddinInfo.h"
-#include "AddinContainer.h"
-#include "Addin.h"
-#include "EngineConfig.h"
-#include "EngineComponent.h"
-#include "Engine.h"
-
+#include "GaME.h"
 
 CreateEngineComponentMap EngineComponent::createEngineComponentMap;
 

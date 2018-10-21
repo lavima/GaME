@@ -17,7 +17,7 @@ typedef EngineComponent *(*CreateEngineComponentFun)(Engine &, const string &, c
 typedef std::unordered_map<string, void *> SymbolMap;
 typedef std::pair<string, void *> SymbolMapPair;
 
-struct AddinContainer {
+struct Addin {
 
 private:
 
@@ -27,11 +27,13 @@ private:
 
     SymbolMap symbolMap;
 
-    AddinContainer() {}
+    Addin() {}
 
 public:
 
-    static AddinContainer *Create(const string &filename);
+    ~Addin();
+
+    static Addin *Load(const string &filename);
 
     bool HasSymbol(const string &name);
     void AddSymbol(const string &name, void *address);

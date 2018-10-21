@@ -20,7 +20,7 @@ void Engine::shutdown() {
 
     platform->Shutdown();
 
-    std::vector<AddinContainer *>::iterator iter;
+    std::vector<Addin *>::iterator iter;
     for (iter = addins.begin(); iter != addins.end(); iter++) {
 
         platform->UnloadLibrary((*iter)->GetHandle());
@@ -37,7 +37,7 @@ void Engine::shutdown() {
 bool Engine::IsRunning() { return isRunning; }
 ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
 Platform &Engine::GetPlatform() { return *platform; }
-Game *Engine::GetGame() { return game; }
+Game &Engine::GetGame() { return *game; }
 
 void Engine::Initialize() {
 
@@ -48,7 +48,7 @@ void Engine::Initialize() {
     info.ExecutablePath = CommandLine::GetExecutablePath(GetCommandLineA());   
    
 
-    scriptEnvironment = ScriptEnvironment::Create(*this);
+    scriptEnvironment = ScriptEnvironment::Load(*this);
 
     if (!platform->Initialize(config->GetPlatformConfig()))
         printf("WARNING: Failed to initialize the platform.\n");
@@ -84,7 +84,7 @@ void Engine::LoadGame(const string &filename) {
 
     game = Game::Load(filename);
 
-    game->Initialize();
+    game->Initialize(*this);
 
     isGameRunning = isRunning;
     while (isRunning && isGameRunning) {
@@ -118,7 +118,7 @@ void Engine::CloseGame() {
 
 bool Engine::LoadAddin(const string &filename) {
 
-    AddinContainer *addin = AddinContainer::Create(filename);
+    Addin *addin = Addin::Load(filename);
     AddinInfo info = addin->GetInfo();
 
     string libraryFilename = FilePath::GetFilename(filename);
@@ -171,16 +171,16 @@ void Engine::AddComponent(const string &typeName, const string &name) {
     if (components.find(name) != components.end())
         printf("The component with the specified name (%s) already exists\n", name.c_str());
 
-    components[name] = EngineComponent::Create(*this, typeName, name);
+    components[name] = EngineComponent::Create(*this, name, name);
 
 }
 
 void Engine::AddComponent(EngineComponent *component) {
 
-    if (components.find(component->GetName()) != components.end())
-        printf("The component with the specified name (%s) already exists\n", component->GetName());
+    if (components.find(component->GetTypeName()) != components.end())
+        printf("The component with the specified name (%s) already exists\n", component->GetTypeName());
 
-    components[component->GetName()] = component;
+    components[component->GetTypeName()] = component;
 
 }
 

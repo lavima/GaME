@@ -5,47 +5,84 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
+using namespace xercesc;
+
 AddinInfo *AddinInfo::Load(const string &filename) {
 
   xercesc::DOMDocument *document = Xerces::ParseDocument(filename);
 
-  AddinInfo *ret = new AddinInfo();
+  AddinInfo *addin = new AddinInfo();
+  addin->filename = &filename;
 
-  ret->name = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("name")))); 
-  ret->libraryFilename = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("library"))));
+  DOMElement *rootElement = (DOMElement *)document->getDocumentElement();
+
+  DOMElement *nameElement = (DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Name"))->item(0);
+  addin->name = Xerces::GetElementText(nameElement);
+  DOMElement *descriptionElement = (DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Description"))->item(0);
+  addin->description = Xerces::GetElementText(descriptionElement);
+
+  addin->version = Version::Load((DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Version"))->item(0));
+
+  DOMElement *libraryElement = (DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("LibraryFilename"))->item(0);
+  addin->libraryFilename = Xerces::GetElementText(libraryElement);
 
   xercesc::DOMNodeList *engineComponentElements = document->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
 
   if (engineComponentElements->getLength() > 0)
-    ret->type = ENGINE_COMPONENT_ADDIN;
+      addin->addinType = ENGINE_COMPONENT_ADDIN;
 
   for (int i=0; i<engineComponentElements->getLength(); i++) {
-    EngineComponentInfo *componentInfo = EngineComponentInfo::Load((xercesc::DOMElement *)engineComponentElements->item(i));
-    ret->engineComponents.insert(EngineComponentInfoPair(componentInfo->GetName(), componentInfo));
+
+    EngineComponentInfo *componentInfo = new EngineComponentInfo();
+    
+    DOMElement *typeNameElement = (DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Name"))->item(0);
+    componentInfo->typeName = Xerces::GetElementText(typeNameElement);
+    DOMElement *componentDescriptionElement = (DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Description"))->item(0);
+    componentInfo->description = Xerces::GetElementText(componentDescriptionElement);
+    componentInfo->version = Version::Load((DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Version"))->item(0));
+
+    addin->engineComponents.insert(EngineComponentInfoPair(componentInfo->GetTypeName(), componentInfo));
+
   }     
 
   document->release();
 
-  return ret;
+  return addin;
 
 }
 
-AddinType AddinInfo::GetType() { return this->type; }
+AddinType AddinInfo::GetType() { return this->addinType; }
+
 const string &AddinInfo::GetName() { return *(this->name); }
 const string &AddinInfo::GetDescription() { return *(this->description); }
-const string &AddinInfo::GetVersion() { return *(this->version); }
+
+const Version &AddinInfo::GetVersion() { return *(this->version); }
+
+const string &AddinInfo::GetFilename() { return *(this->filename); }
 const string &AddinInfo::GetLibraryFilename() { return *(this->libraryFilename); }
+
 const EngineComponentInfoMap & AddinInfo::GetEngineComponents() { return this->engineComponents; }
 
+AddinInfo::~AddinInfo() {
+    
+    delete name;
+    delete description;
+    delete version;
+    delete libraryFilename;
 
-EngineComponentInfo *EngineComponentInfo::Load(xercesc::DOMElement *element) {
+    for (EngineComponentInfoMapIter iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
+        delete (*iter).second;
+    
+}
 
-  EngineComponentInfo *ret = new EngineComponentInfo();
-  ret->name = new string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("name")))); 
-  return ret;
+EngineComponentInfo::~EngineComponentInfo() {
+    
+    delete typeName;
+    delete description;
+    delete version;
 
 }
 
-const string &EngineComponentInfo::GetName() { return *(this->name); }
-const string & EngineComponentInfo::GetDescription() { return *(this->description); }
-const string & EngineComponentInfo::GetVersion() { return *(this->version); }
+const string &EngineComponentInfo::GetTypeName() { return *typeName; }
+const string &EngineComponentInfo::GetDescription() { return *description; }
+const Version &EngineComponentInfo::GetVersion() { return *version; }

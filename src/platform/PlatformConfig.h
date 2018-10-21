@@ -11,17 +11,17 @@ class PlatformConfig {
 
 protected:
 
-    string typeName;
+    string name;
 
     PlatformConfig();
-    PlatformConfig(const string &typeName);
+    PlatformConfig(const string &name);
 
 public:
 
     static PlatformConfig * Load(xercesc::DOMDocument *document);
 
     const string &GetTypeName();
-    void SetTypeName(const string &typeName);
+    void SetTypeName(const string &name);
 
 };
 
@@ -38,7 +38,7 @@ protected:
     bool fullscreen;
 
     GraphicalPlatformConfig();
-    GraphicalPlatformConfig(const string &typeName, int width, int height, bool fullscreen);
+    GraphicalPlatformConfig(const string &name, int width, int height, bool fullscreen);
 
 public:
 

@@ -19,7 +19,7 @@ ScriptEnvironment::~ScriptEnvironment() {
 
 }
 
-ScriptEnvironment *ScriptEnvironment::Create(Engine &engine) {
+ScriptEnvironment *ScriptEnvironment::Load(Engine &engine) {
 
   ScriptEnvironment *env = new ScriptEnvironment(engine);
 

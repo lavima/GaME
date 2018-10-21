@@ -8,7 +8,7 @@ Author: Lars Vidar Magnusson
 #include "../GaME.h"
 #include "Vulkan.h"
 
-const string &Vulkan::GetErrorString(VkResult result) {
+const string Vulkan::GetErrorString(VkResult result) {
   if (result == VK_SUCCESS)
     return string("Success");
   else if (result == VK_NOT_READY)

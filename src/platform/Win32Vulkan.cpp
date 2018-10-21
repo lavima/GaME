@@ -19,7 +19,7 @@ Win32Vulkan::Win32Vulkan(PlatformConfig &config) {
 
 LRESULT	CALLBACK WindowCallback(HWND, UINT, WPARAM, LPARAM);
 
-Platform * Win32Vulkan::Create(PlatformConfig &config) {
+Platform * Win32Vulkan::Load(PlatformConfig &config) {
 
     return new Win32Vulkan(config);
 

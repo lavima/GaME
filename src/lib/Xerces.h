@@ -10,5 +10,5 @@ Author: Lars Vidar Magnusson
 class Xerces {
 public:
     static xercesc::DOMDocument *ParseDocument(const std::string &filename);
-    static const std::string &GetElementText(xercesc::DOMElement *element);
+    static const string *GetElementText(xercesc::DOMElement *element);
 };

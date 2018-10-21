@@ -7,6 +7,8 @@
 #include <utility>
 #include <unordered_map>
 
+using namespace std;
+
 #include <v8.h>
 #include <libplatform/libplatform.h>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -22,6 +24,7 @@
 #include <vulkan/vulkan.h>
 #endif
 
+#include "util/Version.h"
 #include "util/StringUtil.h"
 #include "util/FilePath.h"
 #include "util/CommandLine.h"
@@ -39,6 +42,7 @@
 #endif
 #include "framework/GameTime.h"
 #include "framework/Entity.h"
+#include "framework/GameInfo.h"
 #include "framework/Game.h"
 #include "AddinInfo.h"
 #include "Addin.h"
@@ -46,5 +50,3 @@
 #include "EngineComponent.h"
 #include "Engine.h"
 #include "simplerenderer\SimpleRenderer.h"
-
-using namespace std;

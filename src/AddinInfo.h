@@ -6,7 +6,7 @@ Author: Lars Vidar Magnusson
 #pragma once
 
 enum AddinType {
-  ENGINE_COMPONENT_ADDIN = 1
+    ENGINE_COMPONENT_ADDIN = 1
 };
 
 class EngineComponentInfo;
@@ -21,44 +21,56 @@ class AddinInfo {
 
 private:
 
-  AddinType type;
-  const string *name;
-  const string *description;
-  const string *version;
-  const string *libraryFilename;
+    AddinType addinType;
 
-  EngineComponentInfoMap engineComponents;
+    const string *name;
+    const string *description;
+    
+    const Version *version;
+    
+    const string *filename;
+    const string *libraryFilename;
 
-  AddinInfo() {}
+    EngineComponentInfoMap engineComponents;
 
+    AddinInfo() {}
+    
 public:
 
-  static AddinInfo *Load(const string &filename);
+    ~AddinInfo();
 
-  AddinType GetType();
-  const string &GetName();
-  const string &GetDescription();
-  const string &GetVersion();
-  const string &GetLibraryFilename();
-  const EngineComponentInfoMap &GetEngineComponents();
+    static AddinInfo *Load(const string &filename);
+
+    AddinType GetType();
+    
+    const string &GetName();
+    const string &GetDescription();
+    
+    const Version &GetVersion();
+    
+    const string &GetFilename();
+    const string &GetLibraryFilename();
+    
+    const EngineComponentInfoMap &GetEngineComponents();
+  
 };
 
 class EngineComponentInfo {
 
+    friend class AddinInfo;
+
 private:
 
-  const string *name;
-  const string *description;
-  const string *version;
-
-  EngineComponentInfo() {}
+    const string *typeName;
+    const string *description;
+    const Version *version;
 
 public:
 
-  static EngineComponentInfo *Load(xercesc::DOMElement *element); 
+    ~EngineComponentInfo();
 
-  const string &GetName();
-  const string &GetDescription();
-  const string &GetVersion();
+    const string &GetTypeName();
+    const string &GetDescription();
+    const Version &GetVersion();
 
 };

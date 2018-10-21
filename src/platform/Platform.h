@@ -24,7 +24,7 @@ class Platform {
 
 public:
     
-    static Platform *Create(PlatformConfig &config);
+    static Platform *Load(PlatformConfig &config);
 
     virtual bool Initialize(PlatformConfig &config) = 0;
 
@@ -52,7 +52,7 @@ public:
 
 protected:
 
-    static void RegisterImplementation(const string &typeName, CreatePlatformFun createFun);
+    static void RegisterImplementation(const string &name, CreatePlatformFun createFun);
 
 private:
 

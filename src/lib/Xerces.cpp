@@ -40,12 +40,17 @@ xercesc::DOMDocument *Xerces::ParseDocument(const string &filename) {
 
 }
 
-const string &Xerces::GetElementText(DOMElement *element) {
+const string *Xerces::GetElementText(DOMElement *element) {
 
     DOMNode *textNode = element->getFirstChild();
     if (textNode->getNodeType() != DOMNode::TEXT_NODE)
         return nullptr;
 
     DOMText *text = (DOMText *)textNode;
-    return string(XERCESTRANSCODE(text->getTextContent()));
+    char *cText = XERCESTRANSCODE(text->getTextContent());
+    string *ret = new string(cText);
+    XMLString::release(&cText);
+    
+    return ret;
+
 }
