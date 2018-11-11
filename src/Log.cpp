@@ -10,6 +10,8 @@ Author: Lars Vidar Magnusson
 
 void Log::AddEvent(EventType type, const string &format, ...) {
 
+  // TODO change to STL-style args
+
   if (type > level)
     return;
 

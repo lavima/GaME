@@ -9,19 +9,13 @@
 
 #include <v8.h>
 #include <libplatform/libplatform.h>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLString.hpp>
 #ifdef OS_WIN
 #include <windows.h>
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 #endif
 
+#include "pugixml.hpp"
 #include "util/StringUtil.h"
 #include "util/FilePath.h"
 #include "util/CommandLine.h"

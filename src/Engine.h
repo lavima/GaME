@@ -46,6 +46,8 @@ private:
     ScriptEnvironment *scriptEnvironment;
     Platform *platform;
 
+    Log *log;
+
     Game *game;
 
     bool isRunning;
@@ -60,6 +62,7 @@ public:
     bool IsRunning();
 
     ScriptEnvironment &GetScriptEnvironment();
+
     Platform &GetPlatform();
     Game *GetGame();
 
@@ -77,5 +80,7 @@ public:
 
     const string &GetCommandLine();
     const EngineInfo &GetInfo();
-
+  
+    Log &GetLog(); 
+  
 };

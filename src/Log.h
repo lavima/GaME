@@ -6,10 +6,9 @@ Author: Lars Vidar Magnusson
 #pragma once
 
 enum EventType {
-    EVENT_COMMAND = 1,
-    EVENT_ERROR = 2,
-    EVENT_WARNING = 4,
-    EVENT_INFO = 8
+    EVENT_ERROR,
+    EVENT_WARNING,
+    EVENT_INFO
 };
 
 #define ERROR_PREFIX "ERROR: "
@@ -25,16 +24,14 @@ class Log {
 
 private:
 
-    LogListenerVector commandListeners;
-    LogListenerVector errorListeners;
-    LogListenerVector warningListeners;
-    LogListenerVector infoListeners;
+    LogListenerVector listeners;
 
     int level;
 
 public:
 
-    Log() {}
+    Log();
+    Log(const std:string &filename);
 
     void AddEvent(EventType type, const std::string &format, ...);
 

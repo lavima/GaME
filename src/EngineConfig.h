@@ -18,6 +18,8 @@ private:
 
     PlatformConfig *platformConfig;
     std::vector<AddinConfig *> addins;
+    const string *logFile;
+
 
     EngineConfig() {}
     ~EngineConfig();
@@ -29,6 +31,8 @@ public:
     PlatformConfig &GetPlatformConfig();
     int GetNumAddins();
     AddinConfig &GetAddin(int index);
+
+    const string &GetLogFile();
 
 };
 

@@ -10,9 +10,12 @@ Engine::Engine(Platform &platform, EngineConfig &config) {
 
     this->platform = &platform;
     this->config = &config;
+
     isRunning = false;
     game = NULL;
     scriptEnvironment = NULL;
+
+    log = new Log(config.GetLogFile());
 
 }
 
@@ -194,3 +197,5 @@ EngineComponent *Engine::GetComponent(const string &name) {
 
 const string &Engine::GetCommandLine() { return platform->GetCommandLine(); }
 const EngineInfo &Engine::GetInfo() { return (const EngineInfo &)info; }
+
+Log &Engine::GetLog() { return *log; }

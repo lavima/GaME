@@ -7,41 +7,38 @@ Author: Lars Vidar Magnusson
 
 AddinInfo *AddinInfo::Load(const string &filename) {
 
-  xercesc::DOMDocument *document = Xerces::ParseDocument(filename);
+  pugi::xml_document *doc = PugiXML::ParseDocument(filename);
+  pugi::xml_node docElement = doc->document_element;
 
   AddinInfo *ret = new AddinInfo();
 
-  ret->name = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("name")))); 
-  ret->libraryFilename = new string(XERCESTRANSCODE(document->getDocumentElement()->getAttribute(XERCESTRANSCODE("library"))));
+  ret->libraryFilename = new string(docElement.attribute("library").value());
 
-  xercesc::DOMNodeList *engineComponentElements = document->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
+  pugi::xml_node componentNode = doc-document_element.child("EngineComponent");
 
-  if (engineComponentElements->getLength() > 0)
+  if (componentNode)
     ret->type = ENGINE_COMPONENT_ADDIN;
 
-  for (int i=0; i<engineComponentElements->getLength(); i++) {
-    EngineComponentInfo *componentInfo = EngineComponentInfo::Load((xercesc::DOMElement *)engineComponentElements->item(i));
+  for (; componentNode; componentNode = componentNode.next_sibling("EngineComponent")) {
+    EngineComponentInfo *componentInfo = EngineComponentInfo::Load(componentNode);
     ret->engineComponents.insert(EngineComponentInfoPair(componentInfo->GetName(), componentInfo));
   }     
 
-  document->release();
+  delete doc;
 
   return ret;
 
 }
 
 AddinType AddinInfo::GetType() { return this->type; }
-const string &AddinInfo::GetName() { return *(this->name); }
-const string &AddinInfo::GetDescription() { return *(this->description); }
-const string &AddinInfo::GetVersion() { return *(this->version); }
 const string &AddinInfo::GetLibraryFilename() { return *(this->libraryFilename); }
 const EngineComponentInfoMap & AddinInfo::GetEngineComponents() { return this->engineComponents; }
 
 
-EngineComponentInfo *EngineComponentInfo::Load(xercesc::DOMElement *element) {
+EngineComponentInfo *EngineComponentInfo::Load(pugi::xml_node &element) {
 
   EngineComponentInfo *ret = new EngineComponentInfo();
-  ret->name = new string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("name")))); 
+  ret->name = new string(element.attribute("name").value()); 
   return ret;
 
 }
