@@ -8,34 +8,38 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 
-void Log::AddEvent(EventType type, const string &format, ...) {
+void Log::AddEvent(EventType addinType, const string &format, ...) {
 
+<<<<<<< HEAD
   // TODO change to STL-style args
 
   if (type > level)
+=======
+  if (addinType > level)
+>>>>>>> 2792e9c4014905c812354151c7218ff58293030d
     return;
 
   va_list args;
 
   char *formatBuffer = NULL;
-  if (type == EVENT_ERROR) {
+  if (addinType == EVENT_ERROR) {
     formatBuffer = (char *)malloc(strlen(ERROR_PREFIX) + strlen(format.c_str()));
     strcpy(formatBuffer, ERROR_PREFIX);
     strcat(formatBuffer, format.c_str());
   }
-  else if (type == EVENT_WARNING) {
+  else if (addinType == EVENT_WARNING) {
     formatBuffer = (char *)malloc(strlen(WARNING_PREFIX) + strlen(format.c_str()));
     strcpy(formatBuffer, WARNING_PREFIX);
     strcat(formatBuffer, format.c_str());
   }
-  else if (type == EVENT_INFO) {
+  else if (addinType == EVENT_INFO) {
     formatBuffer = (char *)malloc(strlen(INFO_PREFIX) + strlen(format.c_str()));
     strcpy(formatBuffer, INFO_PREFIX);
     strcat(formatBuffer, format.c_str());
   }
 
   const char *finalFormat = NULL;
-  if (type == EVENT_COMMAND)
+  if (addinType == EVENT_COMMAND)
     finalFormat = format.c_str();
   else
     finalFormat = formatBuffer;
@@ -49,7 +53,7 @@ void Log::AddEvent(EventType type, const string &format, ...) {
   vprintf(finalFormat, args);
 
   vsnprintf(text, textSize, finalFormat, args);
-  if (type == EVENT_ERROR)
+  if (addinType == EVENT_ERROR)
     for (LogListenerVectorIter iter=errorListeners.begin(); iter!=errorListeners.end(); ++iter)
       (*iter)->NewEvent(text);
 

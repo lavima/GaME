@@ -145,6 +145,12 @@
     <ClInclude Include="..\src\util\FilePath.h">
       <Filter>Header Files\util</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\util\Version.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\GameInfo.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AddinInfo.cpp">
@@ -219,16 +225,11 @@
     <ClCompile Include="..\src\util\FilePath.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <TestContent Include="..\tests\TestGame.xml">
-      <Filter>Resource Files\tests</Filter>
-    </TestContent>
-    <TestContent Include="..\tests\TestEngine.xml">
-      <Filter>Resource Files\tests</Filter>
-    </TestContent>
-    <Content Include="..\src\simplerenderer\SimpleRenderer.xml">
-      <Filter>Resource Files\simplerenderer</Filter>
-    </Content>
+    <ClCompile Include="..\src\util\Version.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\GameInfo.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

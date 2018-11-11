@@ -171,6 +171,7 @@
     <ClInclude Include="..\src\framework\Game.h" />
     <ClInclude Include="..\src\EngineComponent.h" />
     <ClInclude Include="..\src\framework\Entity.h" />
+    <ClInclude Include="..\src\framework\GameInfo.h" />
     <ClInclude Include="..\src\framework\GameTime.h" />
     <ClInclude Include="..\src\GaME.h" />
     <ClInclude Include="..\src\lib\CommonTypes.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="..\src\util\CommandLine.h" />
     <ClInclude Include="..\src\util\FilePath.h" />
     <ClInclude Include="..\src\util\StringUtil.h" />
+    <ClInclude Include="..\src\util\Version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Addin.cpp" />
@@ -200,6 +202,7 @@
     <ClCompile Include="..\src\framework\Game.cpp" />
     <ClCompile Include="..\src\EngineComponent.cpp" />
     <ClCompile Include="..\src\framework\Entity.cpp" />
+    <ClCompile Include="..\src\framework\GameInfo.cpp" />
     <ClCompile Include="..\src\lib\Vulkan.cpp" />
     <ClCompile Include="..\src\lib\Xerces.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
@@ -217,6 +220,7 @@
     <ClCompile Include="..\src\util\CommandLine.cpp" />
     <ClCompile Include="..\src\util\FilePath.cpp" />
     <ClCompile Include="..\src\util\StringUtil.cpp" />
+    <ClCompile Include="..\src\util\Version.cpp" />
   </ItemGroup>
   <ItemGroup>
     <GaMEContent Include="..\src\simplerenderer\SimpleRenderer.xml" />

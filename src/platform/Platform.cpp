@@ -16,7 +16,7 @@ Author: Lars Vidar Magnusson
 #include "Platform.h"
 
 
-Platform *Platform::Create(PlatformConfig &config) {
+Platform *Platform::Load(PlatformConfig &config) {
 
     if (!implementations.count(config.GetTypeName()))
         return nullptr;
@@ -28,9 +28,9 @@ Platform *Platform::Create(PlatformConfig &config) {
 
 }
 
-void Platform::RegisterImplementation(const string &typeName, CreatePlatformFun createFun) {
+void Platform::RegisterImplementation(const string &name, CreatePlatformFun createFun) {
 
-    implementations[typeName] = createFun;
+    implementations[name] = createFun;
 
 }
 

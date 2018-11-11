@@ -7,6 +7,8 @@
 #include <utility>
 #include <unordered_map>
 
+using namespace std;
+
 #include <v8.h>
 #include <libplatform/libplatform.h>
 #ifdef OS_WIN
@@ -15,7 +17,11 @@
 #include <vulkan/vulkan.h>
 #endif
 
+<<<<<<< HEAD
 #include "pugixml.hpp"
+=======
+#include "util/Version.h"
+>>>>>>> 2792e9c4014905c812354151c7218ff58293030d
 #include "util/StringUtil.h"
 #include "util/FilePath.h"
 #include "util/CommandLine.h"
@@ -33,6 +39,7 @@
 #endif
 #include "framework/GameTime.h"
 #include "framework/Entity.h"
+#include "framework/GameInfo.h"
 #include "framework/Game.h"
 #include "AddinInfo.h"
 #include "Addin.h"
@@ -40,5 +47,8 @@
 #include "EngineComponent.h"
 #include "Engine.h"
 #include "simplerenderer\SimpleRenderer.h"
+<<<<<<< HEAD
 
 using namespace std;
+=======
+>>>>>>> 2792e9c4014905c812354151c7218ff58293030d

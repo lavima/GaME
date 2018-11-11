@@ -33,7 +33,7 @@ public:
     Log();
     Log(const std:string &filename);
 
-    void AddEvent(EventType type, const std::string &format, ...);
+    void AddEvent(EventType addinType, const std::string &format, ...);
 
     void AddListener(int typeFlag, LogListener *listener);
 

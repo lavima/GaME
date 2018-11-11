@@ -1,13 +1,13 @@
 /*
-File: AddinContainer.cpp
+File: Addin.cpp
 Author: Lars Vidar Magnusson
 */
 
 #include "GaME.h"
 
-AddinContainer *AddinContainer::Create(const string &filename) {
+Addin *Addin::Load(const string &filename) {
 
-  AddinContainer *ret = new AddinContainer();
+  Addin *ret = new Addin();
 
   ret->filename = &filename;
   ret->info = AddinInfo::Load(filename);
@@ -16,15 +16,15 @@ AddinContainer *AddinContainer::Create(const string &filename) {
 
 }
 
-bool AddinContainer::HasSymbol(const string &name) { 
+bool Addin::HasSymbol(const string &name) { 
   return this->symbolMap.find(name) != this->symbolMap.end(); 
 }
 
-void AddinContainer::AddSymbol(const string &name, void *address) { 
+void Addin::AddSymbol(const string &name, void *address) { 
   this->symbolMap.insert(SymbolMapPair(name, address)); 
 }
 
-void *AddinContainer::GetSymbol(const string &name) {
+void *Addin::GetSymbol(const string &name) {
 
   if (this->HasSymbol(name))
     return this->symbolMap[name];
@@ -33,7 +33,12 @@ void *AddinContainer::GetSymbol(const string &name) {
 
 }
 
-const string &AddinContainer::GetFilename() { return *(this->filename); }
-AddinInfo &AddinContainer::GetInfo() { return *(this->info); }
-void *AddinContainer::GetHandle() { return this->handle; }
-void AddinContainer::SetHandle(void *handle) { this->handle = handle; }
+const string &Addin::GetFilename() { return *(this->filename); }
+AddinInfo &Addin::GetInfo() { return *(this->info); }
+void *Addin::GetHandle() { return this->handle; }
+void Addin::SetHandle(void *handle) { this->handle = handle; }
+
+Addin::~Addin() {
+    delete filename;
+    delete info;
+}

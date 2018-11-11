@@ -20,9 +20,9 @@ private:
 
 public:
 
-  static Script *Create(ScriptEnvironment &context, const std::string &filename);
+  static Script *Load(ScriptEnvironment &context, const std::string &filename);
   
-  const std::string &GetName() { return *name; }
+  const std::string &GetTypeName() { return *name; }
 
   bool Run();
 

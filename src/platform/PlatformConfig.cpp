@@ -3,41 +3,25 @@ File: PlatformConfig.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include <string>
-#include <unordered_map>
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/dom/DOMText.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLString.hpp>
-#define VK_USE_PLATFORM_WIN32_KHR
-#include <vulkan/vulkan.h>
-
-#include "../lib/Xerces.h"
-#include "PlatformConfig.h"
-#include "Platform.h"
-#ifdef OS_WIN
-#include "Win32Vulkan.h"
-#endif // OS_WIN
+#include "../GaME.h"
 
 
 PlatformConfig::PlatformConfig() {
 
 #ifdef OS_WIN
-    this->typeName = TYPENAME_WIN32VULKAN;
+    this->name = TYPENAME_WIN32VULKAN;
 #endif // OS_WIN
 
 }
 
-PlatformConfig::PlatformConfig(const string &typeName) { 
+PlatformConfig::PlatformConfig(const string &name) { 
     
-    this->typeName = typeName; 
+    this->name = name; 
 
 }
 
-const string &PlatformConfig::GetTypeName() { return typeName; }
-void PlatformConfig::SetTypeName(const string &typeName) { this->typeName = typeName; }
+const string &PlatformConfig::GetTypeName() { return name; }
+void PlatformConfig::SetTypeName(const string &name) { this->name = name; }
 
 PlatformConfig *PlatformConfig::Load(xercesc::DOMDocument *document) {
 
@@ -58,8 +42,8 @@ GraphicalPlatformConfig::GraphicalPlatformConfig() {
 
 }
 
-GraphicalPlatformConfig::GraphicalPlatformConfig(const string &typeName, int width, int height, bool fullscreen) 
-    : PlatformConfig(typeName) {
+GraphicalPlatformConfig::GraphicalPlatformConfig(const string &name, int width, int height, bool fullscreen) 
+    : PlatformConfig(name) {
 
     this->width = width;
     this->height = height;
@@ -72,7 +56,7 @@ GraphicalPlatformConfig *GraphicalPlatformConfig::Load(xercesc::DOMElement *elem
 
     GraphicalPlatformConfig *newConfig = new GraphicalPlatformConfig();
 
-    newConfig->typeName = string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("type"))));
+    newConfig->name = string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("type"))));
 
     xercesc::DOMNodeList *widthElements = element->getElementsByTagName(XERCESTRANSCODE("Width"));
     if (widthElements->getLength() != 0)

@@ -27,7 +27,7 @@ public:
 
   ~ScriptEnvironment();
 
-  static ScriptEnvironment *Create(Engine &);
+  static ScriptEnvironment *Load(Engine &);
 
   Script *LoadScript(const std::string &);
   v8::Handle<v8::Value> RunScript(Script &);

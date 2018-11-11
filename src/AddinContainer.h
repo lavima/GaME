@@ -1,5 +1,5 @@
 /*
-File: AddinContainer.h
+File: Addin.h
 Author: Lars Vidar Magnusson
 */
 

@@ -8,25 +8,18 @@ Author: Lars Vidar Magnusson
 /*
 * Type definitions used in the Engine class.
 */
-typedef std::vector<AddinContainer *> AddinVector;
+typedef std::vector<Addin *> AddinVector;
 
 class Engine;
 
 struct EngineInfo {
 
     const string Name = "GaME";
-    const int MajorVersion = 0;
-    const int MinorVersion = 0;
-    const int Release = 1;
-
-    const string &GetVersionString() { return versionString; }
+    
+    const Version *Version = Version::Create(0, 0, 1);
 
     string ExecutablePath;
     string ConfigFilename;
-
-private:
-
-    const string versionString = StringUtil::Format("%d-%d-%d", MajorVersion, MinorVersion, Release);   
 
 };
 
@@ -64,7 +57,7 @@ public:
     ScriptEnvironment &GetScriptEnvironment();
 
     Platform &GetPlatform();
-    Game *GetGame();
+    Game &GetGame();
 
     void Initialize();
     void Stop();

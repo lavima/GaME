@@ -5,7 +5,7 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
   
-Script *Script::Create(ScriptEnvironment &context, const string &filename) {
+Script *Script::Load(ScriptEnvironment &context, const string &filename) {
   
   ifstream file(filename, ios::in);
 
