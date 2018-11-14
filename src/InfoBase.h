@@ -17,7 +17,7 @@ private:
 
 protected:
 
-    template<typename T> static T *Load(T *info, pugi::xml_document *xmlDocument, const string &filename);
+    template<typename T> static T *Load(T *info, pugi::xml_node &xmlElement);
 
 public:
 

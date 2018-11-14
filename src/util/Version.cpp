@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
+using namespace pugi;
+
 Version::Version(int major, int minor, int release) {
     this->major = major;
     this->minor = minor;
@@ -15,11 +17,12 @@ Version *Version::Create(int major, int minor, int release) {
     return new Version(major, minor, release);
 }
 
-Version *Version::Load(xercesc::DOMElement *element) {
+Version *Version::Load(xml_node &element) {
     
-    if (string(XERCESTRANSCODE(element->getTagName())).compare("Version")!=0)
+    if (string(element.value()).compare("Version")!=0)
         return nullptr;
 
+    return Create(element.child("Major").value(), element.child("Minor").value(), element.child("Version").value());
 
 }
 

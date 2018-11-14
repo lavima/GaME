@@ -5,9 +5,11 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
+using namespace pugi;
+
 EngineConfig::~EngineConfig() {
 
-    document->release();
+    document->save_file(configFilename->c_str());
 
     delete platformConfig;
     for (int i = 0; i < addins.size(); i++)
@@ -18,13 +20,12 @@ EngineConfig::~EngineConfig() {
 EngineConfig *EngineConfig::Load(const string &filename) {
 
     EngineConfig *engineConfig = new EngineConfig();
-    engineConfig->document = Xerces::ParseDocument(filename);
+    engineConfig->document = PugiXML::ParseDocument(filename);
 
     engineConfig->platformConfig = PlatformConfig::Load(engineConfig->document);
 
-    xercesc::DOMNodeList *addinNodes = engineConfig->document->getElementsByTagName(XERCESTRANSCODE("Addin"));
-    for (int i = 0; i < addinNodes->getLength(); i++)
-        engineConfig->addins.push_back(AddinConfig::Load((xercesc::DOMElement *)addinNodes->item(i)));
+    for (xml_node addinNode = ngineConfig->document->child("Addin"); addinNode; addinNode = addinNode.next_sibling("Addin"))
+        engineConfig->addins.push_back(AddinConfig::Load(addinNode));
 
     return engineConfig;
 
@@ -34,11 +35,11 @@ PlatformConfig &EngineConfig::GetPlatformConfig() { return *platformConfig; }
 int EngineConfig::GetNumAddins() { return addins.size(); }
 AddinConfig &EngineConfig::GetAddin(int index) { return *(addins[index]); }
 
-AddinConfig *AddinConfig::Load(xercesc::DOMElement *element) {
+AddinConfig *AddinConfig::Load(xml_node &element) {
 
     AddinConfig *ret = new AddinConfig();
 
-    ret->source = new string(XERCESTRANSCODE(element->getAttribute(XERCESTRANSCODE("source"))));
+    ret->source = new string(element.attribute("source").value());
 
     return ret;
 

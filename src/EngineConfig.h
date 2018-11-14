@@ -14,12 +14,13 @@ class EngineConfig {
 
 private:
 
-    xercesc::DOMDocument *document;
+    const string *configFilename; 
+
+    pugi::xml_document *document;
 
     PlatformConfig *platformConfig;
     std::vector<AddinConfig *> addins;
     const string *logFile;
-
 
     EngineConfig() {}
     ~EngineConfig();
@@ -46,7 +47,7 @@ private:
 
 public:
 
-    static AddinConfig *Load(xercesc::DOMElement *element);
+    static AddinConfig *Load(pugi::xml_node &element);
 
     const string &GetSource();
 

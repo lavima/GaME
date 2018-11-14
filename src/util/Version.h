@@ -17,7 +17,7 @@ private:
 public:
 
     static Version *Create(int major, int minor, int release);
-    static Version *Load(xercesc::DOMElement *element);
+    static Version *Load(pugi::xml_node &element);
 
     const int GetMajor() const;
     const int GetMinor() const;
