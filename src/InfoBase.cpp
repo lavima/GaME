@@ -7,10 +7,10 @@ Author: Lars Vidar Magnusson
 
 using namespace pugi;
 
-template<typename T> static T *InfoBase::Load(T *info, xml_node &xmlElement) {
-    static_assert(std::is_base_of<InfoBase, T>::value, "T must derive from InfoBase");
+template<typename T> static T *_InfoBase::Load(T *info, xml_node &xmlElement) {
+    static_assert(std::is_base_of<_InfoBase, T>::value, "T must derive from _InfoBase");
 
-    InfoBase *base = (InfoBase *)info;
+    _InfoBase *base = (_InfoBase *)info;
 
     base->name = new string(docElement.child("Name").value()); 
     base->description = new string(docElement.child("Description").value()); 
@@ -20,6 +20,26 @@ template<typename T> static T *InfoBase::Load(T *info, xml_node &xmlElement) {
 
 }
 
-const string &InfoBase::GetName() { return *(this->name); }
-const string &InfoBase::GetDescription() { return *(this->description); }
-const string &InfoBase::GetVersion() { return *(this->version); }
+template<typename T> static T *_InfoBase::Create(T *info, const string *name, const string *description, const Version *version) {
+
+   _InfoBase *base = (_InfoBase *)info;
+
+   base->name = name;
+   base->description = description;
+   base->version = version;
+
+   return info;
+
+}
+
+_InfoBase::~_InfoBase() {
+
+    delete name;
+    delete description;
+    delete version;
+
+}
+
+const string &_InfoBase::GetName() { return *(this->name); }
+const string &_InfoBase::GetDescription() { return *(this->description); }
+const Version &_InfoBase::GetVersion() { return *(this->version); }

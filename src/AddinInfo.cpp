@@ -17,7 +17,6 @@ AddinInfo *AddinInfo::Load(const string &filename) {
   InfoBase::Load(addin, docElement);
 
   addin->filename = &filename;
-
   addin->libraryFilename = new string(docElement.attribute("library").value());
 
   xml_node componentNode = doc->document_element.child("EngineComponent");
@@ -44,9 +43,6 @@ const EngineComponentInfoMap & AddinInfo::GetEngineComponents() { return this->e
 
 AddinInfo::~AddinInfo() {
     
-    delete name;
-    delete description;
-    delete version;
     delete libraryFilename;
     for (EngineComponentInfoMapIter iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
         delete (*iter).second;
@@ -55,20 +51,11 @@ AddinInfo::~AddinInfo() {
 
 EngineComponentInfo *EngineComponentInfo::Load(pugi::xml_node &element) {
 
-  EngineComponentInfo *ret = new EngineComponentInfo();
-  ret->name = new string(element.attribute("name").value()); 
-  return ret;
+  EngineComponentInfo *componentInfo = new EngineComponentInfo();
+  InfoBase::Load(element);
+  return componentInfo;
     
 }
 
-EngineComponentInfo::~EngineComponentInfo() {
-    
-    delete typeName;
-    delete description;
-    delete version;
+EngineComponentInfo::~EngineComponentInfo() {}
 
-}
-
-const string &EngineComponentInfo::GetTypeName() { return *typeName; }
-const string &EngineComponentInfo::GetDescription() { return *description; }
-const Version &EngineComponentInfo::GetVersion() { return *version; }

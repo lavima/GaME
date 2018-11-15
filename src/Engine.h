@@ -12,7 +12,7 @@ typedef std::vector<Addin *> AddinVector;
 
 class Engine;
 
-struct EngineInfo {
+class EngineInfo {
 
     const string Name = "GaME";
     

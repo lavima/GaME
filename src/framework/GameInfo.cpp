@@ -5,41 +5,29 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
+using namespace pugi;
+
 GameInfo::~GameInfo() {
     
-    delete name;
-    delete description;
-    delete version;
-
-    for (EngineComponentNameIter iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
-        delete (*iter).second;
+    for (StringVectorIter iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
+        delete (*iter);
 
 }
 
 GameInfo *GameInfo::Load(const string &filename) {
     
-    xercesc::DOMDocument *document = Xerces::ParseDocument(filename);
+    xml_document *document = PugiXML::ParseDocument(filename);
 
-    GameInfo *ret = new GameInfo();
-    ret->filename = &filename;
+    GameInfo *info = new GameInfo();
+    info->filename = new string(filename);
 
-    xercesc::DOMElement *rootElement = (xercesc::DOMElement *)document->getDocumentElement()->getElementsByTagName(XERCESTRANSCODE("Info"))->item(0);
+    xml_node rootElement = document->document_element();
 
-    xercesc::DOMElement *nameElement = (xercesc::DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Name"))->item(0);
-    ret->name = Xerces::GetElementText(nameElement);
+    _InfoBase::Load(info, rootElement);
 
-    xercesc::DOMElement *descriptionElement = (xercesc::DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Description"))->item(0);
-    ret->description = Xerces::GetElementText(descriptionElement);
-
-    ret->version = Version::Load((xercesc::DOMElement *)rootElement->getElementsByTagName(XERCESTRANSCODE("Version"))->item(0));
-
-    xercesc::DOMNodeList *componentNodes = document->getDocumentElement()->getElementsByTagName(XERCESTRANSCODE("EngineComponent"));
-    for (int i = 0; i<componentNodes->getLength(); i++) {
-        xercesc::DOMElement *componentElement = (xercesc::DOMElement *)componentNodes->item(i);
-        ret->engineComponents.insert(
-            EngineComponentNamePair(
-                string(XERCESTRANSCODE(componentElement->getAttribute(XERCESTRANSCODE("type")))),
-                new string(XERCESTRANSCODE(componentElement->getAttribute(XERCESTRANSCODE("name"))))));
+    xml_node componentNode = document->child("EngineComponent");
+    for ( ; componentNode; componentNode = componentNode.next_sibling("EngineComponent")) {
+        ret->engineComponents.insert(string(componentElement->atttributes("type")));
     }
 
     return ret;
