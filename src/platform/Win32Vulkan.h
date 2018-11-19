@@ -7,9 +7,7 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-using namespace std;
-
-#define TYPENAME_WIN32VULKAN "Win32Vulkan"
+#define WIN32VULKAN_NAME "Win32Vulkan"
 
 class Win32Vulkan : public Platform {
 
@@ -41,7 +39,7 @@ private:
 
 public:
 
-    static Platform * Load(PlatformConfig &config);
+    static Platform * Create(PlatformConfig &config);
 
     bool Initialize(PlatformConfig &config);
 
@@ -73,7 +71,7 @@ private:
     private:
         static __Register singleton;
     public:
-        __Register() { Platform::RegisterImplementation(TYPENAME_WIN32VULKAN, &(Win32Vulkan::Load)); }
+        __Register() { Platform::RegisterImplementation(WIN32VULKAN_NAME, &(Win32Vulkan::Create)); }
     };
 
     

@@ -5,23 +5,22 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+#define ENGINE_NAME "GaME"
+#define ENGINE_DESCRIPTION "GaME Mechanics Engine"
+#define ENGINE_VERSION Version::Create(0, 0, 1)
+
+class EngineInfo : public _InfoBase {
+
+public:
+
+    EngineInfo() : _InfoBase(ENGINE_NAME, ENGINE_DESCRIPTION, ENGINE_VERSION) {}
+
+};
+
 /*
 * Type definitions used in the Engine class.
 */
 typedef std::vector<Addin *> AddinVector;
-
-class Engine;
-
-class EngineInfo {
-
-    const string Name = "GaME";
-    
-    const Version *Version = Version::Create(0, 0, 1);
-
-    string ExecutablePath;
-    string ConfigFilename;
-
-};
 
 /*
 * The Engine class represents the actual Game Mechanics Engine (GaME). It is a singleton class and all references
@@ -35,7 +34,11 @@ private:
     AddinVector addins;
     EngineComponentMap components;
 
+    const string *executablePath;
+
+    const string *configFilename;
     EngineConfig *config;
+
     ScriptEnvironment *scriptEnvironment;
     Platform *platform;
 

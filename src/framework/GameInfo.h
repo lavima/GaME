@@ -20,9 +20,7 @@ public:
 
     static GameInfo *Load(const string &filename);
 
-    const string &GetName() const;
-    const string &GetDescription() const;
-    const Version &GetVersion() const;
+    const string &GetFilename() const;
     const StringVector &GetEngineComponents() const;
 
 };
