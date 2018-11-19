@@ -5,23 +5,24 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-using namespace std;
-
 class PlatformConfig {
+
+private:
+    
+    string *typeName;
+
+    PlatformConfig() {}
 
 protected:
 
-    string name;
-
-    PlatformConfig();
-    PlatformConfig(const string &name);
+    PlatformConfig(const string &typeName);
 
 public:
 
-    static PlatformConfig * Load(xercesc::DOMDocument *document);
+    static PlatformConfig *Load(pugi::xml_document &xmlDocument);
 
     const string &GetTypeName();
-    void SetTypeName(const string &name);
+    void SetTypeName(const string &typeName);
 
 };
 
@@ -31,18 +32,19 @@ public:
 
 class GraphicalPlatformConfig : public PlatformConfig {
 
-protected:
+private:
 
     int width;
     int height;
     bool fullscreen;
 
     GraphicalPlatformConfig();
+    GraphicalPlatformConfig(const string &name);
     GraphicalPlatformConfig(const string &name, int width, int height, bool fullscreen);
 
 public:
 
-    static GraphicalPlatformConfig *Load(xercesc::DOMElement *element);
+    static GraphicalPlatformConfig *Load(pugi::xml_node &xmlNode);
 
     int GetWidth();
     void SetWidth(int width);

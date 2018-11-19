@@ -5,8 +5,6 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-using namespace std;
-
 class Engine;
 class Platform;
 
@@ -21,10 +19,9 @@ typedef pair<string, CreatePlatformFun> CreatePlatformPair;
 */
 class Platform {
 
-
 public:
     
-    static Platform *Load(PlatformConfig &config);
+    static Platform *Create(PlatformConfig &config);
 
     virtual bool Initialize(PlatformConfig &config) = 0;
 

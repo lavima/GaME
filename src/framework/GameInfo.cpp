@@ -26,9 +26,8 @@ GameInfo *GameInfo::Load(const string &filename) {
     _InfoBase::Load(info, rootElement);
 
     xml_node componentNode = document->child("EngineComponent");
-    for ( ; componentNode; componentNode = componentNode.next_sibling("EngineComponent")) {
-        ret->engineComponents.insert(string(componentElement->atttributes("type")));
-    }
+    for ( ; componentNode; componentNode = componentNode.next_sibling("EngineComponent"))
+        ret->engineComponents.push_back(string(componentNode.value()));
 
     return ret;
 }

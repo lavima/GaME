@@ -1,3 +1,8 @@
+/*
+* Filename: GaME.h
+* Author: Lars Vidar Magnusson 
+*/
+
 #pragma once
 
 #include <iostream>
@@ -17,14 +22,11 @@ using namespace std;
 #include <vulkan/vulkan.h>
 #endif
 
-<<<<<<< HEAD
 #include "pugixml.hpp"
-=======
-#include "util/Version.h"
->>>>>>> 2792e9c4014905c812354151c7218ff58293030d
 #include "util/StringUtil.h"
 #include "util/FilePath.h"
 #include "util/CommandLine.h"
+#include "Version.h"
 #include "Log.h"
 #include "lib/CommonTypes.h"
 #include "lib/Xerces.h"
@@ -47,8 +49,4 @@ using namespace std;
 #include "EngineComponent.h"
 #include "Engine.h"
 #include "simplerenderer\SimpleRenderer.h"
-<<<<<<< HEAD
 
-using namespace std;
-=======
->>>>>>> 2792e9c4014905c812354151c7218ff58293030d
