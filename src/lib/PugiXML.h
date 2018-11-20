@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+class Engine;
+
 class PugiXML {
 private:
   

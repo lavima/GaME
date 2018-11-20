@@ -17,7 +17,7 @@ enum EventType {
 
 class LogListener;
 
-typedef std::vector<LogListener *> LogListenerVector;
+typedef vector<LogListener *> LogListenerVector;
 typedef LogListenerVector::iterator LogListenerVectorIter;
 
 class Log {
@@ -31,9 +31,9 @@ private:
 public:
 
     Log();
-    Log(const std:string &filename);
+    Log(const string &filename);
 
-    void AddEvent(EventType addinType, const std::string &format, ...);
+    void AddEvent(EventType addinType, const string &format, ...);
 
     void AddListener(int typeFlag, LogListener *listener);
 
@@ -46,6 +46,6 @@ class LogListener {
 
 public:
 
-    virtual void NewEvent(const std::string &text) = 0;
+    virtual void NewEvent(const string &text) = 0;
 
 };

@@ -5,8 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-#define ENGINE_NAME "GaME"
-#define ENGINE_DESCRIPTION "GaME Mechanics Engine"
+#define ENGINE_NAME new string("GaME")
+#define ENGINE_DESCRIPTION new string("GaME Mechanics Engine")
 #define ENGINE_VERSION Version::Create(0, 0, 1)
 
 class EngineInfo : public _InfoBase {

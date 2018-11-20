@@ -10,7 +10,7 @@ class GameInfo : public _InfoBase {
 private:
     
     const string *filename;
-    StringVector engineComponents;
+    vector<const string *> engineComponents;
 
     GameInfo() {}
 
@@ -21,6 +21,6 @@ public:
     static GameInfo *Load(const string &filename);
 
     const string &GetFilename() const;
-    const StringVector &GetEngineComponents() const;
+    const vector<const string *> &GetEngineComponents() const;
 
 };
