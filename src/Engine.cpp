@@ -31,8 +31,6 @@ void Engine::shutdown() {
 
     }
 
-    xercesc::XMLPlatformUtils::Terminate();
-
     delete scriptEnvironment;
 
 }
@@ -45,11 +43,9 @@ Game &Engine::GetGame() { return *game; }
 void Engine::Initialize() {
 
     printf("Initiliazing engine\n");
-
     
     /* Retrieve the executable path from the command line */
-    info.ExecutablePath = CommandLine::GetExecutablePath(GetCommandLineA());   
-   
+    executablePath = new string(CommandLine::GetExecutablePath(platform->GetCommandLine()));   
 
     scriptEnvironment = ScriptEnvironment::Load(*this);
 

@@ -9,7 +9,7 @@ using namespace pugi;
 
 GameInfo::~GameInfo() {
     
-    for (StringVectorIter iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
+    for (vector<const char *> iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
         delete (*iter);
 
 }
@@ -27,7 +27,7 @@ GameInfo *GameInfo::Load(const string &filename) {
 
     xml_node componentNode = document->child("EngineComponent");
     for ( ; componentNode; componentNode = componentNode.next_sibling("EngineComponent"))
-        ret->engineComponents.push_back(string(componentNode.value()));
+        ret->engineComponents.push_back(new string(componentNode.value()));
 
     return ret;
 }

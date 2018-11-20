@@ -19,18 +19,19 @@ using namespace std;
 #ifdef OS_WIN
 #include <windows.h>
 #define VK_USE_PLATFORM_WIN32_KHR
-#include <vulkan/vulkan.h>
 #endif
+#include <vulkan/vulkan.h>
 
-#include "pugixml.hpp"
+#include <pugixml.hpp>
+
 #include "util/StringUtil.h"
 #include "util/FilePath.h"
 #include "util/CommandLine.h"
-#include "Version.h"
 #include "Log.h"
-#include "lib/CommonTypes.h"
-#include "lib/Xerces.h"
+#include "lib/PugiXML.h"
 #include "lib/Vulkan.h"
+#include "Version.h"
+#include "InfoBase.h"
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Script.h"
 #include "platform/PlatformConfig.h"
@@ -48,5 +49,5 @@ using namespace std;
 #include "EngineConfig.h"
 #include "EngineComponent.h"
 #include "Engine.h"
-#include "simplerenderer\SimpleRenderer.h"
+#include "simplerenderer/SimpleRenderer.h"
 
