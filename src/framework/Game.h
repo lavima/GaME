@@ -5,10 +5,6 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-using namespace std;
-
-
-
 class Game {
 
 private:
@@ -16,10 +12,10 @@ private:
     Engine *engine;
 
     GameInfo *info;
+    GameConfig *config;
 
     Script *gameScript;
 
-    
     Game() {}
 
 public:
@@ -34,5 +30,6 @@ public:
     void Update(GameTime &gameTime);
 
     const GameInfo &GetInfo();
+    GameConfig &GetConfig();
 
 };

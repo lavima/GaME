@@ -11,10 +11,6 @@ enum AddinType {
 
 class EngineComponentInfo;
 
-typedef std::unordered_map<string, EngineComponentInfo *> EngineComponentInfoMap;
-typedef std::pair<string, EngineComponentInfo *> EngineComponentInfoPair;
-typedef EngineComponentInfoMap::iterator EngineComponentInfoMapIter;
-
 class AddinInfo : public _InfoBase {
 
     // TODO still needed? 
@@ -22,27 +18,26 @@ class AddinInfo : public _InfoBase {
 
 private:
 
-    AddinType addinType;
+    AddinType type;
 
-    const string *filename;
-    const string *libraryFilename;
+    string filename;
+    string libraryFilename;
 
-    EngineComponentInfoMap engineComponents;
+    unordered_map<string, EngineComponentInfo *> engineComponents;
 
     AddinInfo() {}
     
 public:
 
+    AddinInfo(pugi::xml_document &xmlDocument);
     ~AddinInfo();
-
-    static AddinInfo *Load(const string &filename);
 
     AddinType GetType();
     
     const string &GetFilename();
     const string &GetLibraryFilename();
     
-    const EngineComponentInfoMap &GetEngineComponents();
+    const unordered_map<string, EngineComponentInfo *> &GetEngineComponents() const;
   
 };
 
@@ -52,8 +47,8 @@ class EngineComponentInfo : public _InfoBase {
 
 public:
 
+    EngineComponentInfo(pugi::xml_node &xmlNode);
     ~EngineComponentInfo();
 
-    static AddinInfo *Load(pugi::xml_node &element);
 
 };

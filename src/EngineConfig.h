@@ -5,8 +5,6 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class AddinConfig;
-
 /**
  * Engine Configuration with XML backend.
  */
@@ -14,41 +12,27 @@ class EngineConfig {
 
 private:
 
-    const string *configFilename; 
+    string filename;
+    string logFilename;
 
-    pugi::xml_document *document;
+    vector<string> addinFilenames;
 
-    PlatformConfig *platformConfig;
-    std::vector<AddinConfig *> addins;
-    const string *logFile;
+    pugi::xml_document *xmlDocument;
 
     EngineConfig() {}
+
+public:
+
+    EngineConfig(const string &filename, const string &logFilename);
+    EngineConfig(const string &filename, const string &logFilename, const vector<string> &addinFilenames);
+    EngineConfig(const string &filename);
+    EngineConfig(pugi::xml_document &xmlDocument);
     ~EngineConfig();
 
-public:
+    void AddAddinFilename(const string &addinFilename);
 
-    static EngineConfig *Load(const string &filename);
-
-    PlatformConfig &GetPlatformConfig();
-    int GetNumAddins();
-    AddinConfig &GetAddin(int index);
-
-    const string &GetLogFile();
-
-};
-
-class AddinConfig {
-
-private:
-
-    const string *source;
-
-    AddinConfig() {}
-
-public:
-
-    static AddinConfig *Load(pugi::xml_node &element);
-
-    const string &GetSource();
+    const string &GetFilename();
+    const string &GetLogFilename();
+    const vector<string> &GetAddinFilenames();
 
 };

@@ -1,61 +1,45 @@
 /*
 File: AddinInfo.cpp
 Author: Lars Vidar Magnusson
-*/
+ */
 
 #include "GaME.h"
 
 using namespace pugi;
 
-AddinInfo *AddinInfo::Load(const string &filename) {
+AddinInfo::AddinInfo(xml_document &xmlDocument) : _InfoBase(xmlDocument.document_element()) {
 
-  xml_document *doc = PugiXML::ParseDocument(filename);
-  xml_node docElement = doc->document_element;
+    xml_node docElement = xmlDocument.document_element();
 
-  AddinInfo *addin = new AddinInfo();
+    this->filename = filename;
+    this->libraryFilename = string(docElement.attribute("library").value());
 
-  InfoBase::Load(addin, docElement);
+    xml_node componentNode = docElement.child("EngineComponent");
 
-  addin->filename = &filename;
-  addin->libraryFilename = new string(docElement.attribute("library").value());
+    if (componentNode)
+        this->type = ENGINE_COMPONENT_ADDIN;
 
-  xml_node componentNode = doc->document_element.child("EngineComponent");
-
-  if (componentNode)
-    addin->type = ENGINE_COMPONENT_ADDIN;
-
-  for (; componentNode; componentNode = componentNode.next_sibling("EngineComponent")) {
-    EngineComponentInfo *componentInfo = EngineComponentInfo::Load(componentNode);
-    addin->engineComponents.insert(EngineComponentInfoPair(componentInfo->GetName(), componentInfo));
-  }     
-
-  delete doc;
-
-  return addin;
+    for (; componentNode; componentNode = componentNode.next_sibling("EngineComponent")) {
+        EngineComponentInfo *componentInfo = new EngineComponentInfo(componentNode);
+        this->engineComponents.insert(pair<string, EngineComponentInfo *>(componentInfo->GetName(), componentInfo));
+    }
 
 }
 
 AddinType AddinInfo::GetType() { return this->type; }
 
-const string &AddinInfo::GetLibraryFilename() { return *(this->libraryFilename); }
+const string &AddinInfo::GetLibraryFilename() { return this->libraryFilename; }
 
-const EngineComponentInfoMap & AddinInfo::GetEngineComponents() { return this->engineComponents; }
+const unordered_map<string, EngineComponentInfo *> &AddinInfo::GetEngineComponents() const { return this->engineComponents; }
 
 AddinInfo::~AddinInfo() {
-    
-    delete libraryFilename;
-    for (EngineComponentInfoMapIter iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
+
+    for (unordered_map<string, EngineComponentInfo *>::iterator iter = engineComponents.begin(); iter != engineComponents.end(); ++iter)
         delete (*iter).second;
 
 }
 
-EngineComponentInfo *EngineComponentInfo::Load(pugi::xml_node &element) {
-
-  EngineComponentInfo *componentInfo = new EngineComponentInfo();
-  InfoBase::Load(element);
-  return componentInfo;
-    
-}
+EngineComponentInfo::EngineComponentInfo(pugi::xml_node &xmlNode) : _InfoBase(xmlNode) {}
 
 EngineComponentInfo::~EngineComponentInfo() {}
 

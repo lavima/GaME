@@ -18,7 +18,7 @@ void PugiXML::Initialize(Engine &engine) {
 pugi::xml_document *PugiXML::ParseDocument(const string &filename) {
 
     xml_document *doc = new xml_document();
-    xml_parse_result doc->load_file(filename.c_str());
+    xml_parse_result result = doc->load_file(filename.c_str());
     if (!result) {
         log->AddEvent(EVENT_ERROR, "Could not load XML file %s", filename);
         return nullptr;    

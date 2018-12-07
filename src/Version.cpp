@@ -8,27 +8,36 @@ Author: Lars Vidar Magnusson
 using namespace pugi;
 
 Version::Version(int major, int minor, int release) {
+
     this->major = major;
     this->minor = minor;
     this->release = release;
+
 }
 
-Version *Version::Create(int major, int minor, int release) {
-    return new Version(major, minor, release);
-}
-
-Version *Version::Load(xml_node &element) {
+Version::Version(xml_node &xmlNode) {
     
-    if (string(element.value()).compare("Version")!=0)
-        return nullptr;
+    assert(string(xmlNode.value()).compare("Version")==0);
 
-    return Create(element.child("Major").value(), element.child("Minor").value(), element.child("Version").value());
+    this->major = xmlNode.child("Major").text().as_int();
+    this->minor = xmlNode.child("Minor").text().as_int(); 
+    this->release = xmlNode.child("Release").text().as_int();
 
 }
 
-const int Version::GetMajor() const { return major; }
-const int Version::GetMinor() const { return minor; }
-const int Version::GetRelease() const { return release; };
+Version::Version(xml_node &&xmlNode) {
+    
+    assert(string(xmlNode.value()).compare("Version")==0);
+
+    this->major = xmlNode.child("Major").text().as_int();
+    this->minor = xmlNode.child("Minor").text().as_int(); 
+    this->release = xmlNode.child("Release").text().as_int();
+
+}
+
+int Version::GetMajor() const { return major; }
+int Version::GetMinor() const { return minor; }
+int Version::GetRelease() const { return release; };
 
 const string *Version::GetVersionString() {
     return (const string *)StringUtil::Format("%d-%d-%d", major, minor, release);

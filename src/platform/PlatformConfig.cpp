@@ -9,7 +9,7 @@ using namespace pugi;
 
 PlatformConfig::PlatformConfig(const string &typeName) {
 
-    this->typeName = new string(typeName);
+    this->typeName = typeName;
 
 }
 
@@ -18,22 +18,14 @@ void PlatformConfig::SetTypeName(const string &typeName) { this->typeName = type
 
 PlatformConfig *PlatformConfig::Load(xml_document &xmlDocument) {
 
-    xml_node graphicalConfig = xmlDocument.child("GraphicalPlatformConfig");
-    if (platformConfig)
-        return GraphicalPlatformConfig::Load(platformConfig);
+    xml_node xmlNode = xmlDocument.document_element();
+    if (string(xmlNode.value()).compare("GraphicalPlatformConfig") == 0)
+        return new GraphicalPlatformConfig(xmlNode);
 
     return new PlatformConfig("Undecided");
 
 }
 
-
-GraphicalPlatformConfig::GraphicalPlatformConfig() {
-
-    this->width = DEFAULT_WIDTH;
-    this->height = DEFAULT_HEIGHT;
-    this->fullscreen = DEFAULT_FULLSCREEN;
-
-}
 
 GraphicalPlatformConfig::GraphicalPlatformConfig(const string &name) 
     : PlatformConfig(name) {
@@ -53,23 +45,19 @@ GraphicalPlatformConfig::GraphicalPlatformConfig(const string &name, int width, 
 
 }
 
-GraphicalPlatformConfig *GraphicalPlatformConfig::Load(xml_node &xmlNode) {   
+GraphicalPlatformConfig::GraphicalPlatformConfig(xml_node &xmlNode) : PlatformConfig(string(xmlNode.attribute("typeName").value())) {   
     
-    GraphicalPlatformConfig *newConfig = new GraphicalPlatformConfig(string(xmlNode.attribute("typeName")));
-
     xml_node widthNode = xmlNode.child("Width");
     if (widthNode)
-        newConfig->width = widthNode.text().as_int();
+        this->width = widthNode.text().as_int();
 
-    xml_node *heightNode = xmlNode.child("Height");
+    xml_node heightNode = xmlNode.child("Height");
     if (heightNode)
-        newConfig->height = heightNode.text().as_int();
+        this->height = heightNode.text().as_int();
 
     xml_node fullscreenNode = xmlNode.child("Fullscreen");
     if (fullscreenNode)
-        newConfig->height = fullscreenNode.text().as_bool();
-
-    return newConfig;
+        this->height = fullscreenNode.text().as_bool();
 
 }
 
