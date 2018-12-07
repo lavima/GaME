@@ -7,10 +7,13 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
+#include <list>
 #include <vector>
 #include <utility>
 #include <unordered_map>
+#include <cassert>
 
 using namespace std;
 
@@ -34,19 +37,27 @@ using namespace std;
 #include "InfoBase.h"
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Script.h"
+#include "lib/V8.h"
+#include "platform/PlatformInfo.h"
 #include "platform/PlatformConfig.h"
+#include "platform/DefaultPlatformConfig.h"
 #include "platform/Platform.h"
-#ifdef OS_WIN
+#ifdef PLATFORM_WIN32
 #include <windows.h>
 #include "platform/Win32Vulkan.h"
+#endif
+#ifdef PLATFORM_GLFW
+#include <GLFW/glfw3.h>
 #endif
 #include "framework/GameTime.h"
 #include "framework/Entity.h"
 #include "framework/GameInfo.h"
+#include "framework/GameConfig.h"
 #include "framework/Game.h"
 #include "AddinInfo.h"
 #include "Addin.h"
 #include "EngineConfig.h"
+#include "DefaultEngineConfig.h"
 #include "EngineComponent.h"
 #include "Engine.h"
 #include "simplerenderer/SimpleRenderer.h"

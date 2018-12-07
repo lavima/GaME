@@ -1,11 +1,11 @@
 /*
 File: EngineComponent.cpp
 Author: Lars Vidar Magnusson
-*/
+ */
 
 #include "GaME.h"
 
-CreateEngineComponentMap EngineComponent::createEngineComponentMap;
+unordered_map<string, CreateEngineComponentFun> EngineComponent::createEngineComponentMap;
 
 EngineComponent::EngineComponent(Engine &engine) {
 
@@ -15,15 +15,17 @@ EngineComponent::EngineComponent(Engine &engine) {
 
 EngineComponent *EngineComponent::Create(Engine &engine, const string &typeName, const string &name) {
 
-  CreateEngineComponentMapIter item = createEngineComponentMap.find(typeName);
-  if (item == createEngineComponentMap.end()) {
-    printf("Could not find the specified game component type %s\n", typeName);
-    return NULL;
-  }
-  CreateEngineComponentFun createEngineComponent = createEngineComponentMap[typeName];
-  return createEngineComponent(engine, typeName, name);
+    unordered_map<string, CreateEngineComponentFun>::iterator item = createEngineComponentMap.find(typeName);
+    if (item == createEngineComponentMap.end()) {
+        printf("Could not find the specified game component type %s\n", typeName);
+        return NULL;
+    }
+
+    CreateEngineComponentFun createEngineComponent = createEngineComponentMap[typeName];
+
+    return createEngineComponent(engine, typeName, name);
 
 }
 
-const string & EngineComponent::GetTypeName() { return *(this->name); }
-const string & EngineComponent::GetName() { return *(this->name); }
+const string &EngineComponent::GetTypeName() { return this->typeName; }
+const string &EngineComponent::GetName() { return this->name; }

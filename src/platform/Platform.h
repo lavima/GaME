@@ -8,10 +8,7 @@ Author: Lars Vidar Magnusson
 class Engine;
 class Platform;
 
-typedef Platform *(*CreatePlatformFun)(PlatformConfig &);
-
-typedef unordered_map<string, CreatePlatformFun> CreatePlatformMap;
-typedef pair<string, CreatePlatformFun> CreatePlatformPair;
+typedef Platform *(*CreatePlatformFun)(PlatformConfig *);
 
 /*
 * This class provides the interface for all platform implementations, and a factory function for 
@@ -21,9 +18,9 @@ class Platform {
 
 public:
     
-    static Platform *Create(PlatformConfig &config);
+    static Platform *Create(PlatformConfig *config);
 
-    virtual bool Initialize(PlatformConfig &config) = 0;
+    virtual bool Initialize() = 0;
 
     virtual void Shutdown() = 0;
 
@@ -53,6 +50,6 @@ protected:
 
 private:
 
-    static CreatePlatformMap implementations;
+    static unordered_map<string, CreatePlatformFun> implementations;
 
 };

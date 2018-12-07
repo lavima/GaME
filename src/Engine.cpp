@@ -6,54 +6,35 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 
-Engine::Engine(Platform &platform, EngineConfig &config) {
+Engine::Engine(Platform &platform, const string &configFilename) : Engine(platform, new EngineConfig(configFilename)) {}
+
+Engine::Engine(Platform &platform, EngineConfig *engineConfig) {
 
     this->platform = &platform;
-    this->config = &config;
+    this->config = engineConfig;
 
     isRunning = false;
-    game = NULL;
-    scriptEnvironment = NULL;
+    game = nullptr;
+    scriptEnvironment = nullptr;
 
-    log = new Log(config.GetLogFile());
-
-}
-
-void Engine::shutdown() {
-
-    platform->Shutdown();
-
-    std::vector<Addin *>::iterator iter;
-    for (iter = addins.begin(); iter != addins.end(); iter++) {
-
-        platform->UnloadLibrary((*iter)->GetHandle());
-        delete *iter;
-
-    }
-
-    delete scriptEnvironment;
+    log = new Log(config->GetLogFilename());
 
 }
-
-bool Engine::IsRunning() { return isRunning; }
-ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
-Platform &Engine::GetPlatform() { return *platform; }
-Game &Engine::GetGame() { return *game; }
 
 void Engine::Initialize() {
 
     printf("Initiliazing engine\n");
     
     /* Retrieve the executable path from the command line */
-    executablePath = new string(CommandLine::GetExecutablePath(platform->GetCommandLine()));   
+    info.executablePath = string(CommandLine::GetExecutablePath(platform->GetCommandLine()));   
 
-    scriptEnvironment = ScriptEnvironment::Load(*this);
+    scriptEnvironment = ScriptEnvironment::Create(*this);
 
-    if (!platform->Initialize(config->GetPlatformConfig()))
+    if (!platform->Initialize())
         printf("WARNING: Failed to initialize the platform.\n");
 
-    for (int i = 0; i < config->GetNumAddins(); i++)
-        LoadAddin(config->GetAddin(i).GetSource());
+    for (vector<string>::const_iterator iter = config->GetAddinFilenames().begin(); iter != config->GetAddinFilenames().end(); ++iter)
+        LoadAddin(*iter);
 
     isRunning = true;
 
@@ -94,7 +75,7 @@ void Engine::LoadGame(const string &filename) {
         if (game)
             game->Update(gameTime);
 
-        for (EngineComponentMapIter iter = components.begin(); iter != components.end(); ++iter)
+        for (unordered_map<string, EngineComponent *>::iterator iter = components.begin(); iter != components.end(); ++iter)
             iter->second->Update(gameTime);
 
         platform->SwapBuffers();
@@ -108,7 +89,7 @@ void Engine::LoadGame(const string &filename) {
 void Engine::CloseGame() {
 
     if (!isGameRunning) {
-        printf("Unable to close game, since no game is currently running.\n");
+        printf("No game is currently running.\n");
         return;
     }
     isGameRunning = false;
@@ -116,6 +97,8 @@ void Engine::CloseGame() {
 }
 
 bool Engine::LoadAddin(const string &filename) {
+
+    
 
     Addin *addin = Addin::Load(filename);
     AddinInfo info = addin->GetInfo();
@@ -153,11 +136,13 @@ bool Engine::LoadAddin(const string &filename) {
         addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
 
         for (auto iter = info.GetEngineComponents().begin(); iter != info.GetEngineComponents().end(); ++iter)
-            EngineComponent::createEngineComponentMap.insert(CreateEngineComponentPair(iter->first, (CreateEngineComponentFun)address));
+            EngineComponent::createEngineComponentMap.insert(pair<string, CreateEngineComponentFun>(iter->first, (CreateEngineComponentFun)address));
 
     }
 
     addins.push_back(addin);
+
+    config->AddAddinFilename(filename);
 
     printf("Sucessfully loaded addin %s from %s\n", addin->GetInfo().GetName(), filename);
 
@@ -191,7 +176,29 @@ EngineComponent *Engine::GetComponent(const string &name) {
 
 }
 
+bool Engine::IsRunning() { return isRunning; }
+ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
+Platform &Engine::GetPlatform() { return *platform; }
+Game &Engine::GetGame() { return *game; }
+
 const string &Engine::GetCommandLine() { return platform->GetCommandLine(); }
 const EngineInfo &Engine::GetInfo() { return (const EngineInfo &)info; }
 
 Log &Engine::GetLog() { return *log; }
+
+void Engine::shutdown() {
+
+    platform->Shutdown();
+
+    std::vector<Addin *>::iterator iter;
+    for (iter = addins.begin(); iter != addins.end(); iter++) {
+
+        platform->UnloadLibrary((*iter)->GetHandle());
+        delete *iter;
+
+    }
+
+    delete scriptEnvironment;
+
+}
+

@@ -8,5 +8,6 @@ Author: Lars Vidar Magnusson
 struct GameTime {
 
 public:
+    double Time;
   
 };

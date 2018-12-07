@@ -8,7 +8,7 @@ static Platform * GLFWVulkan::Create(PlatformConfig &config) {
 
 }
 
-bool GLFWVulkan::Initialize(PlatformConfig &config) {
+bool GLFWVulkan::Initialize() {
 
 }
 

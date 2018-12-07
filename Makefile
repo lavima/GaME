@@ -16,7 +16,9 @@ SOURCES = $(wildcard src/*.cpp) \
 
 OBJS = $(SOURCES:.cpp=.o)
 
-INCLUDE_DIRS = -Isrc -Iexternal_libs/pugixml-1.9 -Iexternal_libs/v8-7.0.276.31/include -Iexternal_libs/vulkan-1.1.85.0/include
+DEFINES = -DPLATFORM_GLFW
+
+INCLUDE_DIRS = -Isrc -Iexternal_libs/pugixml-1.9 -Iexternal_libs/v8-7.0.276.31/include -Iexternal_libs/vulkan-1.1.85.0/include -Iexternal_libs/glfw-3.2.1/include
 
 CC = g++
 
@@ -25,4 +27,4 @@ CFLAGS = --std=c++0x
 bin/GaME: $(OBJS) 
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDE_DIRS) -o $@ -c $<

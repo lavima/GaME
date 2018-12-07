@@ -9,9 +9,8 @@ class PlatformConfig {
 
 private:
     
-    string *typeName;
+    string typeName;
 
-    PlatformConfig() {}
 
 protected:
 
@@ -19,6 +18,9 @@ protected:
 
 public:
 
+    /*
+    * Factory function for loading any type of platform configuration from an XML-document
+    */
     static PlatformConfig *Load(pugi::xml_document &xmlDocument);
 
     const string &GetTypeName();
@@ -32,19 +34,21 @@ public:
 
 class GraphicalPlatformConfig : public PlatformConfig {
 
+  friend class PlatformConfig;
+
 private:
 
     int width;
     int height;
     bool fullscreen;
 
-    GraphicalPlatformConfig();
+protected:
+
     GraphicalPlatformConfig(const string &name);
     GraphicalPlatformConfig(const string &name, int width, int height, bool fullscreen);
+    GraphicalPlatformConfig(pugi::xml_node &xmlNode);
 
 public:
-
-    static GraphicalPlatformConfig *Load(pugi::xml_node &xmlNode);
 
     int GetWidth();
     void SetWidth(int width);

@@ -6,22 +6,24 @@ Author: Lars Vidar Magnusson
 #pragma once
 
 class Version {
+  friend class _InfoBase;
 private:
 
     int major;
     int minor;
     int release;
 
-    Version(int major, int minor, int release);
+    Version() {}
 
 public:
 
-    static Version *Create(int major, int minor, int release);
-    static Version *Load(pugi::xml_node &element);
+    Version(int major, int minor, int release);
+    Version(pugi::xml_node &xmlNode);
+    Version(pugi::xml_node &&xmlNode);
 
-    const int GetMajor() const;
-    const int GetMinor() const;
-    const int GetRelease() const;
+    int GetMajor() const;
+    int GetMinor() const;
+    int GetRelease() const;
 
     const string *GetVersionString();
 

@@ -9,20 +9,22 @@ class _InfoBase {
 
 private:
 
-    const string *name;
-    const string *description;
-    const Version *version;
 
 protected:
 
-    _InfoBase() {}
+    string name;
+    string description;
+    Version version;
 
-    _InfoBase(const string *name, const string *description, const Version *version);
-    template<typename T> static T *Create(T *info, const string *name, const string *description, const Version *version);
+    _InfoBase(const string &name, const string &description, const Version &version);
+    _InfoBase(const string &&name, const string &&description, const Version &&version);
+    _InfoBase(pugi::xml_node &xmlNode);
+    _InfoBase(pugi::xml_node &&xmlNode);
+
+    _InfoBase() {}
+    ~_InfoBase();
 
 public:
-
-    ~_InfoBase();
 
     const string &GetName();
     const string &GetDescription();
@@ -30,13 +32,3 @@ public:
 
 };
 
-/*
-* Base class for meta information classes that can be read from XML-files
-*/
-class _InfoBaseXML : public _InfoBase {
-
-protected:
-
-    template<typename T> static T *Load(T *info, pugi::xml_node &xmlElement);
-
-};

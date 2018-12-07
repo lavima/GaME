@@ -6,9 +6,9 @@ Author: Lars Vidar Magnusson
 #pragma once
 
 enum EventType {
-    EVENT_ERROR,
-    EVENT_WARNING,
-    EVENT_INFO
+    EVENT_ERROR = 1,
+    EVENT_WARNING = 2,
+    EVENT_DEBUG = 3
 };
 
 #define ERROR_PREFIX "ERROR: "
@@ -17,25 +17,28 @@ enum EventType {
 
 class LogListener;
 
-typedef vector<LogListener *> LogListenerVector;
-typedef LogListenerVector::iterator LogListenerVectorIter;
-
+/*
+* This class contains functionality for logging events.
+*/
 class Log {
 
 private:
 
-    LogListenerVector listeners;
+    ostream *out;
 
-    int level;
+    list<LogListener *> listeners;
+
+    int listenLevel;
 
 public:
 
     Log();
     Log(const string &filename);
 
-    void AddEvent(EventType addinType, const string &format, ...);
+    template<typename ... T> void AddEvent(const string &format, T && ... args);
+    template<typename ... T> void AddEvent(EventType addinType, const string &format, T && ... args);
 
-    void AddListener(int typeFlag, LogListener *listener);
+    void AddListener(LogListener *listener);
 
     void SetLevel(int level);
     int GetLevel();
