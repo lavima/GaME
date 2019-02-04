@@ -19,11 +19,15 @@ using namespace std;
 
 #include <v8.h>
 #include <libplatform/libplatform.h>
-#ifdef OS_WIN
-#include <windows.h>
+#ifdef PLATFORM_WIN32
 #define VK_USE_PLATFORM_WIN32_KHR
+#include "vulkan/vulkan.h"
+#include <windows.h>
 #endif
-#include <vulkan/vulkan.h>
+#ifdef PLATFORM_GLFW_VULKAN
+#include "vulkan/vulkan.h"
+//#include "GLFW/glfw3.h"
+#endif
 
 #include <pugixml.hpp>
 
@@ -43,11 +47,7 @@ using namespace std;
 #include "platform/DefaultPlatformConfig.h"
 #include "platform/Platform.h"
 #ifdef PLATFORM_WIN32
-#include <windows.h>
 #include "platform/Win32Vulkan.h"
-#endif
-#ifdef PLATFORM_GLFW
-#include <GLFW/glfw3.h>
 #endif
 #include "framework/GameTime.h"
 #include "framework/Entity.h"

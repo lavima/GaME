@@ -56,7 +56,7 @@ ScriptEnvironment *ScriptEnvironment::Create(Engine &engine) {
 
         v8::Handle<v8::ObjectTemplate> platformConfig = v8::ObjectTemplate::New(env->isolate);
 
-        env->context = v8::Persistent<v8::Context>::New(*(env->isolate), v8::Context::New(*(env->isolate), NULL, global));
+        env->context = v8::Persistent<v8::Context>(env->isolate, v8::Context::New(env->isolate, NULL, global));
     }
 
     return env;
