@@ -1,7 +1,7 @@
 /*
 File: Engine.h
 Author: Lars Vidar Magnusson
-*/
+ */
 
 #pragma once
 
@@ -11,11 +11,11 @@ Author: Lars Vidar Magnusson
 
 class EngineInfo : public _InfoBase {
     friend class Engine;
-private:
-    
+    private:
+
     string executablePath;
 
-public:
+    public:
 
     EngineInfo() : _InfoBase(ENGINE_NAME, ENGINE_DESCRIPTION, ENGINE_VERSION) {}
 
@@ -24,56 +24,62 @@ public:
 };
 
 /*
-* The Engine class represents the actual Game Mechanics Engine (GaME). 
-*/
+ * The Engine class represents the actual Game Mechanics Engine (GaME). 
+ */
 class Engine {
-private:
+    private:
 
-    EngineInfo info;
-    string configFilename;
-    EngineConfig *config;
+        EngineInfo info;
+        string configFilename;
+        EngineConfig *config;
 
-    vector<Addin *> addins;
-    unordered_map<string, EngineComponent *> components;
+        vector<Addin *> addins;
+        unordered_map<string, EngineComponent *> components;
 
-    ScriptEnvironment *scriptEnvironment;
-    Platform *platform;
+        ScriptEnvironment *scriptEnvironment;
+        Platform *platform;
 
-    Log *log;
+        Log *log;
 
-    Game *game;
+        Game *game;
 
-    bool isRunning;
-    bool isGameRunning;
+        bool isRunning;
+        bool isGameRunning;
 
-    void shutdown();
+        void shutdown();
 
-    Engine() {}
+        Engine() {}
 
-public:
+    public:
 
-    Engine(Platform &platform, const string &configFilename);
-    Engine(Platform &platform, EngineConfig *engineConfig);
+        Engine(Platform &platform, const string &configFilename);
+        Engine(Platform &platform, EngineConfig *engineConfig);
 
-    void Initialize();
-    void Stop();
+        void Initialize();
+        void Stop();
 
-    void LoadGame(const string &filename);
-    void CloseGame();
+        void LoadGame(const string &filename);
+        void CloseGame();
 
-    bool LoadAddin(const string &filename);
+        bool LoadAddin(const string &filename);
 
-    void AddComponent(const string &typeName, const string &name);
-    void AddComponent(EngineComponent *component);
-    EngineComponent *GetComponent(const string &name);
+        void AddComponent(const string &typeName, const string &name);
+        void AddComponent(EngineComponent *component);
+        EngineComponent *GetComponent(const string &name);
 
-    bool IsRunning();
+        bool IsRunning();
 
-    const string &GetCommandLine();
-    const EngineInfo &GetInfo();
-    ScriptEnvironment &GetScriptEnvironment();
-    Platform &GetPlatform();
-    Game &GetGame();
-    Log &GetLog(); 
-  
+        const string &GetCommandLine();
+        const EngineInfo &GetInfo();
+        ScriptEnvironment &GetScriptEnvironment();
+        Platform &GetPlatform();
+        Game &GetGame();
+        Log &GetLog(); 
+
+    private:
+
+        class EngineScriptable {
+
+        };
+
 };

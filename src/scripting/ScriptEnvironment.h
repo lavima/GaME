@@ -11,6 +11,7 @@ class Script;
 class ScriptEnvironment {
 
     friend class V8;
+    friend class Scriptable;
 
 private:
 

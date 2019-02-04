@@ -1,11 +1,3 @@
-HEADERS = $(wildcard src/*.h) \
-          $(wildcard src/framework/*.h) \
-          $(wildcard src/lib/*.h) \
-          $(wildcard src/platform/*.h) \
-          $(wildcard src/scripting/*.h) \
-          $(wildcard src/simplerenderer/*.h) \
-          $(wildcard src/util/*.h) 
-
 SOURCES = $(wildcard src/*.cpp) \
           $(wildcard src/framework/*.cpp) \
           $(wildcard src/lib/*.cpp) \
@@ -16,13 +8,13 @@ SOURCES = $(wildcard src/*.cpp) \
 
 OBJS = $(SOURCES:.cpp=.o)
 
-DEFINES = -DPLATFORM_GLFW
+DEFINES = -D PLATFORM_GLFW_VULKAN
 
 INCLUDE_DIRS = -Isrc -Iexternal_libs/pugixml-1.9 -Iexternal_libs/v8-7.0.276.31/include -Iexternal_libs/vulkan-1.1.85.0/include -Iexternal_libs/glfw-3.2.1/include
 
 CC = g++
 
-CFLAGS = --std=c++0x
+CFLAGS = --std=c++17
 
 bin/GaME: $(OBJS) 
 
