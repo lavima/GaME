@@ -6,9 +6,6 @@
 #include "../GaME.h"
 
 
-void engineLoadAddin(const v8::FunctionCallbackInfo<v8::Value>&);
-void engineLoadGame(const v8::FunctionCallbackInfo<v8::Value>&);
-  
 ScriptEnvironment::ScriptEnvironment(Engine &engine) {
 
     this->engine = &engine;
@@ -42,16 +39,9 @@ ScriptEnvironment *ScriptEnvironment::Create(Engine &engine) {
         v8::Isolate::Scope isolateScope(env->isolate);
         v8::HandleScope handleScope(env->isolate);
 
-        v8::Handle<v8::ObjectTemplate> engine = v8::ObjectTemplate::New(env->isolate);
-        engine->Set(v8::String::NewFromUtf8(env->isolate, "loadGame", v8::NewStringType::kNormal).ToLocalChecked(),
-                v8::FunctionTemplate::New(env->isolate, engineLoadGame));
-        engine->Set(v8::String::NewFromUtf8(env->isolate, "loadAddin", v8::NewStringType::kNormal).ToLocalChecked(),
-                v8::FunctionTemplate::New(env->isolate, engineLoadAddin));
-
         v8::Handle<v8::ObjectTemplate> game = v8::ObjectTemplate::New(env->isolate);
 
         v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(env->isolate);
-        global->Set(v8::String::NewFromUtf8(env->isolate, "engine", v8::NewStringType::kNormal).ToLocalChecked(), engine);
         global->Set(v8::String::NewFromUtf8(env->isolate, "game", v8::NewStringType::kNormal).ToLocalChecked(), game);
 
         v8::Handle<v8::ObjectTemplate> platformConfig = v8::ObjectTemplate::New(env->isolate);
@@ -73,24 +63,3 @@ v8::Handle<v8::Value> ScriptEnvironment::RunScript(Script &script) {
 
 v8::Persistent<v8::Context> ScriptEnvironment::GetContext() { return context; }
 
-void engineLoadAddin(const v8::FunctionCallbackInfo<v8::Value>& args) {
-
-    v8::Local<v8::Object> self = args.Holder();
-    v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0));
-
-    Engine *engine = (Engine *)wrap->Value();
-    v8::String::Utf8Value filename(args[0]);
-    engine->LoadAddin(*filename);
-
-}
-
-void engineLoadGame(const v8::FunctionCallbackInfo<v8::Value>& args) {
-
-    v8::Local<v8::Object> self = args.Holder();
-    v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0));
-
-    Engine *engine = (Engine *)wrap->Value();
-    v8::String::Utf8Value filename(args[0]);
-    engine->LoadGame(*filename);
-
-}

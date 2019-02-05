@@ -202,3 +202,37 @@ void Engine::shutdown() {
 
 }
 
+void scriptableLoadAddin(const v8::FunctionCallbackInfo<v8::Value>& args) {
+
+    v8::Local<v8::Object> self = args.Holder();
+    v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0));
+
+    Engine *engine = (Engine *)wrap->Value();
+    v8::String::Utf8Value filename(args[0]);
+    engine->LoadAddin(*filename);
+
+}
+
+void scriptableengineLoadGame(const v8::FunctionCallbackInfo<v8::Value>& args) {
+
+    v8::Local<v8::Object> self = args.Holder();
+    v8::Local<v8::External> wrap = v8::Local<v8::External>::Cast(self->GetInternalField(0));
+
+    Engine *engine = (Engine *)wrap->Value();
+    v8::String::Utf8Value filename(args[0]);
+    engine->LoadGame(*filename);
+
+}
+void Engine::Scriptable::Register(ScriptEnvironment &environment) { 
+    
+    _Scriptable::Register(environment);
+
+    v8::Handle<v8::ObjectTemplate> engine = v8::ObjectTemplate::New(env->isolate);
+    engine->Set(v8::String::NewFromUtf8(env->isolate, "loadGame", v8::NewStringType::kNormal).ToLocalChecked(),
+            v8::FunctionTemplate::New(env->isolate, engineLoadGame));
+    engine->Set(v8::String::NewFromUtf8(env->isolate, "loadAddin", v8::NewStringType::kNormal).ToLocalChecked(),
+            v8::FunctionTemplate::New(env->isolate, engineLoadAddin));
+
+    global->Set(v8::String::NewFromUtf8(env->isolate, "engine", v8::NewStringType::kNormal).ToLocalChecked(), engine);
+
+}

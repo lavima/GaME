@@ -5,12 +5,14 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Scriptable {
-  
-private:
+class _Scriptable {
 
-  ScriptEnvironment *environment;
+protected:
+
+    ScriptEnvironment *environment;
 
 public:
+
+    virtual void Register(ScriptEnvironment &environment);
 
 };
