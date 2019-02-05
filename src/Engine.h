@@ -78,7 +78,10 @@ class Engine {
 
     private:
 
-        class EngineScriptable {
+        class Scriptable : public _Scriptable {
+        public:
+
+            virtual void Register(ScriptEnvironment &environment);
 
         };
 
