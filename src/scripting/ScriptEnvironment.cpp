@@ -35,7 +35,6 @@ ScriptEnvironment *ScriptEnvironment::Create(Engine &engine) {
 
     env->isolate = v8::Isolate::New(createParams);
     {
-
         v8::Isolate::Scope isolateScope(env->isolate);
         v8::HandleScope handleScope(env->isolate);
 
