@@ -17,7 +17,7 @@ EngineComponent *EngineComponent::Create(Engine &engine, const string &typeName,
 
     unordered_map<string, CreateEngineComponentFun>::iterator item = createEngineComponentMap.find(typeName);
     if (item == createEngineComponentMap.end()) {
-        printf("Could not find the specified game component type %s\n", typeName);
+        printf("Could not find the specified game component type %s\n", typeName.c_str());
         return NULL;
     }
 

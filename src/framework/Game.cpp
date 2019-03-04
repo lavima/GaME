@@ -14,7 +14,7 @@ Game *Game::Load(const string &filename) {
 
     Game *newGame = new Game();
     xml_node infoNode = rootNode.child("Info");
-    newGame->info = GameInfo::Load(infoNode);
+    newGame->info = new GameInfo(infoNode);
     xml_node configNode = rootNode.child("Config");
     newGame->config = GameConfig::Load(configNode);
 

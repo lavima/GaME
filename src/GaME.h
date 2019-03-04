@@ -23,10 +23,12 @@ using namespace std;
 #define VK_USE_PLATFORM_WIN32_KHR
 #include "vulkan/vulkan.h"
 #include <windows.h>
+#elif OS_WIN
+#include <windows.h>
 #endif
 #ifdef PLATFORM_GLFW_VULKAN
 #include "vulkan/vulkan.h"
-//#include "GLFW/glfw3.h"
+#include "GLFW/glfw3.h"
 #endif
 
 #include <pugixml.hpp>
@@ -40,6 +42,7 @@ using namespace std;
 #include "Version.h"
 #include "InfoBase.h"
 #include "scripting/ScriptEnvironment.h"
+#include "scripting/Scriptable.h"
 #include "scripting/Script.h"
 #include "lib/V8.h"
 #include "platform/PlatformInfo.h"

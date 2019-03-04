@@ -5,14 +5,12 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-namespace GaME {
-
 class Script {
 
 private:
 
     ScriptEnvironment *environment;
-    const std::string name;
+    std::string name;
 
     v8::Persistent<v8::Script> *script;
 
@@ -31,4 +29,3 @@ public:
 
 };
 
-}

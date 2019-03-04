@@ -151,6 +151,15 @@
     <ClInclude Include="..\src\framework\GameInfo.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\scripting\Scriptable.h">
+      <Filter>Header Files\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\InfoBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CommonTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AddinInfo.cpp">
@@ -189,9 +198,6 @@
     <ClCompile Include="..\src\platform\x11\X11Vulkan.cpp">
       <Filter>Source Files\platform\x11</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\lib\Xerces.cpp">
-      <Filter>Source Files\lib</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\lib\Vulkan.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
@@ -225,11 +231,14 @@
     <ClCompile Include="..\src\util\FilePath.cpp">
       <Filter>Source Files\util</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\util\Version.cpp">
-      <Filter>Source Files\util</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\framework\GameInfo.cpp">
       <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InfoBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\scripting\Scriptable.cpp">
+      <Filter>Source Files\scripting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

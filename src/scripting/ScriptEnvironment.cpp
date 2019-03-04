@@ -38,14 +38,8 @@ ScriptEnvironment *ScriptEnvironment::Create(Engine &engine) {
         v8::Isolate::Scope isolateScope(env->isolate);
         v8::HandleScope handleScope(env->isolate);
 
-        v8::Handle<v8::ObjectTemplate> game = v8::ObjectTemplate::New(env->isolate);
-
         v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(env->isolate);
-        global->Set(v8::String::NewFromUtf8(env->isolate, "game", v8::NewStringType::kNormal).ToLocalChecked(), game);
-
-        v8::Handle<v8::ObjectTemplate> platformConfig = v8::ObjectTemplate::New(env->isolate);
-
-        env->context = v8::Persistent<v8::Context>(env->isolate, v8::Context::New(env->isolate, NULL, global));
+        //env->context = v8::Persistent<v8::Context>(env->isolate, v8::Context::New(env->isolate, NULL, global));
     }
 
     return env;
@@ -60,5 +54,7 @@ v8::Handle<v8::Value> ScriptEnvironment::RunScript(Script &script) {
     return v8::Handle<v8::Value>();
 }
 
-v8::Persistent<v8::Context> ScriptEnvironment::GetContext() { return context; }
+v8::Isolate *ScriptEnvironment::GetIsolate() { return isolate; }
+v8::ArrayBuffer::Allocator *ScriptEnvironment::GetAllocator() { return allocator; }
+v8::Local<v8::Context> ScriptEnvironment::GetContext() { return context.Get(isolate); }
 

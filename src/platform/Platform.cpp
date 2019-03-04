@@ -3,7 +3,7 @@ File: Platform.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include "GaME.h"
+#include "../GaME.h"
 
 
 Platform *Platform::Create(PlatformConfig *config) {
