@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+using namespace pugi;
+
 class Game {
 
 private:

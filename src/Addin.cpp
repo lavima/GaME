@@ -8,9 +8,11 @@ Author: Lars Vidar Magnusson
 Addin *Addin::Load(const string &filename) {
 
   Addin *ret = new Addin();
-
   ret->filename = &filename;
-  ret->info = AddinInfo::Load(filename);
+  
+  xml_document *document = PugiXML::ParseDocument(filename);
+  
+  ret->info = new AddinInfo(*document);
 
   return ret;
 

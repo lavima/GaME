@@ -43,7 +43,7 @@ _InfoBase::~_InfoBase() {
 
 }
 
-const string &_InfoBase::GetName() { return name; }
-const string &_InfoBase::GetDescription() { return description; }
-const Version &_InfoBase::GetVersion() { return this->version; }
+const string &_InfoBase::GetName() const { return name; }
+const string &_InfoBase::GetDescription() const { return description; }
+const Version &_InfoBase::GetVersion() const { return this->version; }
 

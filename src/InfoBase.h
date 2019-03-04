@@ -26,9 +26,9 @@ protected:
 
 public:
 
-    const string &GetName();
-    const string &GetDescription();
-    const Version &GetVersion();
+    const string &GetName() const;
+    const string &GetDescription() const;
+    const Version &GetVersion() const;
 
 };
 

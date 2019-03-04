@@ -16,8 +16,8 @@ SimpleRenderer::SimpleRenderer(Engine &engine) : EngineComponent(engine) {
         VK_MAKE_VERSION(gameInfo->GetVersion().GetMajor(), gameInfo->GetVersion().GetMinor(), gameInfo->GetVersion().GetRelease());
 
     const EngineInfo *engineInfo = &engine.GetInfo();
-    vkAppInfo.pEngineName = engineInfo->Name.c_str();
-    vkAppInfo.engineVersion = VK_MAKE_VERSION(engineInfo->Version->GetMajor(), engineInfo->Version->GetMinor(), engineInfo->Version->GetRelease());
+    vkAppInfo.pEngineName = engineInfo->GetName().c_str();
+    vkAppInfo.engineVersion = VK_MAKE_VERSION(engineInfo->GetVersion().GetMajor(), engineInfo->GetVersion().GetMinor(), engineInfo->GetVersion().GetRelease());
 
 }
 

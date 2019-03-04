@@ -11,9 +11,8 @@ class Script;
 class ScriptEnvironment {
 
     friend class V8;
-    friend class Scriptable;
-
-private:
+    
+protected:
 
     Engine *engine;
 
@@ -33,6 +32,8 @@ public:
     Script *LoadScript(const std::string &);
     v8::Handle<v8::Value> RunScript(Script &);
 
-    v8::Persistent<v8::Context> GetContext();
+    v8::Isolate *GetIsolate();
+    v8::ArrayBuffer::Allocator *GetAllocator();
+    v8::Local<v8::Context> GetContext();
 
 };
