@@ -13,6 +13,7 @@
 #include <vector>
 #include <utility>
 #include <unordered_map>
+#include <memory>
 #include <cassert>
 
 using namespace std;

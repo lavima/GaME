@@ -18,6 +18,6 @@ private:
     
 public:
     
-    PlatformInfo(PlatformType type, const string *name, const string *description, const Version *version);
+    PlatformInfo(PlatformType type, const string &name, const string &description, const Version &version);
 
 };
