@@ -20,16 +20,16 @@ Log::Log(const string &filename) {
 
 }
 
-template<typename ... T> void Log::AddEvent(EventType addinType, const string &format, T && ... args) {
+template<typename ... T> void Log::AddEvent(EventType eventType, const string &format, T ... args) {
 
-    if (addinType > listenLevel)
+    if (eventType > listenLevel)
         return;
 
-    if (addinType == EVENT_ERROR) 
+    if (eventType == EVENT_ERROR) 
         (*out) << ERROR_PREFIX << StringUtil::Format(format, args ...); 
-    else if (addinType == EVENT_WARNING) 
+    else if (eventType == EVENT_WARNING) 
         (*out) << WARNING_PREFIX << StringUtil::Format(format, args ...); 
-    else if (addinType == EVENT_DEBUG)
+    else if (eventType == EVENT_DEBUG)
         (*out) << INFO_PREFIX << StringUtil::Format(format, args ...); 
 
 }

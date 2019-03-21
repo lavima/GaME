@@ -35,8 +35,8 @@ public:
     Log();
     Log(const string &filename);
 
-    template<typename ... T> void AddEvent(const string &format, T && ... args);
-    template<typename ... T> void AddEvent(EventType addinType, const string &format, T && ... args);
+    template<typename ... T> void AddEvent(const string &format, T ... args);
+    template<typename ... T> void AddEvent(EventType eventType, const string &format, T ... args);
 
     void AddListener(LogListener *listener);
 
