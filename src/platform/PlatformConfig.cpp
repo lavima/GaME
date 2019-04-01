@@ -69,3 +69,7 @@ void GraphicalPlatformConfig::SetHeight(int width) { this->height = height; }
 
 bool GraphicalPlatformConfig::GetFullscreen() { return this->fullscreen; }
 void GraphicalPlatformConfig::SetFullscreen(bool fullscreen) { this->fullscreen = fullscreen; }
+
+GraphicalPlatformConfig GraphicalPlatformConfig::__Factory::singleton;
+
+GraphicalPlatformConfig::__Factory() { Data::RegisterType(PLATFORM_CONFIG_EXTENSION, &singleton); }

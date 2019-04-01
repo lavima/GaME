@@ -13,21 +13,17 @@ Win32Vulkan::Win32Vulkan(PlatformConfig &config) {
 
     this->config = (GraphicalPlatformConfig *)&config;
 
-    commandLine = GetCommandLine();
-
 }
 
 LRESULT	CALLBACK WindowCallback(HWND, UINT, WPARAM, LPARAM);
 
-Platform * Win32Vulkan::Load(PlatformConfig &config) {
+Platform * Win32Vulkan::Create(PlatformConfig &config) {
 
     return new Win32Vulkan(config);
 
 }
 
-bool Win32Vulkan::Initialize(PlatformConfig &config) {
-
-    this->config = (GraphicalPlatformConfig *)&config;
+bool Win32Vulkan::Initialize() {
 
     RECT		windowRect;
     windowRect.left = 0;
@@ -169,14 +165,6 @@ void * Win32Vulkan::LoadLibrarySymbol(void * handle, const string &name) {
 
 unsigned long long Win32Vulkan::GetSystemTime() {
     return 0;
-}
-
-#ifdef GetCommandLine
-#undef GetCommandLine
-#endif
-const string &Win32Vulkan::GetCommandLine() {
-    
-    return commandLine;
 }
 
 LRESULT CALLBACK WindowCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM	lParam) {

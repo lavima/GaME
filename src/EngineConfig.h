@@ -5,34 +5,51 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+#define ENGINE_CONFIG_EXTENSION "engine_config"
+
 /**
  * Engine Configuration with XML backend.
  */
-class EngineConfig {
+class EngineConfig : XMLData<EngineConfig> {
 
 private:
 
-    string filename;
-    string logFilename;
+    unique_ptr<string> logFilename;
 
     vector<string> addinFilenames;
-
-    pugi::xml_document *xmlDocument;
-
-    EngineConfig() {}
+    vector<reference_wrapper<const string>> addinFilenamesConst;
 
 public:
 
-    EngineConfig(const string &filename, const string &logFilename);
-    EngineConfig(const string &filename, const string &logFilename, const vector<string> &addinFilenames);
     EngineConfig(const string &filename);
-    EngineConfig(pugi::xml_document &xmlDocument);
+    EngineConfig(const string &filename, const string &logFilename);
     ~EngineConfig();
 
-    void AddAddinFilename(const string &addinFilename);
+    static EngineConfig *Load(const string &filename);
 
-    const string &GetFilename();
+    bool HasLogFilename(); 
     const string &GetLogFilename();
-    const vector<string> &GetAddinFilenames();
+    void SetLogFilename(const string &logFilename);
+
+    void AddAddinFilename(const string &addinFilename);
+    const vector<reference_wrapper<const string>> GetAddinFilenames();
+
+    virtual bool Load();
+    virtual bool Save();
+
+private:
+
+    class EngineConfigFactory : DataFactory<EngineConfig> {
+    private:
+
+        static EngineConfigFactory singleton;
+
+        EngineConfigFactory();
+
+    public:
+
+        EngineConfig *Load(const string &filename);
+
+    };
 
 };

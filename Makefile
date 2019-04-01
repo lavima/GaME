@@ -15,7 +15,7 @@ DEFINES = -D PLATFORM_GLFW_VULKAN
 INCLUDE_DIRS = -Isrc -Iexternal_libs/pugixml-1.9 -Iexternal_libs/v8-7.4.256/include -Iexternal_libs/vulkan-1.1.85.0/include -Iexternal_libs/glfw-3.2.1/include
 LIB_DIRS = -Lexternal_libs/v8-7.4.256/libs -Lexternal_libs/vulkan-1.1.85.0/libs -Lexternal_libs/glfw-3.2.1/libs 
 
-LIBS = -lv8_monolith -lglfw3 -lvulkan
+LIBS = -ldl -lv8_monolith -lglfw -lvulkan
 
 LINKER_OPTIONS = -pthread
 
