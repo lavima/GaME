@@ -35,8 +35,6 @@ private:
 
 	Win32Data win32;
 
-    string commandLine;
-
 public:
 
     static Platform * Create(PlatformConfig &config);
@@ -59,11 +57,6 @@ public:
 	void *LoadLibrarySymbol(void *handle, const string &name);
 
 	unsigned long long GetSystemTime();
-
-#ifdef GetCommandLine
-#undef GetCommandLine
-#endif
-    const string &GetCommandLine();
 
 private:
 

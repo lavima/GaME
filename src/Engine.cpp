@@ -6,35 +6,58 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 
-Engine::Engine(Platform &platform, const string &configFilename) : Engine(platform, new EngineConfig(configFilename)) {}
-
-Engine::Engine(Platform &platform, EngineConfig *engineConfig) {
-
-    this->platform = &platform;
-    this->config = engineConfig;
+Engine::Engine() {
 
     isRunning = false;
     game = nullptr;
     scriptEnvironment = nullptr;
 
-    log = new Log(config->GetLogFilename());
+    log = unique_ptr<Log>(new Log(cout));
+    log->AddOutputStream(cerr, EVENT_ERROR);
 
 }
 
 void Engine::Initialize() {
 
-    printf("Initiliazing engine\n");
-    
-    /* Retrieve the executable path from the command line */
-    info.executablePath = string(CommandLine::GetExecutablePath(platform->GetCommandLine()));   
+    EngineConfig *engineConfig = nullptr;
+    if (CommandLine::HasOption("engineConfig")) {
+        (*log).AddEvent(EVENT_INFO, "Loading engine configuration from %s", CommandLine::GetOption("engineConfig"));
+        engineConfig = EngineConfig::Load((CommandLine::GetOption("engineConfig")));
+    } 
+    else
+        engineConfig = new DefaultEngineConfig();
+    if (CommandLine::HasOption("engineLogFilename"))
+        engineConfig->SetLogFilename(CommandLine::GetOption("engineLogFile"));
+
+    if (engineConfig->HasLogFilename()) {
+        logFileStream = unique_ptr<ofstream>(new ofstream(engineConfig->GetLogFilename()));
+        (*log).AddOutputStream(*logFileStream);
+    }
+
+    (*log).AddEvent(EVENT_INFO, "Initiliazing engine");
+
+    info.executablePath = CommandLine::GetProgram();   
 
     scriptEnvironment = ScriptEnvironment::Create(*this);
 
+    PlatformConfig *platformConfig = nullptr;
+    if (CommandLine::HasOption("platformConfig")) 
+        platformConfig = PlatformConfig::Load(CommandLine::GetOption("platformConfig"));
+
+    if (!platformConfig) {
+        (*log).AddEvent(EVENT_INFO, "Creating default platform config");
+        platformConfig = new DefaultPlatformConfig();
+    }
+
+    platform = platform(Platform::Create(*this, platformConfig));
+
+    (*log).AddEvent(EVENT_DEBUG, "Initializing platform");
     if (!platform->Initialize())
         printf("WARNING: Failed to initialize the platform.\n");
 
-    for (vector<string>::const_iterator iter = config->GetAddinFilenames().begin(); iter != config->GetAddinFilenames().end(); ++iter)
-        LoadAddin(*iter);
+    (*log).AddEvent(EVENT_DEBUG, "Loading addins");
+    for (const string &addinFilename : config->GetAddinFilenames())
+        LoadAddin(addinFilename);
 
     isRunning = true;
 
@@ -181,7 +204,6 @@ ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
 Platform &Engine::GetPlatform() { return *platform; }
 Game &Engine::GetGame() { return *game; }
 
-const string &Engine::GetCommandLine() { return platform->GetCommandLine(); }
 const EngineInfo &Engine::GetInfo() { return (const EngineInfo &)info; }
 
 Log &Engine::GetLog() { return *log; }

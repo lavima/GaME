@@ -5,9 +5,13 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-#define ENGINE_NAME string("GaME")
-#define ENGINE_DESCRIPTION string("GaME Mechanics Engine")
+#define ENGINE_NAME "GaME"
+#define ENGINE_DESCRIPTION "GaME Mechanics Engine"
 #define ENGINE_VERSION Version(0, 0, 1)
+
+
+#define ENGINE_OPTION_CONFIG "engineConfig"
+#define ENGINE_OPTION_CONFIG "engineLogFilename"
 
 class EngineInfo : public _InfoBase {
     friend class Engine;
@@ -37,23 +41,19 @@ class Engine {
         unordered_map<string, EngineComponent *> components;
 
         ScriptEnvironment *scriptEnvironment;
-        Platform *platform;
+        unique_ptr<Platform> platform;
 
-        Log *log;
+        unique_ptr<Log> log;
+        unique_ptr<ofstream> logFileStream;
 
         Game *game;
 
         bool isRunning;
         bool isGameRunning;
 
-        void shutdown();
-
-        Engine() {}
-
     public:
 
-        Engine(Platform &platform, const string &configFilename);
-        Engine(Platform &platform, EngineConfig *engineConfig);
+        Engine();
 
         void Initialize();
         void Stop();
@@ -69,7 +69,6 @@ class Engine {
 
         bool IsRunning();
 
-        const string &GetCommandLine();
         const EngineInfo &GetInfo();
         ScriptEnvironment &GetScriptEnvironment();
         Platform &GetPlatform();
@@ -77,6 +76,8 @@ class Engine {
         Log &GetLog(); 
 
     private:
+
+        void shutdown(); 
 
         class Scriptable : public _Scriptable {
         public:

@@ -5,8 +5,9 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class PlatformConfig {
+#define PLATFORM_CONFIG_EXTENSION "platform_config"
 
+class PlatformConfig : XMLData<PlatformConfig> {
 private:
     
     string typeName;
@@ -25,6 +26,21 @@ public:
 
     const string &GetTypeName();
     void SetTypeName(const string &typeName);
+
+private:
+
+    class __Factory : DataFactory<GraphicalPlatformConfig> {
+    private:
+
+        static __Factory singleton;
+
+        __Factory();
+
+    public:
+
+        PlatformConfig *Load(const string &filename);
+
+    };
 
 };
 
