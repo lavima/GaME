@@ -7,10 +7,11 @@ Author: Lars Vidar Magnusson
 
 #ifdef PLATFORM_GLFW_VULKAN
 
+
 class DefaultPlatformConfig : public GraphicalPlatformConfig {
 public:
 
-    DefaultPlatformConfig() : GraphicalPlatformConfig(string("GLFWVulkan"), 800, 600, false) {}
+    DefaultPlatformConfig() : GraphicalPlatformConfig(GLFWVULKAN_PLATFORM_CONFIG, GLFWVULKAN_NAME, 800, 600, false) {}
 
 };
 

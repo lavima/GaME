@@ -50,7 +50,6 @@ using namespace std;
 #include "platform/InputKey.h"
 #include "platform/PlatformInfo.h"
 #include "platform/PlatformConfig.h"
-#include "platform/DefaultPlatformConfig.h"
 #include "platform/Platform.h"
 #ifdef PLATFORM_WIN32
 #include "platform/Win32Vulkan.h"
@@ -58,11 +57,13 @@ using namespace std;
 #ifdef PLATFORM_GLFW_VULKAN
 #include "platform/GLFWVulkan.h"
 #endif
+#include "platform/DefaultPlatformConfig.h"
 #include "framework/GameTime.h"
 #include "framework/Entity.h"
 #include "framework/GameInfo.h"
 #include "framework/GameConfig.h"
 #include "framework/Game.h"
+#include "EngineComponentInfo.h"
 #include "AddinInfo.h"
 #include "Addin.h"
 #include "EngineConfig.h"

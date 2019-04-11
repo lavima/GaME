@@ -1,6 +1,7 @@
 EXTERNAL_SOURCES = $(wildcard external_libs/pugixml-1.9/*.cpp)
 
 SOURCES = $(wildcard src/*.cpp) \
+          $(wildcard src/data/*.cpp) \
           $(wildcard src/framework/*.cpp) \
           $(wildcard src/lib/*.cpp) \
           $(wildcard src/platform/*.cpp) \

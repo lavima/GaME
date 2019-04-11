@@ -5,27 +5,27 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-#define ENGINE_CONFIG_EXTENSION "engine_config"
+#define EXTENSION_ENGINECONFIG "engine_config"
+
+#define XMLNAME_ENGINECONFIG "EngineConfig"
+#define XMLNAME_ENGINECONFIG_LOGFILENAME "LogFilename"
+#define XMLNAME_ENGINECONFIG_ADDIN XMLNAME_ADDIN
 
 /**
  * Engine Configuration with XML backend.
  */
-class EngineConfig : XMLData<EngineConfig> {
+class EngineConfig : public XMLData {
 
 private:
 
     unique_ptr<string> logFilename;
 
     vector<string> addinFilenames;
-    vector<reference_wrapper<const string>> addinFilenamesConst;
 
 public:
 
     EngineConfig(const string &filename);
     EngineConfig(const string &filename, const string &logFilename);
-    ~EngineConfig();
-
-    static EngineConfig *Load(const string &filename);
 
     bool HasLogFilename(); 
     const string &GetLogFilename();
@@ -34,21 +34,23 @@ public:
     void AddAddinFilename(const string &addinFilename);
     const vector<reference_wrapper<const string>> GetAddinFilenames();
 
-    virtual bool Load();
-    virtual bool Save();
+    using XMLData::Load;
+    bool Load(pugi::xml_node rootNode);
+    using XMLData::Save;
+    bool Save(pugi::xml_node rootNode);
 
 private:
 
-    class EngineConfigFactory : DataFactory<EngineConfig> {
+    class __Factory : public DataFactory {
     private:
 
-        static EngineConfigFactory singleton;
+        static __Factory singleton;
 
-        EngineConfigFactory();
+        __Factory();
 
     public:
 
-        EngineConfig *Load(const string &filename);
+        Data *Load(const string &filename);
 
     };
 

@@ -5,7 +5,9 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-template<typename T> class DataFactory {
+class Data;
+
+class DataFactory {
 public:
-    virtual T *Load(const string &filename) = 0;
+    virtual Data *Load(const string &filename) = 0;
 };

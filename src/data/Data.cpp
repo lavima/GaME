@@ -5,19 +5,10 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-unordered_map<string, DataFactory<T> *> Data<T>::datatypes;
+unordered_map<string, DataFactory *> Data::datatypes;
 
-Data<T>::Data(const string &filename) {
+Data::Data(const string &filename) {
     this->filename = filename;
-}
-
-T *Data::Load(const string &filename) {
-
-    if (datatypes[filename].count == 0)
-        return nullptr;
-
-    return datatypes[filename]->Load(filename);
-
 }
 
 bool Data::LoadFrom(const string &filename) {
@@ -28,3 +19,7 @@ bool Data::LoadFrom(const string &filename) {
 }
 
 const string &Data::GetFilename() { return filename; }
+
+void Data::RegisterType(const string &extension, DataFactory *factory) {
+
+}

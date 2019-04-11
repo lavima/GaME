@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 #define PLATFORM_CONFIG_EXTENSION "platform_config"
 
-class PlatformConfig : XMLData<PlatformConfig> {
+class PlatformConfig : public XMLData {
 private:
     
     string typeName;
@@ -15,21 +15,17 @@ private:
 
 protected:
 
-    PlatformConfig(const string &typeName);
+    PlatformConfig(const string &filename);
+    PlatformConfig(const string &filename, const string &typeName);
 
 public:
-
-    /*
-    * Factory function for loading any type of platform configuration from an XML-document
-    */
-    static PlatformConfig *Load(pugi::xml_document &xmlDocument);
 
     const string &GetTypeName();
     void SetTypeName(const string &typeName);
 
 private:
 
-    class __Factory : DataFactory<GraphicalPlatformConfig> {
+    class __Factory : public DataFactory {
     private:
 
         static __Factory singleton;
@@ -38,33 +34,37 @@ private:
 
     public:
 
-        PlatformConfig *Load(const string &filename);
+        Data *Load(const string &filename);
 
     };
 
 };
 
-#define DEFAULT_WIDTH 800
-#define DEFAULT_HEIGHT 600
-#define DEFAULT_FULLSCREEN false
+#define DEFAULT_GRAPHICALPLATFORM_WIDTH 800
+#define DEFAULT_GRAPHICALPLATFORM_HEIGHT 600
+#define DEFAULT_GRAPHICALPLATFORM_FULLSCREEN false
+
+#define XMLNAME_GRAPHICALPLATFORMCONFIG "GraphicalPlatformConfig"
+#define XMLNAME_GRAPHICALPLATFORMCONFIG_WIDTH "Width"
+#define XMLNAME_GRAPHICALPLATFORMCONFIG_HEIGHT "Height"
+#define XMLNAME_GRAPHICALPLATFORMCONFIG_FULLSCREEN "Fullscreen"
 
 class GraphicalPlatformConfig : public PlatformConfig {
-
-  friend class PlatformConfig;
-
 private:
 
     int width;
     int height;
     bool fullscreen;
 
-protected:
-
-    GraphicalPlatformConfig(const string &name);
-    GraphicalPlatformConfig(const string &name, int width, int height, bool fullscreen);
-    GraphicalPlatformConfig(pugi::xml_node &xmlNode);
-
 public:
+
+    GraphicalPlatformConfig(const string &filename);
+    GraphicalPlatformConfig(const string &filename, const string &name);
+    GraphicalPlatformConfig(const string &filename, const string &name, int width, int height, bool fullscreen);
+
+
+    bool Load(pugi::xml_node rootNode); 
+    bool Save(pugi::xml_node rootNode);
 
     int GetWidth();
     void SetWidth(int width);

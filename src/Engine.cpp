@@ -22,7 +22,7 @@ void Engine::Initialize() {
     EngineConfig *engineConfig = nullptr;
     if (CommandLine::HasOption("engineConfig")) {
         (*log).AddEvent(EVENT_INFO, "Loading engine configuration from %s", CommandLine::GetOption("engineConfig"));
-        engineConfig = EngineConfig::Load((CommandLine::GetOption("engineConfig")));
+        engineConfig = Data::Load<EngineConfig>((CommandLine::GetOption("engineConfig")));
     } 
     else
         engineConfig = new DefaultEngineConfig();
@@ -42,20 +42,19 @@ void Engine::Initialize() {
 
     PlatformConfig *platformConfig = nullptr;
     if (CommandLine::HasOption("platformConfig")) 
-        platformConfig = PlatformConfig::Load(CommandLine::GetOption("platformConfig"));
+        platformConfig = Data::Load<PlatformConfig>(CommandLine::GetOption("platformConfig"));
 
     if (!platformConfig) {
         (*log).AddEvent(EVENT_INFO, "Creating default platform config");
         platformConfig = new DefaultPlatformConfig();
     }
 
-    platform = platform(Platform::Create(*this, platformConfig));
+    platform = unique_ptr<Platform>(Platform::Create(*this, platformConfig));
 
-    (*log).AddEvent(EVENT_DEBUG, "Initializing platform");
     if (!platform->Initialize())
         printf("WARNING: Failed to initialize the platform.\n");
 
-    (*log).AddEvent(EVENT_DEBUG, "Loading addins");
+    (*log).AddEvent(EVENT_INFO, "Loading addins");
     for (const string &addinFilename : config->GetAddinFilenames())
         LoadAddin(addinFilename);
 
@@ -120,8 +119,6 @@ void Engine::CloseGame() {
 }
 
 bool Engine::LoadAddin(const string &filename) {
-
-    
 
     Addin *addin = Addin::Load(filename);
     AddinInfo info = addin->GetInfo();

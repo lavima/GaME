@@ -8,35 +8,41 @@ Author: Lars Vidar Magnusson
 /*
 * Base class for XML serializable classes.
 */
-template<typename T> class XMLData : WritableData<T> {
+class XMLData : public WritableData, public XMLSerializable {
 private:
 
-    pugi::xml_document xmlDocument;
+    unique_ptr<pugi::xml_document> xmlDocument;
+
+public:
+
+    XMLData(const string &filename);
+    XMLData(const string &filename, pugi::xml_document *document);
+
+    bool Load();
+    virtual bool Load(pugi::xml_node) = 0;
+
+    bool Save();
+    virtual bool Save(pugi::xml_node) = 0;
+
 
 protected:
 
-    XMLData(const string &filename) : WritableData<T>(filename) {}
-    XMLData(const string &filename, pugi::xml_document document);
+    static bool Parse(const string &filename, pugi::xml_document *document);
 
-    bool LoadXML();
-    bool SaveXML();
-
-    xml_document GetXMLDocument();
-    void SetXMLDocument(pugi::xml_document document);
-
+    pugi::xml_document &GetXMLDocument();
 
 private:
 
-    class XMLDataFactory : DataFactory<XMLData> {
+    class __Factory : public DataFactory {
     private:
 
-        static XMLDataFactory singleton;
+        static __Factory singleton;
 
-        XMLDataFactory();
+        __Factory();
 
     public:
         
-        XMLData *Load(const string &filename); 
+        Data *Load(const string &filename); 
 
     };
 };
