@@ -40,7 +40,3 @@ AddinInfo &Addin::GetInfo() { return *(this->info); }
 void *Addin::GetHandle() { return this->handle; }
 void Addin::SetHandle(void *handle) { this->handle = handle; }
 
-Addin::~Addin() {
-    delete filename;
-    delete info;
-}

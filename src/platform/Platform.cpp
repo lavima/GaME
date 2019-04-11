@@ -20,7 +20,7 @@ Platform *Platform::Create(Engine &engine, PlatformConfig *config) {
 
 }
 
-const unordered_map<KeyCode, reference_wrapper<const InputKey>> GraphicalPlatform::GetInputKeys() {
+const unordered_map<KeyCode, reference_wrapper<const InputKey>> Platform::GetInputKeys() {
     return unordered_map<KeyCode, reference_wrapper<const InputKey>>(inputKeys.begin(), inputKeys.end()); 
 }
 
@@ -31,4 +31,4 @@ void Platform::RegisterImplementation(const string &name, CreatePlatformFun crea
 }
 
 Engine &Platform::GetEngine() { return engine; }
-unordered_map<KeyCode, __InputKeyWritable> __GraphicalPlatformInternal::GetWritableInputKeys() { return inputKeys; }
+unordered_map<KeyCode, __InputKeyWritable> Platform::GetWritableInputKeys() { return inputKeys; }

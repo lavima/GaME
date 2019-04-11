@@ -5,10 +5,10 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-template<typename T> class Data {
+class Data {
 private:
 
-    static unordered_map<string, DataFactory<T> *> datatypes;
+    static unordered_map<string, DataFactory *> datatypes;
 
     string filename; 
 
@@ -18,7 +18,7 @@ protected:
 
 public:
 
-    static T *Load(const string &filename);
+    template<typename T> static T *Load(const string &filename);
 
     virtual bool Load() = 0;
     bool LoadFrom(const string &filename);
@@ -27,14 +27,25 @@ public:
 
 protected:
 
-    static void RegisterType(const string &extension);
+    static void RegisterType(const string &extension, DataFactory *factory);
 
 };
 
-template<typename T> class WritableData : Data<T> {
+template<typename T> T *Data::Load(const string &filename) {
+
+    if (!is_base_of<Data, T>::value)
+        return nullptr;
+    if (datatypes.count(filename) == 0)
+        return nullptr;
+
+    return dynamic_cast<T *>(datatypes[filename]->Load(filename));
+
+}
+
+class WritableData : public Data {
 protected:
 
-    WritableData<T>(const string &filename) : Data<T>(filename) {}
+    WritableData(const string &filename) : Data(filename) {}
 
 public:
 

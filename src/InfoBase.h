@@ -5,26 +5,36 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class _InfoBase {
+#define XMLNAME_INFOBASE_NAME "Name"
+#define XMLNAME_INFOBASE_DESCRIPTION "Description"
+#define XMLNAME_INFOBASE_VERSION XMLNAME_VERSION 
 
+class __InfoBase : public XMLSerializable {
 private:
-
-
-protected:
 
     string name;
     string description;
     Version version;
 
-    _InfoBase(const string &name, const string &description, const Version &version);
-    _InfoBase(const string &&name, const string &&description, const Version &&version);
-    _InfoBase(pugi::xml_node &xmlNode);
-    _InfoBase(pugi::xml_node &&xmlNode);
+protected:
 
-    _InfoBase() {}
-    ~_InfoBase();
+    __InfoBase() {}
+    __InfoBase(const string &name, const string &description, const Version &version);
+    __InfoBase(const string &&name, const string &&description, const Version &&version);
+    __InfoBase(pugi::xml_node &xmlNode);
+    __InfoBase(pugi::xml_node &&xmlNode);
 
-public:
+    static bool Load(__InfoBase *info, pugi::xml_node &rootNode);
+    static bool Save(__InfoBase &info, pugi::xml_node *rootNode);
+
+    void SetName(const string &name);
+    void SetDescription(const string &description);
+    void SetVersion(const Version &version);
+
+public: 
+
+    bool Load(pugi::xml_node &rootNode) override; 
+    bool Save(pugi::xml_node *rootNode) override;
 
     const string &GetName() const;
     const string &GetDescription() const;

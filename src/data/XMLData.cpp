@@ -7,33 +7,43 @@ Author: Lars Vidar Magnusson
 
 using namespace pugi;
 
-XMLData::XMLData(const string &filename, pugi::xml_document document)
-    : Data(filename) {
-    this->xmlDocument = document;
+XMLData::XMLData(const string &filename) : WritableData(filename) {
+    xmlDocument = unique_ptr<xml_document>(new xml_document());
 }
 
-XMLData *XMLData::LoadXML() {
+XMLData::XMLData(const string &filename, pugi::xml_document *document) : WritableData(filename) {
+    xmlDocument = unique_ptr<xml_document>(document);
+}
 
-    xml_parse_result result = xmlDocument.load_file(filename.c_str());
+bool XMLData::Load() {
+
+    xml_parse_result result = xmlDocument->load_file(GetFilename().c_str());
     if (!result) {
         return false;    
     }
 
-    return true;
+    return Load(xmlDocument->document_element());
 
 }
 
-void XMLData::SaveXML() {
+bool XMLData::Save() {
 
-    xmlDocument.save_file(filename.c_str()); 
+    Save(xmlDocument->document_element());
 
-    return true;
+    return xmlDocument->save_file(GetFilename().c_str()); 
 
 }
 
-xml_document XMLData::GetXMLDocument() { return xmlDocument; }
-void XMLData::SetXMLDocument(pugi::xml_document document) { this->xmlDocument = document; }
+bool XMLData::Parse(const string &filename, xml_document *document) {
 
-XMLData::XMLDataFactory::XMLDataFactory() { Data::RegisterType(extension, &singleton); }
+    document = new xml_document();
+    xml_parse_result result = document->load_file(filename.c_str());
+    return (bool)result;
 
-XMLData *XMLData::XMLDataFactory::Load(const string &filename) {}
+}
+
+xml_document &XMLData::GetXMLDocument() { return *xmlDocument; }
+
+XMLData::__Factory XMLData::__Factory::singleton;
+XMLData::__Factory::__Factory() { Data::RegisterType("xml", &singleton); }
+Data *XMLData::__Factory::Load(const string &filename) {}

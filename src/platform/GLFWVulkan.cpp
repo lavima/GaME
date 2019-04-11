@@ -7,7 +7,7 @@
 
 #include "../GaME.h"
 
-GLFWVulkan::GLFWVulkan(Engine &engine, PlatformConfig *config) : __GraphicalPlatformInternal(engine) {
+GLFWVulkan::GLFWVulkan(Engine &engine, PlatformConfig *config) : Platform(engine) {
 
     this->config = (GraphicalPlatformConfig *)&config;
 

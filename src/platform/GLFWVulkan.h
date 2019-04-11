@@ -6,6 +6,8 @@
 #pragma once
 
 #define GLFWVULKAN_NAME "GLFWVulkan"
+#define GLFWVULKAN_PLATFORM_CONFIG "glfw_vulkan.platform_config"
+
 
 class GLFWVulkan : public Platform {
 

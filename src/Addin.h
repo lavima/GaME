@@ -14,24 +14,16 @@ typedef EngineComponent *(*CreateEngineComponentFun)(Engine &, const string &, c
 #define ADDIN_REGISTERADDIN "RegisterAddin"
 #define ADDIN_CREATECOMPONENT "CreateEngineComponent"
 
-typedef std::unordered_map<string, void *> SymbolMap;
-typedef std::pair<string, void *> SymbolMapPair;
-
-struct Addin {
-
+class Addin {
 private:
 
-    const string *filename;
-    AddinInfo *info;
+    string filename; 
+    unique_ptr<AddinInfo> info;
     void *handle;
 
-    SymbolMap symbolMap;
-
-    Addin() {}
+    unordered_map<string, void *> symbolMap;
 
 public:
-
-    ~Addin();
 
     static Addin *Load(const string &filename);
 
