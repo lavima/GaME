@@ -24,8 +24,8 @@ protected:
     __InfoBase(pugi::xml_node &xmlNode);
     __InfoBase(pugi::xml_node &&xmlNode);
 
-    static bool Load(__InfoBase *info, pugi::xml_node &rootNode);
-    static bool Save(__InfoBase &info, pugi::xml_node *rootNode);
+    static bool Load(__InfoBase *info, pugi::xml_node rootNode);
+    static bool Save(__InfoBase &info, pugi::xml_node rootNode);
 
     void SetName(const string &name);
     void SetDescription(const string &description);
@@ -33,8 +33,8 @@ protected:
 
 public: 
 
-    bool Load(pugi::xml_node &rootNode) override; 
-    bool Save(pugi::xml_node *rootNode) override;
+    bool Load(pugi::xml_node rootNode) override; 
+    bool Save(pugi::xml_node rootNode) override;
 
     const string &GetName() const;
     const string &GetDescription() const;

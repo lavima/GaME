@@ -31,7 +31,7 @@ const string *Version::GetVersionString() {
 
 bool Version::operator==(Version &other) { return major==other.major && minor==other.minor && release==other.release; }
 
-bool Version::Load(Version *version, pugi::xml_node &rootNode) {
+bool Version::Load(Version *version, pugi::xml_node rootNode) {
 
     if (string(rootNode.value()).compare(XMLNAME_VERSION))
         return false;
@@ -55,9 +55,9 @@ bool Version::Load(Version *version, pugi::xml_node &rootNode) {
 
 }
 
-bool Version::Save(Version &version, pugi::xml_node *rootNode) {
+bool Version::Save(Version &version, pugi::xml_node rootNode) {
 
-    rootNode->set_name(XMLNAME_VERSION);
+    rootNode.set_name(XMLNAME_VERSION);
 
     xml_node majorNode = rootNode.append_child();
     majorNode.set_name(XMLNAME_VERSION_MAJOR);
@@ -75,5 +75,5 @@ bool Version::Save(Version &version, pugi::xml_node *rootNode) {
 
 }
 
-bool Version::Load(pugi::xml_node &rootNode) { return Version::Load(this, rootNode); }
-bool Version::Save(pugi::xml_node *rootNode) { return Version::Save(*this, rootNode); }
+bool Version::Load(pugi::xml_node rootNode) { return Version::Load(this, rootNode); }
+bool Version::Save(pugi::xml_node rootNode) { return Version::Save(*this, rootNode); }
