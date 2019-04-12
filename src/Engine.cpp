@@ -155,7 +155,7 @@ bool Engine::LoadAddin(const string &filename) {
 
         addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
 
-        for (auto iter = info.GetEngineComponents().begin(); iter != info.GetEngineComponents().end(); ++iter)
+        for (EngineComponentInfo &componentInfo : info.GetEngineComponents())
             EngineComponent::createEngineComponentMap.insert(pair<string, CreateEngineComponentFun>(iter->first, (CreateEngineComponentFun)address));
 
     }

@@ -33,12 +33,12 @@ public:
 
     bool operator==(Version &other);
 
-    static bool Load(Version *version, pugi::xml_node &rootNode);
-    static bool Save(Version &version, pugi::xml_node *rootNode);
+    static bool Load(Version *version, pugi::xml_node rootNode);
+    static bool Save(Version &version, pugi::xml_node rootNode);
 
     /* XMLSerializable Interface */
 
-    bool Load(pugi::xml_node &rootNode);
-    bool Save(pugi::xml_node *rootNode);
+    bool Load(pugi::xml_node rootNode);
+    bool Save(pugi::xml_node rootNode);
 
 };
