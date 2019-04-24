@@ -23,8 +23,7 @@ __InfoBase::__InfoBase(const string &&name, const string &&description, const Ve
 
 }
 
-__InfoBase::__InfoBase(pugi::xml_node &xmlNode) { assert(this->Load(xmlNode)); }
-__InfoBase::__InfoBase(pugi::xml_node &&xmlNode) { assert(this->Load(xmlNode)); }
+__InfoBase::__InfoBase(pugi::xml_node xmlNode) { assert(this->Load(xmlNode)); }
 
 bool __InfoBase::Load(__InfoBase *info, pugi::xml_node rootNode) {
 
@@ -42,18 +41,16 @@ bool __InfoBase::Load(__InfoBase *info, pugi::xml_node rootNode) {
 
 }
 
-bool _infoBase::Save(__InfoBase &info, pugi::xml_node rootNode) {
+bool __InfoBase::Save(__InfoBase &info, pugi::xml_node rootNode) {
 
-    xml_node nameNode = rootNode.append_child();
-    nameNode.set_name(XMLNAME_INFOBASE_NAME);
-    nameNode.set_value(info.name);
+    xml_node nameNode = rootNode.append_child(XMLNAME_INFOBASE_NAME);
+    nameNode.set_value(info.name.c_str());
 
-    xml_node descriptionNode = rootNode.append_child();
-    descriptionNode.set_name(XMLNAME_INFOBASE_DESCRIPTION);
-    descriptionNode.set_value(info.description);
+    xml_node descriptionNode = rootNode.append_child(XMLNAME_INFOBASE_DESCRIPTION);
+    descriptionNode.set_value(info.description.c_str());
 
     xml_node versionNode = rootNode.append_child();
-    return info.version.Save(&versionNode);
+    return info.version.Save(versionNode);
 
 }
 
@@ -61,8 +58,8 @@ void __InfoBase::SetName(const string &name) { this->name = name; }
 void __InfoBase::SetDescription(const string &description) { this->description = description; }
 void __InfoBase::SetVersion(const Version &version) { this->version = version; }
 
-bool _infoBase::Load(pugi::xml_node rootNode) { return __InfoBase::Load(this, rootNode); }
-bool _infoBase::Save(pugi::xml_node rootNode) { return __InfoBase::Save(*this, rootNode); }
+bool __InfoBase::Load(pugi::xml_node rootNode) { return __InfoBase::Load(this, rootNode); }
+bool __InfoBase::Save(pugi::xml_node rootNode) { return __InfoBase::Save(*this, rootNode); }
 
 const string &__InfoBase::GetName() const { return name; }
 const string &__InfoBase::GetDescription() const { return description; }

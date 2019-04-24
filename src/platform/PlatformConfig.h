@@ -16,6 +16,7 @@ private:
 protected:
 
     PlatformConfig(const string &filename);
+    PlatformConfig(const string &filename, pugi::xml_document *document);
     PlatformConfig(const string &filename, const string &typeName);
 
 public:
@@ -59,6 +60,7 @@ private:
 public:
 
     GraphicalPlatformConfig(const string &filename);
+    GraphicalPlatformConfig(const string &filename, pugi::xml_document *document);
     GraphicalPlatformConfig(const string &filename, const string &name);
     GraphicalPlatformConfig(const string &filename, const string &name, int width, int height, bool fullscreen);
 

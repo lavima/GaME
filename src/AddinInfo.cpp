@@ -16,7 +16,7 @@ const vector<reference_wrapper<const EngineComponentInfo>> AddinInfo::GetEngineC
 
 bool AddinInfo::Load(xml_node rootNode) {
 
-    if (string(rootNode.value()).compare(XMLNAME_ADDIN))
+    if (string(rootNode.value()).compare(XMLNAME_ADDININFO))
         return false;
 
     xml_attribute libraryAttribute = rootNode.attribute(XMLNAME_ADDININFO_LIBRARYFILENAME);
@@ -40,7 +40,7 @@ bool AddinInfo::Load(xml_node rootNode) {
 
 bool AddinInfo::Save(xml_node rootNode) {
 
-    rootNode.set_name(XMLNAME_ADDIN);
+    rootNode.set_name(XMLNAME_ADDININFO);
 
     xml_attribute libraryAttribute = rootNode.append_attribute(XMLNAME_ADDININFO_LIBRARYFILENAME);
     libraryAttribute.set_value(libraryFilename.c_str());
@@ -58,9 +58,9 @@ AddinInfo::__Factory::__Factory() { Data::RegisterType(EXTENSION_ADDIN, &singlet
 
 Data *AddinInfo::__Factory::Load(const string &filename) { 
 
-    AddinInfo *newAddinInfo = new EngineConfig(filename);
+    AddinInfo *newAddinInfo = new AddinInfo(filename);
 
-    if (!newAddinInfo->Load())
+    if (!((XMLData *)newAddinInfo)->Load())
         return nullptr;
 
     return newAddinInfo;

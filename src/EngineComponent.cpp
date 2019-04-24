@@ -5,27 +5,26 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-unordered_map<string, CreateEngineComponentFun> EngineComponent::createEngineComponentMap;
+unordered_map<string, CreateEngineComponentFun> EngineComponent::componentProviders;
 
-EngineComponent::EngineComponent(Engine &engine) {
+EngineComponent::EngineComponent(Engine &engine, const string &typeName) : __Instanceable(typeName) {
 
     this->engine = &engine;
 
 }
 
-EngineComponent *EngineComponent::Create(Engine &engine, const string &typeName, const string &name) {
+EngineComponent *EngineComponent::Create(Engine &engine, const string &typeName) {
 
-    unordered_map<string, CreateEngineComponentFun>::iterator item = createEngineComponentMap.find(typeName);
-    if (item == createEngineComponentMap.end()) {
+    unordered_map<string, CreateEngineComponentFun>::iterator item = componentProviders.find(typeName);
+    if (item == componentProviders.end()) {
         printf("Could not find the specified game component type %s\n", typeName.c_str());
         return NULL;
     }
 
-    CreateEngineComponentFun createEngineComponent = createEngineComponentMap[typeName];
+    CreateEngineComponentFun createEngineComponent = componentProviders[typeName];
 
-    return createEngineComponent(engine, typeName, name);
+    return createEngineComponent(engine, typeName);
 
 }
 
-const string &EngineComponent::GetTypeName() { return this->typeName; }
-const string &EngineComponent::GetName() { return this->name; }
+void EngineComponent::RegisterProvider(const string &typeName, CreateEngineComponentFun createFun) { componentProviders[typeName] = createFun; }

@@ -9,15 +9,12 @@ class Engine;
 class EngineComponent;
 
 typedef void (*RegisterAddinFun)(AddinInfo &);
-typedef EngineComponent *(*CreateEngineComponentFun)(Engine &, const string &, const string &);
 
-#define ADDIN_REGISTERADDIN "RegisterAddin"
-#define ADDIN_CREATECOMPONENT "CreateEngineComponent"
+#define ADDINFUN_REGISTERADDIN "RegisterAddin"
 
 class Addin {
 private:
 
-    string filename; 
     unique_ptr<AddinInfo> info;
     void *handle;
 
@@ -25,15 +22,13 @@ private:
 
 public:
 
-    static Addin *Load(const string &filename);
+    static Addin *Load(Platform &platform, const string &filename);
 
     bool HasSymbol(const string &name);
-    void AddSymbol(const string &name, void *address);
-    void *GetSymbol(const string &name);
+    void *GetSymbolAddr(const string &name);
+    const vector<reference_wrapper<const string>> GetLoadedSymbolNames() const;
 
-    const string &GetFilename();
     AddinInfo &GetInfo();
     void *GetHandle();
-    void SetHandle(void *handle);
 
 };

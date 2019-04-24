@@ -9,7 +9,6 @@ Author: Lars Vidar Magnusson
 Engine::Engine() {
 
     isRunning = false;
-    game = nullptr;
     scriptEnvironment = nullptr;
 
     log = unique_ptr<Log>(new Log(cout));
@@ -84,7 +83,7 @@ void Engine::Stop() {
 
 void Engine::LoadGame(const string &filename) {
 
-    game = Game::Load(filename);
+    game = unique_ptr<Game>(Data::Load<Game>(filename));
 
     game->Initialize(*this);
 
@@ -120,46 +119,7 @@ void Engine::CloseGame() {
 
 bool Engine::LoadAddin(const string &filename) {
 
-    Addin *addin = Addin::Load(filename);
-    AddinInfo info = addin->GetInfo();
-
-    string libraryFilename = FilePath::GetFilename(filename);
-
-    addin->SetHandle(platform->LoadLibrary(libraryFilename));
-    if (!addin->GetHandle()) {
-        printf("Failed to load the addin.\n");
-        delete addin;
-        return false;
-    }
-
-    void *address = platform->LoadLibrarySymbol(addin->GetHandle(), ADDIN_REGISTERADDIN);
-    if (!address) {
-        printf("Failed to load %s.\n", ADDIN_REGISTERADDIN);
-        delete addin;
-        return false;
-    }
-
-    addin->AddSymbol(ADDIN_REGISTERADDIN, address);
-
-    RegisterAddinFun registerAddin = (RegisterAddinFun)address;
-    registerAddin(info);
-
-    if (info.GetType() == ENGINE_COMPONENT_ADDIN) {
-
-        address = platform->LoadLibrarySymbol(addin->GetHandle(), ADDIN_CREATECOMPONENT);
-        if (!address) {
-            printf("Failed to load %s.\n", ADDIN_CREATECOMPONENT);
-            delete addin;
-            return false;
-        }
-
-        addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
-
-        for (EngineComponentInfo &componentInfo : info.GetEngineComponents())
-            EngineComponent::createEngineComponentMap.insert(pair<string, CreateEngineComponentFun>(iter->first, (CreateEngineComponentFun)address));
-
-    }
-
+    Addin *addin = Addin::Load(*platform, filename);
     addins.push_back(addin);
 
     config->AddAddinFilename(filename);
@@ -175,7 +135,7 @@ void Engine::AddComponent(const string &typeName, const string &name) {
     if (components.find(name) != components.end())
         printf("The component with the specified name (%s) already exists\n", name.c_str());
 
-    components[name] = EngineComponent::Create(*this, name, name);
+    components[name] = EngineComponent::Create(*this, typeName);
 
 }
 

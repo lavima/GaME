@@ -5,10 +5,14 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-EngineComponentInfo::EngineComponentInfo(const string &name, const string &description, const Version &version);
-EngineComponentInfo::EngineComponentInfo(pugi::xml_node rootNode);
+EngineComponentInfo::EngineComponentInfo(const string &name, const string &description, const Version &version) 
+    : __InfoBase(name, description, version) {}
 
-static bool EngineComponentInfo::Load(EngineComponentInfo *info, pugi::xml_node rootNode) {
+EngineComponentInfo::EngineComponentInfo(xml_node rootNode) {
+    assert(EngineComponentInfo::Load(this, rootNode));
+}
+
+bool EngineComponentInfo::Load(EngineComponentInfo *info, xml_node rootNode) {
 
     if (string(rootNode.value()).compare(XMLNAME_ENGINECOMPONENTINFO))
         return false;
@@ -17,7 +21,7 @@ static bool EngineComponentInfo::Load(EngineComponentInfo *info, pugi::xml_node 
 
 }
 
-static bool EngineComponentInfo::Load(EngineComponentInfo &info, pugi::xml_node rootNode) {
+bool EngineComponentInfo::Save(EngineComponentInfo &info, xml_node rootNode) {
 
     rootNode.set_name(XMLNAME_ENGINECOMPONENTINFO);
 
@@ -25,7 +29,7 @@ static bool EngineComponentInfo::Load(EngineComponentInfo &info, pugi::xml_node 
 
 }
 
-bool EngineComponentInfo::Load(pugi::xml_node rootNode) { return Load(this, rootNode); }
-bool EngineComponentInfo::Save(pugi::xml_node rootNode) { return Save(*this, rootNode); }
+bool EngineComponentInfo::Load(pugi::xml_node rootNode) { return EngineComponentInfo::Load(this, rootNode); }
+bool EngineComponentInfo::Save(pugi::xml_node rootNode) { return EngineComponentInfo::Save(*this, rootNode); }
 
 

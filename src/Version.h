@@ -8,7 +8,7 @@ Author: Lars Vidar Magnusson
 #define XMLNAME_VERSION "Version"
 #define XMLNAME_VERSION_MAJOR "Major"
 #define XMLNAME_VERSION_MINOR "Minor"
-#define XMLNAEM_VERSION_RELEASE "Release"
+#define XMLNAME_VERSION_RELEASE "Release"
 
 class Version : XMLSerializable {
 private:
@@ -17,10 +17,10 @@ private:
     int minor;
     int release;
 
-    Version() {}
 
 public:
 
+    Version();
     Version(int major, int minor, int release);
     Version(pugi::xml_node &xmlNode);
     Version(pugi::xml_node &&xmlNode);

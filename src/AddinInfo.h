@@ -25,9 +25,10 @@ private:
 
     vector<EngineComponentInfo> engineComponents;
 
-    AddinInfo() {}
-    
+
 public:
+
+    AddinInfo(const string &filename) : XMLData(filename) {}
 
     AddinType GetType();
     

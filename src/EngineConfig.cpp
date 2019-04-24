@@ -26,8 +26,8 @@ const vector<reference_wrapper<const string>> EngineConfig::GetAddinFilenames() 
 
 bool EngineConfig::Load(xml_node rootNode) {
 
-    if (string(rootNode.get_name()).compare(XMLNAME_ENGINECONFIG))
-        return false
+    if (string(rootNode.name()).compare(XMLNAME_ENGINECONFIG))
+        return false;
 
     xml_node nodeLogFilename = rootNode.child(XMLNAME_ENGINECONFIG_LOGFILENAME);
     if (nodeLogFilename)
@@ -49,9 +49,9 @@ bool EngineConfig::Save(xml_node rootNode) {
         logFilenameNode.set_value(logFilename->c_str());
     }
         
-    for (string addinFilename : addinFilenames) {
+    for (const string &addinFilename : addinFilenames) {
         xml_node addinFilenameNode = rootNode.append_child(XMLNAME_ENGINECONFIG_ADDIN);
-        addinFilenameNode.set_value(addinFilename);
+        addinFilenameNode.set_value(addinFilename.c_str());
     }
 
     return true;
