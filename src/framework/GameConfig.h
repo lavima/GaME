@@ -5,18 +5,25 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class GameConfig {
+#define XMLNAME_GAMECONFIG "GameConfig"
+#define XMLNAME_GAMECONFIG_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTCONFIG
 
+class GameConfig : XMLSerializable {
 private:
 
-    unordered_map<string, string> engineComponents;
-
-    GameConfig() {}
+    vector<EngineComponentConfig *> engineComponentConfigs;
 
 public:
 
-    static GameConfig *Load(pugi::xml_node &xmlNode);
+    GameConfig() {} 
+    GameConfig(pugi::xml_node rootNode);
 
-    unordered_map<string, string> &GetEngineComponents();
+    static bool Load(GameConfig *config, pugi::xml_node rootNode);
+    static bool Save(GameConfig &config, pugi::xml_node rootNode);
+
+    const vector<EngineComponentConfig *> &GetEngineComponentConfigs();
+
+    bool Load(pugi::xml_node rootNode);
+    bool Save(pugi::xml_node rootNode);
 
 };

@@ -13,7 +13,7 @@ Author: Lars Vidar Magnusson
 #define ENGINE_OPTION_CONFIG "engineConfig"
 #define ENGINE_OPTION_CONFIG "engineLogFilename"
 
-class EngineInfo : public _InfoBase {
+class EngineInfo : public __InfoBase {
     friend class Engine;
     private:
 
@@ -21,7 +21,7 @@ class EngineInfo : public _InfoBase {
 
     public:
 
-    EngineInfo() : _InfoBase(ENGINE_NAME, ENGINE_DESCRIPTION, ENGINE_VERSION) {}
+    EngineInfo() : __InfoBase(ENGINE_NAME, ENGINE_DESCRIPTION, ENGINE_VERSION) {}
 
     const string &GetExecutablePath() const { return executablePath; }
 
@@ -46,7 +46,7 @@ class Engine {
         unique_ptr<Log> log;
         unique_ptr<ofstream> logFileStream;
 
-        Game *game;
+        unique_ptr<Game> game;
 
         bool isRunning;
         bool isGameRunning;

@@ -13,7 +13,7 @@ public:
     EngineComponentInfo(pugi::xml_node rootNode);
     
     static bool Load(EngineComponentInfo *info, pugi::xml_node rootNode);
-    static bool Load(EngineComponentInfo &info, pugi::xml_node rootNode);
+    static bool Save(EngineComponentInfo &info, pugi::xml_node rootNode);
 
     bool Load(pugi::xml_node rootNode);
     bool Save(pugi::xml_node rootNode);

@@ -16,6 +16,7 @@
 #include <memory>
 #include <functional>
 #include <cassert>
+#include <cstdint>
 
 using namespace std;
 
@@ -38,17 +39,18 @@ using namespace std;
 #include "util/CommandLine.h"
 #include "data/DataFactory.h"
 #include "data/Data.h"
+#include "data/XMLSerializable.h"
 #include "data/XMLData.h"
 #include "Log.h"
 #include "lib/Vulkan.h"
 #include "Version.h"
+#include "Instanceable.h"
 #include "InfoBase.h"
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Scriptable.h"
 #include "scripting/Script.h"
 #include "lib/V8.h"
 #include "platform/InputKey.h"
-#include "platform/PlatformInfo.h"
 #include "platform/PlatformConfig.h"
 #include "platform/Platform.h"
 #ifdef PLATFORM_WIN32
@@ -58,17 +60,18 @@ using namespace std;
 #include "platform/GLFWVulkan.h"
 #endif
 #include "platform/DefaultPlatformConfig.h"
+#include "EngineComponentInfo.h"
+#include "EngineComponentConfig.h"
 #include "framework/GameTime.h"
 #include "framework/Entity.h"
 #include "framework/GameInfo.h"
 #include "framework/GameConfig.h"
 #include "framework/Game.h"
-#include "EngineComponentInfo.h"
+#include "EngineComponent.h"
 #include "AddinInfo.h"
 #include "Addin.h"
 #include "EngineConfig.h"
 #include "DefaultEngineConfig.h"
-#include "EngineComponent.h"
 #include "Engine.h"
 #include "simplerenderer/SimpleRenderer.h"
 

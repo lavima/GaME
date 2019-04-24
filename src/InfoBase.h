@@ -21,8 +21,7 @@ protected:
     __InfoBase() {}
     __InfoBase(const string &name, const string &description, const Version &version);
     __InfoBase(const string &&name, const string &&description, const Version &&version);
-    __InfoBase(pugi::xml_node &xmlNode);
-    __InfoBase(pugi::xml_node &&xmlNode);
+    __InfoBase(pugi::xml_node xmlNode);
 
     static bool Load(__InfoBase *info, pugi::xml_node rootNode);
     static bool Save(__InfoBase &info, pugi::xml_node rootNode);

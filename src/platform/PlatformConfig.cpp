@@ -8,6 +8,7 @@ Author: Lars Vidar Magnusson
 using namespace pugi;
 
 PlatformConfig::PlatformConfig(const string &filename) : XMLData(filename) {}
+PlatformConfig::PlatformConfig(const string &filename, xml_document *document) : XMLData(filename, document) {}
 
 PlatformConfig::PlatformConfig(const string &filename, const string &typeName)
     : XMLData(filename) {
@@ -47,6 +48,7 @@ Data *PlatformConfig::__Factory::Load(const string &filename) {
 
 
 GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename) : PlatformConfig(filename) {} 
+GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename, xml_document *document) : PlatformConfig(filename, document) {}
 
 GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename, const string &typeName) 
     : PlatformConfig(filename, typeName) {
@@ -68,7 +70,7 @@ GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename, const s
 
 bool GraphicalPlatformConfig::Load(xml_node rootNode) {
 
-    if (string(rootNode.get_name()).compare(XMLNAME_GRAPHICALPLATFORMCONFIG))
+    if (string(rootNode.name()).compare(XMLNAME_GRAPHICALPLATFORMCONFIG))
         return false;
 
     xml_node widthNode = rootNode.child(XMLNAME_GRAPHICALPLATFORMCONFIG_WIDTH);
@@ -95,10 +97,10 @@ bool GraphicalPlatformConfig::Save(xml_node rootNode) {
     rootNode.set_name(XMLNAME_GRAPHICALPLATFORMCONFIG);
 
     xml_node widthNode = rootNode.append_child(XMLNAME_GRAPHICALPLATFORMCONFIG_WIDTH);
-    widthNode.set_value(to_string(width));
+    widthNode.set_value(to_string(width).c_str());
 
     xml_node heightNode = rootNode.append_child(XMLNAME_GRAPHICALPLATFORMCONFIG_HEIGHT);
-    heightNode.set_value(to_string(height));
+    heightNode.set_value(to_string(height).c_str());
 
     if (fullscreen)
         rootNode.append_child(XMLNAME_GRAPHICALPLATFORMCONFIG_FULLSCREEN);

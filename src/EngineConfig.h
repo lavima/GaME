@@ -9,7 +9,7 @@ Author: Lars Vidar Magnusson
 
 #define XMLNAME_ENGINECONFIG "EngineConfig"
 #define XMLNAME_ENGINECONFIG_LOGFILENAME "LogFilename"
-#define XMLNAME_ENGINECONFIG_ADDIN XMLNAME_ADDIN
+#define XMLNAME_ENGINECONFIG_ADDIN XMLNAME_ADDININFO
 
 /**
  * Engine Configuration with XML backend.
