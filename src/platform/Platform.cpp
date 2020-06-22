@@ -5,8 +5,10 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
+unordered_map<string, CreatePlatformFun> Platform::implementations;
 
-Platform *Platform::Create(PlatformConfig *config) {
+
+Platform *Platform::Create(Engine &engine, PlatformConfig *config) {
 
     if (!implementations.count(config->GetTypeName()))
         return nullptr;
@@ -14,8 +16,12 @@ Platform *Platform::Create(PlatformConfig *config) {
     CreatePlatformFun createPlatform;
     createPlatform = implementations[config->GetTypeName()];
     
-    return createPlatform(config);
+    return createPlatform(engine, config);
 
+}
+
+const unordered_map<KeyCode, reference_wrapper<const InputKey>> Platform::GetInputKeys() {
+    return unordered_map<KeyCode, reference_wrapper<const InputKey>>(inputKeys.begin(), inputKeys.end()); 
 }
 
 void Platform::RegisterImplementation(const string &name, CreatePlatformFun createFun) {
@@ -24,4 +30,5 @@ void Platform::RegisterImplementation(const string &name, CreatePlatformFun crea
 
 }
 
-unordered_map<string, CreatePlatformFun> Platform::implementations;
+Engine &Platform::GetEngine() { return engine; }
+unordered_map<KeyCode, __InputKeyWritable> Platform::GetWritableInputKeys() { return inputKeys; }

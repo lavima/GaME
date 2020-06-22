@@ -6,35 +6,56 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 
-Engine::Engine(Platform &platform, const string &configFilename) : Engine(platform, new EngineConfig(configFilename)) {}
-
-Engine::Engine(Platform &platform, EngineConfig *engineConfig) {
-
-    this->platform = &platform;
-    this->config = engineConfig;
+Engine::Engine() {
 
     isRunning = false;
-    game = nullptr;
     scriptEnvironment = nullptr;
 
-    log = new Log(config->GetLogFilename());
+    log = unique_ptr<Log>(new Log(cout));
+    log->AddOutputStream(cerr, EVENT_ERROR);
 
 }
 
 void Engine::Initialize() {
 
-    printf("Initiliazing engine\n");
-    
-    /* Retrieve the executable path from the command line */
-    info.executablePath = string(CommandLine::GetExecutablePath(platform->GetCommandLine()));   
+    EngineConfig *engineConfig = nullptr;
+    if (CommandLine::HasOption("engineConfig")) {
+        (*log).AddEvent(EVENT_INFO, "Loading engine configuration from %s", CommandLine::GetOption("engineConfig"));
+        engineConfig = Data::Load<EngineConfig>((CommandLine::GetOption("engineConfig")));
+    } 
+    else
+        engineConfig = new DefaultEngineConfig();
+    if (CommandLine::HasOption("engineLogFilename"))
+        engineConfig->SetLogFilename(CommandLine::GetOption("engineLogFile"));
+
+    if (engineConfig->HasLogFilename()) {
+        logFileStream = unique_ptr<ofstream>(new ofstream(engineConfig->GetLogFilename()));
+        (*log).AddOutputStream(*logFileStream);
+    }
+
+    (*log).AddEvent(EVENT_INFO, "Initiliazing engine");
+
+    info.executablePath = CommandLine::GetProgram();   
 
     scriptEnvironment = ScriptEnvironment::Create(*this);
+
+    PlatformConfig *platformConfig = nullptr;
+    if (CommandLine::HasOption("platformConfig")) 
+        platformConfig = Data::Load<PlatformConfig>(CommandLine::GetOption("platformConfig"));
+
+    if (!platformConfig) {
+        (*log).AddEvent(EVENT_INFO, "Creating default platform config");
+        platformConfig = new DefaultPlatformConfig();
+    }
+
+    platform = unique_ptr<Platform>(Platform::Create(*this, platformConfig));
 
     if (!platform->Initialize())
         printf("WARNING: Failed to initialize the platform.\n");
 
-    for (vector<string>::const_iterator iter = config->GetAddinFilenames().begin(); iter != config->GetAddinFilenames().end(); ++iter)
-        LoadAddin(*iter);
+    (*log).AddEvent(EVENT_INFO, "Loading addins");
+    for (const string &addinFilename : config->GetAddinFilenames())
+        LoadAddin(addinFilename);
 
     isRunning = true;
 
@@ -62,7 +83,7 @@ void Engine::Stop() {
 
 void Engine::LoadGame(const string &filename) {
 
-    game = Game::Load(filename);
+    game = unique_ptr<Game>(Data::Load<Game>(filename));
 
     game->Initialize(*this);
 
@@ -98,48 +119,7 @@ void Engine::CloseGame() {
 
 bool Engine::LoadAddin(const string &filename) {
 
-    
-
-    Addin *addin = Addin::Load(filename);
-    AddinInfo info = addin->GetInfo();
-
-    string libraryFilename = FilePath::GetFilename(filename);
-
-    addin->SetHandle(platform->LoadLibrary(libraryFilename));
-    if (!addin->GetHandle()) {
-        printf("Failed to load the addin.\n");
-        delete addin;
-        return false;
-    }
-
-    void *address = platform->LoadLibrarySymbol(addin->GetHandle(), ADDIN_REGISTERADDIN);
-    if (!address) {
-        printf("Failed to load %s.\n", ADDIN_REGISTERADDIN);
-        delete addin;
-        return false;
-    }
-
-    addin->AddSymbol(ADDIN_REGISTERADDIN, address);
-
-    RegisterAddinFun registerAddin = (RegisterAddinFun)address;
-    registerAddin(info);
-
-    if (info.GetType() == ENGINE_COMPONENT_ADDIN) {
-
-        address = platform->LoadLibrarySymbol(addin->GetHandle(), ADDIN_CREATECOMPONENT);
-        if (!address) {
-            printf("Failed to load %s.\n", ADDIN_CREATECOMPONENT);
-            delete addin;
-            return false;
-        }
-
-        addin->AddSymbol(ADDIN_CREATECOMPONENT, address);
-
-        for (auto iter = info.GetEngineComponents().begin(); iter != info.GetEngineComponents().end(); ++iter)
-            EngineComponent::createEngineComponentMap.insert(pair<string, CreateEngineComponentFun>(iter->first, (CreateEngineComponentFun)address));
-
-    }
-
+    Addin *addin = Addin::Load(*platform, filename);
     addins.push_back(addin);
 
     config->AddAddinFilename(filename);
@@ -155,7 +135,7 @@ void Engine::AddComponent(const string &typeName, const string &name) {
     if (components.find(name) != components.end())
         printf("The component with the specified name (%s) already exists\n", name.c_str());
 
-    components[name] = EngineComponent::Create(*this, name, name);
+    components[name] = EngineComponent::Create(*this, typeName);
 
 }
 
@@ -181,7 +161,6 @@ ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
 Platform &Engine::GetPlatform() { return *platform; }
 Game &Engine::GetGame() { return *game; }
 
-const string &Engine::GetCommandLine() { return platform->GetCommandLine(); }
 const EngineInfo &Engine::GetInfo() { return (const EngineInfo &)info; }
 
 Log &Engine::GetLog() { return *log; }

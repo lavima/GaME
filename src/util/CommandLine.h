@@ -23,6 +23,9 @@ struct CommandOption {
 
 };
 
+/*
+* Structure for specifying command line arguments
+*/
 struct CommandArgument {
 
     const string Name;
@@ -32,66 +35,54 @@ struct CommandArgument {
 
 };
 
-typedef unordered_map<string, string> NameValueMap;
-typedef pair<string, string> NameValuePair;
-typedef NameValueMap::iterator NameValueMapIter;
-typedef unordered_map<string, vector<string>> NameValuesMap;
-typedef pair<string, vector<string>> NameValuesPair;
-typedef NameValueMap::iterator NameValuesMapIter;
-
-typedef vector<CommandOption> OptionVector;
-typedef OptionVector::iterator OptionVectorIter;
-typedef vector<CommandArgument> ArgumentVector;
-typedef ArgumentVector::iterator ArgumentVectorIter;
-typedef ArgumentVector::reverse_iterator ArgumentVectorRIter;
-
-enum CommandLineToken {
-    COMMANDLINE_NONE,
-    COMMANDLINE_NAME,
-    COMMANDLINE_VALUE,
-    COMMANDLINE_ASSIGN
-};
-
 /*
-* Command line parse results
-*/
-struct CommandLineResult {
-
-    int NumErrors = 0;
-
-    string ExecutablePath;
-    NameValueMap Options;
-    NameValuesMap Arguments;
-
-};
-
-class CommandLineTokenizer {
-private:
-
-    const string *linePtr;
-    size_t pos;
-    size_t follow;
-    string tokenString;
-
-public:
-
-    CommandLineTokenizer(const string &commandLine);
-
-    CommandLineToken GetNext();
-    const string &GetTokenString();
-};
-
-/*
-* CommandLine contains static functionality for parsing a command line
+* CommandLine contains functionality for parsing a command line. This provides functionality similar to parse_args
+* in GNU. 
+* The format of the command line is PROGRAM [OPTIONS]... [ARGS]..., meaning that command line options must come before
+* the command line arguments.
 */
 class CommandLine {
 
+private:
+   
+    struct commandResult {
+
+        int NumErrors = 0;
+
+        string Program;
+        unordered_map<string, string> Options;
+        unordered_map<string, vector<string>> Arguments;
+
+    };
+
+    static CommandLine *singleton;
+
+    vector<CommandOption> specifiedOptions;
+    vector<CommandArgument> specifiedArguments;
+
+    unique_ptr<commandResult> result;
+
+    CommandLine() {}
+
+    static CommandLine &get();
+
 public:
 
-    static CommandLineResult *Parse(ArgumentVector &arguments, OptionVector &options, const string &commandLine);
+    static void SpecifyOption(OptionType type, const string &name, const string &description); 
+    static void SpecifyArgument(const string &name, const string &description, int minInstances, int maxInstances); 
 
-    static const string GetExecutablePath(const string &commandLine);
+    static bool Parse(const vector<string> &argumentValues);
 
-    static const string GetDescriptionString(ArgumentVector &arguments, OptionVector &options);
+    static const string GetUsageString();
+
+    static const string &GetProgram();
+
+    static bool HasOption(const string &name);
+    static const string &GetOption(const string &name);
+    static const vector<reference_wrapper<const string>> GetArgument(const string &name);
+
+private:
+
+    static bool isCommandName(const string &arg);
 
 };

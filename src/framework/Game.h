@@ -7,22 +7,26 @@ Author: Lars Vidar Magnusson
 
 using namespace pugi;
 
-class Game {
+#define EXTENSION_GAME "game"
+
+#define XMLNAME_GAME "Game"
+#define XMLNAME_GAME_INFO XMLNAME_GAMEINFO
+#define XMLNAME_GAME_CONFIG XMLNAME_GAMECONFIG
+
+class Game : public XMLData {
 
 private:
 
     Engine *engine;
 
-    GameInfo *info;
-    GameConfig *config;
+    unique_ptr<GameInfo> info;
+    unique_ptr<GameConfig> config;
 
-    Script *gameScript;
-
-    Game() {}
+    unique_ptr<Script> gameScript;
 
 public:
 
-    static Game *Load(const string &filename);
+    Game(const string &filename) : XMLData(filename) {}
 
     void Initialize(Engine &engine);
 
@@ -33,5 +37,26 @@ public:
 
     const GameInfo &GetInfo();
     GameConfig &GetConfig();
+
+    bool Load(pugi::xml_node rootNode);
+    bool Save(pugi::xml_node rootNode);
+
+	using XMLData::Load;
+	using XMLData::Save;
+
+private:
+    
+    class __Factory : DataFactory {
+    private:
+
+        static __Factory singleton;
+
+        __Factory();
+
+    public:
+
+        Data *Load(const string &filename);
+
+    };
 
 };

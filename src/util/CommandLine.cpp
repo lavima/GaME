@@ -1,154 +1,133 @@
-#include <vector>
-#include <unordered_map>
-#include <string>
-#include <algorithm>
+#include "../GaME.h"
 
-#include "CommandLine.h"
+CommandLine *CommandLine::singleton = nullptr;
 
-CommandLineTokenizer::CommandLineTokenizer(const string &commandLine) {
-    
-    linePtr = &commandLine;
-    pos = follow = 0;
-
+void CommandLine::SpecifyOption(OptionType type, const string &name, const string &description) {
+    CommandLine::get().specifiedOptions.push_back(CommandOption{ type, name, description });
 }
 
-CommandLineToken CommandLineTokenizer::GetNext() {
-
-    while (pos < linePtr->length() && ((*linePtr)[pos] == ' ' || (*linePtr)[pos] == '\t'))
-        ++pos;
-
-    if (pos >= linePtr->length())
-        return COMMANDLINE_NONE;
-
-    if ((*linePtr)[pos] == '-') {
-
-        if (pos + 1 >= linePtr->length() || (*linePtr)[pos + 1] != '-')
-            return COMMANDLINE_NONE;
-        
-        pos += 2;
-        follow = min(min((*linePtr).find(' ', pos + 1), (*linePtr).find('\t', pos + 1)), (*linePtr).find('=', pos + 1));
-        
-        tokenString = linePtr->substr(pos, follow - pos);
-        
-        pos = follow;
-        
-        return COMMANDLINE_NAME;
-
-    }
-    else if ((*linePtr)[pos] == '=') {
-        
-        ++pos;
-        
-        return COMMANDLINE_ASSIGN;
-
-    }
-    else {
-        
-        if ((*linePtr)[pos]=='"') {
-            ++pos;
-            follow = (*linePtr).find('"', pos+1);
-        }
-        else {
-            follow = pos+1;
-            while (follow < linePtr->length() && ((*linePtr)[follow] != ' ' || (*linePtr)[follow] != '\t'))
-                ++follow;
-        }
-
-        tokenString = linePtr->substr(pos, follow - pos);
-
-        pos = follow + 1;
-
-        return COMMANDLINE_VALUE;
-
-    }
-
+void CommandLine::SpecifyArgument(const string &name, const string &description, int minInstances, int maxInstances) {
+    CommandLine::get().specifiedArguments.push_back(CommandArgument{ name, description, minInstances, maxInstances });
 }
 
-const string &CommandLineTokenizer::GetTokenString() { return tokenString; }
-
-CommandLineResult *CommandLine::Parse(ArgumentVector &arguments, OptionVector &options, const string &commandLine) {
+bool CommandLine::Parse(const vector<string> &argumentValues) {
     
     // Insert the option declarations into a map for quick name lookup
     unordered_map<string, CommandOption *> optionMap;
-    for (OptionVectorIter iter = options.begin(); iter != options.end(); ++iter)
-        optionMap.insert(pair<string, CommandOption *>((*iter).Name, &(*iter)));
+    for (CommandOption option : CommandLine::get().specifiedOptions)
+        optionMap[option.Name] = &option;
 
-    CommandLineResult *result = new CommandLineResult();
-    CommandLineTokenizer tokenizer(commandLine);
+    CommandLine::get().result = unique_ptr<commandResult>(new commandResult());
+    commandResult &result = *CommandLine::get().result;
     
-    CommandLineToken token = tokenizer.GetNext();
-    
-    if (token != COMMANDLINE_VALUE)
-        result->NumErrors++;
+    auto argvIter = argumentValues.begin();
 
-    result->ExecutablePath = tokenizer.GetTokenString();
+    if (CommandLine::isCommandName(*argvIter)) {
+        result.NumErrors++;
+    }
+    result.Program = *argvIter;
 
-    token = tokenizer.GetNext();
-    while (token == COMMANDLINE_NAME) {
+    ++argvIter;
+    while (argvIter != argumentValues.end() && CommandLine::isCommandName(*argvIter)) {
         
-        string optionName = tokenizer.GetTokenString();
+        string optionName = (*argvIter).substr(2);
         
         if (!optionMap.count(optionName)) {
-            result->NumErrors++;
-            token = tokenizer.GetNext();
-            if (token == COMMANDLINE_ASSIGN && tokenizer.GetNext() != COMMANDLINE_VALUE) {
-                result->NumErrors++;
-                tokenizer.GetNext();
-            }
+            result.NumErrors++;
+            ++argvIter;
             continue;
         }
 
         CommandOption &option = *optionMap[optionName];
         if (option.Type == COMMANDOPTION_VALUE) {
 
-            if (tokenizer.GetNext() != COMMANDLINE_ASSIGN || tokenizer.GetNext() != COMMANDLINE_VALUE)
-                result->NumErrors++;
+            ++argvIter;
+            if (argvIter == argumentValues.end() || CommandLine::isCommandName(*argvIter)) 
+                result.NumErrors++;
             
-            result->Options[optionName] = tokenizer.GetTokenString();
+            result.Options[optionName] = *argvIter;
 
         }
+        else // COMMANDOPTION_LITERAL
+            result.Options[optionName] = "";
 
-        token = tokenizer.GetNext();
+        ++argvIter; 
+
     }    
 
-    vector<string> argumentValues;
-    if (token == COMMANDLINE_VALUE)
-        argumentValues.push_back(tokenizer.GetTokenString());
-    while (tokenizer.GetNext() == COMMANDLINE_VALUE)
-        argumentValues.push_back(tokenizer.GetTokenString());
-
-    vector<string>::iterator valueIter = argumentValues.begin();
-    for (ArgumentVectorIter argIter = arguments.begin(); argIter != arguments.end(); ++argIter) {
+    for (auto argument : CommandLine::get().specifiedArguments) {
         
-        CommandArgument &argument = *argIter;
-
-        int i = 0;
-        for (; i < argument.MaxInstances && valueIter != argumentValues.end(); ++i) {
-            result->Arguments[argument.Name].push_back(*valueIter);
-            ++valueIter;
+        int num = 0;
+        for (; num < argument.MaxInstances && argvIter != argumentValues.end(); ++num) {
+            result.Arguments[argument.Name].push_back(*argvIter);
+            ++argvIter;
         }
 
-        if (i < argument.MinInstances)
-            result->NumErrors++;
+        if (num < argument.MinInstances)
+            result.NumErrors++;
 
     }
 
-    return result;
+    if (argvIter != argumentValues.end())
+        result.NumErrors++;
+
+    return result.NumErrors == 0;
+}
+
+const string CommandLine::GetUsageString() {
+
+    stringstream usage;
+    usage << "GaME "; 
+
+    usage << (CommandLine::get().specifiedOptions.size()>0 ? "[OPTION]" : "");
+    usage << (CommandLine::get().specifiedOptions.size()>1 ? "..." : "");
+
+    usage << " ";
+
+    for (CommandArgument argument : CommandLine::get().specifiedArguments) {
+
+        int instances = 0;
+        while (instances < argument.MinInstances)
+            usage << argument.Name + " ";
+
+        if (argument.MaxInstances > argument.MinInstances) {
+            usage << "[";
+            while (instances < argument.MinInstances - 1)
+                usage << argument.Name + " ";
+            usage << argument.Name + "]";
+        }
+
+        usage << " ";
+    }
+
+    return usage.str();
 
 }
 
-const string CommandLine::GetExecutablePath(const string &commandLine) {
+const string &CommandLine::GetProgram() { return (*CommandLine::get().result).Program; }
 
-    CommandLineTokenizer tokenizer(commandLine);
+bool CommandLine::HasOption(const string &name) { return (*CommandLine::get().result).Options.count(name) > 0; }
+const string &CommandLine::GetOption(const string &name) { return (*CommandLine::get().result).Options[name]; }
 
-    CommandLineToken token = tokenizer.GetNext();
+const vector<reference_wrapper<const string>> CommandLine::GetArgument(const string &name) {
 
-    return tokenizer.GetTokenString();
+    vector<string> &argumentValues = (*CommandLine::get().result).Arguments[name];
+    return vector<reference_wrapper<const string>>(argumentValues.begin(), argumentValues.end());
 
 }
 
-const string CommandLine::GetDescriptionString(ArgumentVector &arguments, OptionVector &options) {
+CommandLine &CommandLine::get() { 
 
-    return "";
+    if (!singleton)
+        singleton = new CommandLine();
+    return *singleton; 
+
+}
+
+bool CommandLine::isCommandName(const string &arg) {
+
+    if (arg.find("--") != 0)
+        return false;
+    return true;
 
 }

@@ -5,34 +5,53 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+#define EXTENSION_ENGINECONFIG "engine_config"
+
+#define XMLNAME_ENGINECONFIG "EngineConfig"
+#define XMLNAME_ENGINECONFIG_LOGFILENAME "LogFilename"
+#define XMLNAME_ENGINECONFIG_ADDIN XMLNAME_ADDININFO
+
 /**
  * Engine Configuration with XML backend.
  */
-class EngineConfig {
+class EngineConfig : public XMLData {
 
 private:
 
-    string filename;
-    string logFilename;
+    unique_ptr<string> logFilename;
 
     vector<string> addinFilenames;
 
-    pugi::xml_document *xmlDocument;
-
-    EngineConfig() {}
-
 public:
 
-    EngineConfig(const string &filename, const string &logFilename);
-    EngineConfig(const string &filename, const string &logFilename, const vector<string> &addinFilenames);
     EngineConfig(const string &filename);
-    EngineConfig(pugi::xml_document &xmlDocument);
-    ~EngineConfig();
+    EngineConfig(const string &filename, const string &logFilename);
+
+    bool HasLogFilename(); 
+    const string &GetLogFilename();
+    void SetLogFilename(const string &logFilename);
 
     void AddAddinFilename(const string &addinFilename);
+    const vector<reference_wrapper<const string>> GetAddinFilenames();
 
-    const string &GetFilename();
-    const string &GetLogFilename();
-    const vector<string> &GetAddinFilenames();
+    using XMLData::Load;
+    bool Load(pugi::xml_node rootNode);
+    using XMLData::Save;
+    bool Save(pugi::xml_node rootNode);
+
+private:
+
+    class __Factory : public DataFactory {
+    private:
+
+        static __Factory singleton;
+
+        __Factory();
+
+    public:
+
+        Data *Load(const string &filename);
+
+    };
 
 };

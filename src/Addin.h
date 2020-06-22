@@ -9,39 +9,26 @@ class Engine;
 class EngineComponent;
 
 typedef void (*RegisterAddinFun)(AddinInfo &);
-typedef EngineComponent *(*CreateEngineComponentFun)(Engine &, const string &, const string &);
 
-#define ADDIN_REGISTERADDIN "RegisterAddin"
-#define ADDIN_CREATECOMPONENT "CreateEngineComponent"
+#define ADDINFUN_REGISTERADDIN "RegisterAddin"
 
-typedef std::unordered_map<string, void *> SymbolMap;
-typedef std::pair<string, void *> SymbolMapPair;
-
-struct Addin {
-
+class Addin {
 private:
 
-    const string *filename;
-    AddinInfo *info;
+    unique_ptr<AddinInfo> info;
     void *handle;
 
-    SymbolMap symbolMap;
-
-    Addin() {}
+    unordered_map<string, void *> symbolMap;
 
 public:
 
-    ~Addin();
-
-    static Addin *Load(const string &filename);
+    static Addin *Load(Platform &platform, const string &filename);
 
     bool HasSymbol(const string &name);
-    void AddSymbol(const string &name, void *address);
-    void *GetSymbol(const string &name);
+    void *GetSymbolAddr(const string &name);
+    const vector<reference_wrapper<const string>> GetLoadedSymbolNames() const;
 
-    const string &GetFilename();
     AddinInfo &GetInfo();
     void *GetHandle();
-    void SetHandle(void *handle);
 
 };

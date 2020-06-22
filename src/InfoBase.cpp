@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 using namespace pugi;
 
-_InfoBase::_InfoBase(const string &name, const string &description, const Version &version) {
+__InfoBase::__InfoBase(const string &name, const string &description, const Version &version) {
 
     this->name = name;
     this->description = description;
@@ -15,7 +15,7 @@ _InfoBase::_InfoBase(const string &name, const string &description, const Versio
 
 }
 
-_InfoBase::_InfoBase(const string &&name, const string &&description, const Version &&version) {
+__InfoBase::__InfoBase(const string &&name, const string &&description, const Version &&version) {
 
     this->name = name;
     this->description = description;
@@ -23,27 +23,45 @@ _InfoBase::_InfoBase(const string &&name, const string &&description, const Vers
 
 }
 
-_InfoBase::_InfoBase(pugi::xml_node &xmlNode) {
+__InfoBase::__InfoBase(pugi::xml_node xmlNode) { assert(this->Load(xmlNode)); }
 
-    this->name = xmlNode.child("Name").value();
-    this->description = string(xmlNode.child("Description").value());
-    this->version = Version(xmlNode.child("Version"));
+bool __InfoBase::Load(__InfoBase *info, pugi::xml_node rootNode) {
 
-}
+    xml_node nameNode = rootNode.child(XMLNAME_INFOBASE_NAME);
+    if (!nameNode)
+        return false;
+    info->name = string(nameNode.value());
 
-_InfoBase::_InfoBase(pugi::xml_node &&xmlNode) {
+    xml_node descriptionNode = rootNode.child(XMLNAME_INFOBASE_DESCRIPTION);
+    if (!descriptionNode)
+        return false;
+    info->description = string(descriptionNode.value());
 
-    this->name = xmlNode.child("Name").value();
-    this->description = string(xmlNode.child("Description").value());
-    this->version = Version(xmlNode.child("Version"));
-
-}
-
-_InfoBase::~_InfoBase() {
+    return info->version.Load(rootNode.child(XMLNAME_INFOBASE_VERSION));
 
 }
 
-const string &_InfoBase::GetName() const { return name; }
-const string &_InfoBase::GetDescription() const { return description; }
-const Version &_InfoBase::GetVersion() const { return this->version; }
+bool __InfoBase::Save(__InfoBase &info, pugi::xml_node rootNode) {
+
+    xml_node nameNode = rootNode.append_child(XMLNAME_INFOBASE_NAME);
+    nameNode.set_value(info.name.c_str());
+
+    xml_node descriptionNode = rootNode.append_child(XMLNAME_INFOBASE_DESCRIPTION);
+    descriptionNode.set_value(info.description.c_str());
+
+    xml_node versionNode = rootNode.append_child();
+    return info.version.Save(versionNode);
+
+}
+
+void __InfoBase::SetName(const string &name) { this->name = name; }
+void __InfoBase::SetDescription(const string &description) { this->description = description; }
+void __InfoBase::SetVersion(const Version &version) { this->version = version; }
+
+bool __InfoBase::Load(pugi::xml_node rootNode) { return __InfoBase::Load(this, rootNode); }
+bool __InfoBase::Save(pugi::xml_node rootNode) { return __InfoBase::Save(*this, rootNode); }
+
+const string &__InfoBase::GetName() const { return name; }
+const string &__InfoBase::GetDescription() const { return description; }
+const Version &__InfoBase::GetVersion() const { return this->version; }
 
