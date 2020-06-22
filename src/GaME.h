@@ -44,6 +44,8 @@ using namespace std;
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Scriptable.h"
 #include "scripting/Script.h"
+#include "data/data.h"
+#include "data/xml_data.h"
 #include "lib/V8.h"
 #include "platform/PlatformInfo.h"
 #include "platform/PlatformConfig.h"
