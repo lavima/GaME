@@ -7,14 +7,12 @@ Author: Lars Vidar Magnusson
 
 Addin *Addin::Load(Platform &platform, const string &filename) {
 
-    Addin *newAddin = new Addin();
+    Addin *newAddin = new Addin(Data::Load<AddinHeader>(filename));
+    AddinHeader &header = newAddin->GetHeader();
 
-    newAddin->info = unique_ptr<AddinInfo>(Data::Load<AddinInfo>(filename));
-    AddinInfo &info = newAddin->GetInfo();
+    string libraryFilename = FilePath::GetFilename(header.GetLibraryFilename());
 
-    string libraryFilename = FilePath::GetFilename(info.GetLibraryFilename());
-
-    newAddin->handle = platform.LoadLibrary(libraryFilename);
+    newAddin->handle_ = platform.LoadLibrary(libraryFilename);
     if (!newAddin->GetHandle()) {
         delete newAddin;
         return nullptr;
@@ -26,42 +24,41 @@ Addin *Addin::Load(Platform &platform, const string &filename) {
         return nullptr;
     }
 
-    newAddin->symbolMap[ADDINFUN_REGISTERADDIN] = address;
+    newAddin->symbol_map_[ADDINFUN_REGISTERADDIN] = address;
 
     RegisterAddinFun registerAddin = (RegisterAddinFun)address;
-    registerAddin(info);
+    registerAddin(header);
 
-    if (info.GetType() == ENGINE_COMPONENT_ADDIN) {
+    if (header.GetType() == AddinType::EngineComponent) {
 
-        createAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENT_CREATE);
+        auto createAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENT_CREATE);
         if (!createAddr) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->symbolMap[ADDINFUN_ENGINECOMPONENT_CREATE] = createAddr;
+        newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENT_CREATE] = createAddr;
 
-        loadConfigAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_LOAD);
+        auto loadConfigAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_LOAD);
         if (!loadConfigAddr) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->symbolMap[ADDINFUN_ENGINECOMPONENTCONFIG_LOAD] = loadConfigAddr;
+        newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_LOAD] = loadConfigAddr;
 
-        saveConfigAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_SAVE);
+        auto saveConfigAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_SAVE);
         if (!saveConfigAddr) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->symbolMap[ADDINFUN_ENGINECOMPONENTCONFIG_SAVE] = saveConfigAddr;
+        newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_SAVE] = saveConfigAddr;
 
-        for (const EngineComponentInfo &componentInfo : info.GetEngineComponents()) {
+        for (const EngineComponentVersionInfo &componentInfo : header.GetEngineComponents()) {
 
-            const string &name = componentInfo.GetName();
+            const string& name = componentInfo.GetName();
             EngineComponent::RegisterProvider(name, (CreateEngineComponentFun)createAddr);
             EngineComponentConfig::RegisterProvider(name, (LoadEngineComponentConfigFun)loadConfigAddr, (SaveEngineComponentConfigFun)saveConfigAddr);
 
         }
-
     }
 
     return newAddin;
@@ -69,13 +66,13 @@ Addin *Addin::Load(Platform &platform, const string &filename) {
 }
 
 bool Addin::HasSymbol(const string &name) { 
-    return this->symbolMap.find(name) != this->symbolMap.end(); 
+    return this->symbol_map_.find(name) != this->symbol_map_.end(); 
 }
 
 void *Addin::GetSymbolAddr(const string &name) {
 
     if (this->HasSymbol(name))
-        return this->symbolMap[name];
+        return this->symbol_map_[name];
 
     return nullptr;
 
@@ -85,13 +82,17 @@ const vector<reference_wrapper<const string>> Addin::GetLoadedSymbolNames() cons
 
     vector<reference_wrapper<const string>> symbolNames;
 
-    for (pair<string, void *> symbolPair : symbolMap)
+    for (pair<string, void *> symbolPair : symbol_map_)
         symbolNames.push_back(symbolPair.first);
 
     return symbolNames;
 
 }
 
-AddinInfo &Addin::GetInfo() { return *(this->info); }
-void *Addin::GetHandle() { return this->handle; }
+AddinHeader &Addin::GetHeader() { return *(this->header_); }
+void *Addin::GetHandle() { return this->handle_; }
+
+AddinType Addin::GetType() const {
+    return header_->GetType();
+}
 

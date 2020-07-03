@@ -8,6 +8,7 @@ Author: Lars Vidar Magnusson
 struct GameTime {
 
 public:
-    double Time;
+    double time_since_start;
+    double time_since_previous;
   
 };

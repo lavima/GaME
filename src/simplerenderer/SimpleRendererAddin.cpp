@@ -9,7 +9,7 @@ Author: Lars Vidar Magnusson
 #include "SimpleRenderer.h"
 
 
-void RegisterAddin(AddinInfo &addinInfo) {
+void RegisterAddin(AddinHeader &addinInfo) {
   
   printf("Addin %s\n", addinInfo.GetName().c_str());
 

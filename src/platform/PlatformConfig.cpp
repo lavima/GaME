@@ -5,115 +5,96 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-using namespace pugi;
+unordered_map<string, PlatformConfig::Loader*>* PlatformConfig::configuration_loaders_ = nullptr;
 
-PlatformConfig::PlatformConfig(const string &filename) : XMLData(filename) {}
-PlatformConfig::PlatformConfig(const string &filename, xml_document *document) : XMLData(filename, document) {}
+PlatformConfig::PlatformConfig(const string& implementation_name) {
 
-PlatformConfig::PlatformConfig(const string &filename, const string &typeName)
-    : XMLData(filename) {
-
-    this->typeName = typeName;
+    this->implementation_name_ = implementation_name;
 
 }
 
-const string &PlatformConfig::GetTypeName() { return typeName; }
-void PlatformConfig::SetTypeName(const string &typeName) { this->typeName = typeName; }
+void PlatformConfig::RegisterImplementation(const string& implementation_name, PlatformConfig::Loader* loader) {
 
+    if (!configuration_loaders_)
+        configuration_loaders_ = new unordered_map<string, PlatformConfig::Loader*>();
 
-PlatformConfig::__Factory PlatformConfig::__Factory::singleton;
-PlatformConfig::__Factory::__Factory() { Data::RegisterType(PLATFORM_CONFIG_EXTENSION, &singleton); }
-
-Data *PlatformConfig::__Factory::Load(const string &filename) {
-
-    xml_document *document = new xml_document(); 
-   
-    if (XMLData::Parse(filename, document))
-        return nullptr;
-
-    PlatformConfig *platformConfig = nullptr;
-
-    xml_node xmlNode = document->document_element();
-    if (string(xmlNode.value()).compare("GraphicalPlatformConfig") == 0)
-        platformConfig = new GraphicalPlatformConfig(filename, document);
-    else
-        return nullptr;
-
-    if (!platformConfig->Load(xmlNode))
-        return nullptr;
-
-    return platformConfig;
+    configuration_loaders_->insert_or_assign(implementation_name, loader);
 
 }
 
+PlatformConfig* PlatformConfig::Load(XmlNode root_node) {
+    const string implementation_name = root_node.GetAttribute("implementation").GetValue();
+    return configuration_loaders_->at(implementation_name)->Load(implementation_name, root_node);
+}
 
-GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename) : PlatformConfig(filename) {} 
-GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename, xml_document *document) : PlatformConfig(filename, document) {}
+const string &PlatformConfig::GetImplementationName() { return implementation_name_; }
+void PlatformConfig::SetImplementationName(const string &typeName) { this->implementation_name_ = typeName; }
 
-GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename, const string &typeName) 
-    : PlatformConfig(filename, typeName) {
-    
-    this->width = DEFAULT_GRAPHICALPLATFORM_WIDTH;
-    this->height = DEFAULT_GRAPHICALPLATFORM_HEIGHT;
-    this->fullscreen = DEFAULT_GRAPHICALPLATFORM_FULLSCREEN;
+
+GraphicalPlatformConfig::GraphicalPlatformConfig(const string& implementation_name)
+    : PlatformConfig(implementation_name) {
+
+    this->width_ = DEFAULT_GRAPHICALPLATFORM_WIDTH;
+    this->height_ = DEFAULT_GRAPHICALPLATFORM_HEIGHT;
+    this->fullscreen_ = DEFAULT_GRAPHICALPLATFORM_FULLSCREEN;
 
 }
 
-GraphicalPlatformConfig::GraphicalPlatformConfig(const string &filename, const string &typeName, int width, int height, bool fullscreen) 
-    : PlatformConfig(filename, typeName) {
+GraphicalPlatformConfig::GraphicalPlatformConfig(const string& implementation_name, int width, int height, bool fullscreen) 
+    : PlatformConfig(implementation_name) {
 
-    this->width = width;
-    this->height = height;
-    this->fullscreen = fullscreen;
+    this->width_ = width;
+    this->height_ = height;
+    this->fullscreen_ = fullscreen;
 
 }
 
-bool GraphicalPlatformConfig::Load(xml_node rootNode) {
+bool GraphicalPlatformConfig::Load(XmlNode root_node) {
 
-    if (string(rootNode.name()).compare(XMLNAME_GRAPHICALPLATFORMCONFIG))
+    if (root_node.GetName().compare(XMLNAME_PLATFORMCONFIG))
         return false;
 
-    xml_node widthNode = rootNode.child(XMLNAME_GRAPHICALPLATFORMCONFIG_WIDTH);
-    if (!widthNode)
+    XmlNode width_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_WIDTH);
+    if (!width_node)
         return false;
-    width = widthNode.text().as_int();
+    width_ = stoi(width_node.GetValue());
 
-    xml_node heightNode = rootNode.child(XMLNAME_GRAPHICALPLATFORMCONFIG_HEIGHT);
-    if (!heightNode)
+    XmlNode height_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_HEIGHT);
+    if (!height_node)
         return false;
-    height = heightNode.text().as_int();
+    height_ = stoi(height_node.GetValue());
 
-    xml_node fullscreenNode = rootNode.child(XMLNAME_GRAPHICALPLATFORMCONFIG_FULLSCREEN);
-    if (!fullscreenNode)
-        fullscreen = false;
-    fullscreen = true;
+    XmlNode fullscreen_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_FULLSCREEN);
+    if (!fullscreen_node)
+        fullscreen_ = false;
+    fullscreen_ = true;
 
     return true;
 
 }
 
-bool GraphicalPlatformConfig::Save(xml_node rootNode) {
+bool GraphicalPlatformConfig::Save(XmlNode root_node) {
 
-    rootNode.set_name(XMLNAME_GRAPHICALPLATFORMCONFIG);
+    root_node.SetName(XMLNAME_PLATFORMCONFIG);
 
-    xml_node widthNode = rootNode.append_child(XMLNAME_GRAPHICALPLATFORMCONFIG_WIDTH);
-    widthNode.set_value(to_string(width).c_str());
+    XmlNode width_node = root_node.AddChild(XMLNAME_PLATFORMCONFIG_WIDTH);
+    width_node.SetValue(to_string(width_));
 
-    xml_node heightNode = rootNode.append_child(XMLNAME_GRAPHICALPLATFORMCONFIG_HEIGHT);
-    heightNode.set_value(to_string(height).c_str());
+    XmlNode height_node = root_node.AddChild(XMLNAME_PLATFORMCONFIG_HEIGHT);
+    height_node.SetValue(to_string(height_));
 
-    if (fullscreen)
-        rootNode.append_child(XMLNAME_GRAPHICALPLATFORMCONFIG_FULLSCREEN);
+    if (fullscreen_)
+        root_node.AddChild(XMLNAME_PLATFORMCONFIG_FULLSCREEN);
 
     return true;
 
 }
 
-int GraphicalPlatformConfig::GetWidth() { return this->width; }
-void GraphicalPlatformConfig::SetWidth(int width) { this->width = width; }
+int GraphicalPlatformConfig::GetWidth() { return this->width_; }
+void GraphicalPlatformConfig::SetWidth(int width) { this->width_ = width; }
 
-int GraphicalPlatformConfig::GetHeight() { return this->height; }
-void GraphicalPlatformConfig::SetHeight(int width) { this->height = height; }
+int GraphicalPlatformConfig::GetHeight() { return this->height_; }
+void GraphicalPlatformConfig::SetHeight(int width) { this->height_ = height_; }
 
-bool GraphicalPlatformConfig::GetFullscreen() { return this->fullscreen; }
-void GraphicalPlatformConfig::SetFullscreen(bool fullscreen) { this->fullscreen = fullscreen; }
+bool GraphicalPlatformConfig::GetFullscreen() { return this->fullscreen_; }
+void GraphicalPlatformConfig::SetFullscreen(bool fullscreen) { this->fullscreen_ = fullscreen; }

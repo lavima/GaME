@@ -5,48 +5,58 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+#define DEFAULT_LOG_FILENAME "engine.log"
+#define DEFAULT_ENGINECONFIG_FILENAME "default.engine_config"
+
 #define EXTENSION_ENGINECONFIG "engine_config"
 
 #define XMLNAME_ENGINECONFIG "EngineConfig"
 #define XMLNAME_ENGINECONFIG_LOGFILENAME "LogFilename"
+#define XMLNAME_ENGINECONFIG_PLATFORMCONFIG XMLNAME_PLATFORMCONFIG
 #define XMLNAME_ENGINECONFIG_ADDIN XMLNAME_ADDININFO
 
 /**
- * Engine Configuration with XML backend.
+ * EngineConfig provides the setup details for the engine.
  */
-class EngineConfig : public XMLData {
+class EngineConfig : public XmlData {
 
 private:
 
-    unique_ptr<string> logFilename;
+    unique_ptr<string> log_filename_;
 
-    vector<string> addinFilenames;
+    vector<string> addin_filenames_;
+
+    unique_ptr<PlatformConfig> platform_config_;
+
+protected:
+
+    EngineConfig(const string &filename);
 
 public:
 
-    EngineConfig(const string &filename);
-    EngineConfig(const string &filename, const string &logFilename);
+    const string &GetLogFilename() const;
+    void SetLogFilename(const string &log_filename);
 
-    bool HasLogFilename(); 
-    const string &GetLogFilename();
-    void SetLogFilename(const string &logFilename);
-
-    void AddAddinFilename(const string &addinFilename);
+    void AddAddinFilename(const string &addin_filename);
     const vector<reference_wrapper<const string>> GetAddinFilenames();
 
-    using XMLData::Load;
-    bool Load(pugi::xml_node rootNode);
-    using XMLData::Save;
-    bool Save(pugi::xml_node rootNode);
+    PlatformConfig* GetPlatformConfig() const;
+    void SetPlatformConfig(PlatformConfig* config);
+
+    using XmlData::Load;
+    using XmlData::Save;
+
+    bool Load(XmlNode root_node) override;
+    bool Save(XmlNode root_node) override;
 
 private:
 
-    class __Factory : public DataFactory {
+    class Loader : public DataLoader {
     private:
 
-        static __Factory singleton;
+        static Loader singleton;
 
-        __Factory();
+        Loader();
 
     public:
 

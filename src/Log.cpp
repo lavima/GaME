@@ -7,65 +7,69 @@ Author: Lars Vidar Magnusson
 
 Log::Log(EventType level) {
 
-    this->listenLevel = level;
+    this->level_ = level;
 
-    textOut = unique_ptr<stringstream>(new stringstream());
-    outStreams.push_back(outStream{EVENT_ALL, textOut.get()});
+    out_string_ = unique_ptr<stringstream>(new stringstream());
+    out_streams_.push_back(OutStream{ EventType::All, out_string_.get() });
 
 }
 
 Log::Log(const string &filename, EventType level) {
 
-    this->listenLevel = level;
+    this->level_ = level;
 
-    fileOut = unique_ptr<ofstream>(new ofstream(filename, ios::out));
-    outStreams.push_back(outStream{EVENT_ALL, fileOut.get()});
+    out_main_ = unique_ptr<ofstream>(new ofstream(filename, ios::out));
+    out_streams_.push_back(OutStream{ EventType::All, out_main_.get() });
+    out_string_ = unique_ptr<stringstream>(new stringstream());
+    out_streams_.push_back(OutStream{ EventType::All, out_string_.get() });
 
 }
 
 Log::Log(ostream &out, EventType level) {
 
-    this->listenLevel = level;
+    this->level_ = level;
 
-    outStreams.push_back(outStream{EVENT_ALL, &out});
+    out_streams_.push_back(OutStream{ EventType::All, &out });
+    out_string_ = unique_ptr<stringstream>(new stringstream());
+    out_streams_.push_back(OutStream{ EventType::All, out_string_.get() });
 
 }
 
 Log::~Log() {
 
-    if (fileOut)
-        (*fileOut).close();
+    if (out_main_)
+        (*out_main_).close();
 
 }
 
 void Log::AddListener(LogListener *listener) {
 
-    listeners.push_back(listener);
+    listeners_.push_back(listener);
 
 }
 
 void Log::AddOutputStream(ostream &out, EventType level) {
 
-    outStreams.push_back(outStream{level, &out});
+    out_streams_.push_back(OutStream{level, &out});
 
 }
 
-void Log::SetLevel(EventType level) { this->listenLevel = level; }
-EventType Log::GetLevel() { return listenLevel; }
+void Log::SetLevel(EventType level) { this->level_ = level; }
+EventType Log::GetLevel() { return level_; }
     
 void Log::output(EventType type, const string &text) {
 
-    for (auto os : outStreams) {
-        if (os.Level < type)
+    for (auto os : out_streams_) {
+        if (os.level < type)
             continue;
-        *os.Out << text;
+        *os.out << text;
     }
 
 }
 
 void Log::dispatchEvent(EventType type, const string &text) {
 
-    for (auto listener : listeners) {
+    for (auto listener : listeners_) {
         if (listener->GetLevel() < type)
             continue;
         listener->Event(type, text);

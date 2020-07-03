@@ -6,17 +6,21 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 
-uint64_t __Instanceable::instanceCounter;
+uint64_t Instanceable::instance_counter_;
+unordered_map<uint_fast64_t, string> Instanceable::hash_typename_;
 
-__Instanceable::__Instanceable(const string &typeName) {
+
+Instanceable::Instanceable(const string &typeName) {
     
-    this->instanceId = __Instanceable::instanceCounter++;
+    this->instance_id_ = Instanceable::instance_counter_++;
 
-    this->typeName = typeName;
-    this->typeHash = hash<string>{}(typeName);
+    uint_fast64_t type_hash = hash<string>{}(typeName);
+    this->type_hash_ = type_hash;
+    if (Instanceable::hash_typename_.find(type_hash) == Instanceable::hash_typename_.end())
+        Instanceable::hash_typename_[type_hash] = typeName;
 
 }
 
-const string &__Instanceable::GetTypeName() const { return typeName; }
+const string& Instanceable::GetTypeName() const { return Instanceable::hash_typename_[type_hash_]; }
 
-bool __Instanceable::operator==(const __Instanceable &other) { return this->instanceId == other.instanceId; }
+bool Instanceable::operator==(const Instanceable&other) { return this->instance_id_ == other.instance_id_; }

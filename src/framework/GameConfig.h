@@ -8,22 +8,22 @@ Author: Lars Vidar Magnusson
 #define XMLNAME_GAMECONFIG "GameConfig"
 #define XMLNAME_GAMECONFIG_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTCONFIG
 
-class GameConfig : XMLSerializable {
+class GameConfig : XmlSerializable {
 private:
 
-    vector<EngineComponentConfig *> engineComponentConfigs;
+    vector<EngineComponentConfig *> engine_component_configs_;
 
 public:
 
     GameConfig() {} 
-    GameConfig(pugi::xml_node rootNode);
+    GameConfig(XmlNode root_node);
 
-    static bool Load(GameConfig *config, pugi::xml_node rootNode);
-    static bool Save(GameConfig &config, pugi::xml_node rootNode);
+    static bool Load(GameConfig *config, XmlNode root_node);
+    static bool Save(const GameConfig &config, XmlNode root_node);
 
     const vector<EngineComponentConfig *> &GetEngineComponentConfigs();
 
-    bool Load(pugi::xml_node rootNode);
-    bool Save(pugi::xml_node rootNode);
+    bool Load(XmlNode root_node);
+    bool Save(XmlNode root_node);
 
 };

@@ -5,23 +5,24 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class __Instanceable {
+class Instanceable {
 private:
 
-    static uint64_t instanceCounter;
-    uint_fast64_t instanceId;
+    static uint64_t instance_counter_;
+    static unordered_map<uint_fast64_t, string> hash_typename_;
 
-    string typeName;
-    uint_fast64_t typeHash;
+    uint_fast64_t instance_id_;
+
+    uint_fast64_t type_hash_;
 
 protected:
 
-    __Instanceable(const string &typeName);
+    Instanceable(const string &type_name);
 
 public:
 
     const string &GetTypeName() const;
 
-    bool operator==(const __Instanceable &other);
+    bool operator==(const Instanceable &other);
 
 };

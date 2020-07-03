@@ -8,26 +8,26 @@ Author: Lars Vidar Magnusson
 class Data {
 private:
 
-    static unordered_map<string, DataFactory *> datatypes;
+    static unordered_map<string, DataLoader*>* data_loaders_;
 
-    string filename; 
+    string filename_; 
 
 protected:
 
-    Data(const string &filename);
+    Data(const string& filename);
 
 public:
 
-    template<typename T> static T *Load(const string &filename);
+    template<typename T> static T* Load(const string& filename);
 
     virtual bool Load() = 0;
-    bool LoadFrom(const string &filename);
+    bool LoadFrom(const string& filename);
 
     const string &GetFilename();
 
 protected:
 
-    static void RegisterType(const string &extension, DataFactory *factory);
+    static void RegisterType(const string &extension, DataLoader* loader);
 
 };
 
@@ -35,10 +35,12 @@ template<typename T> T *Data::Load(const string &filename) {
 
     if (!is_base_of<Data, T>::value)
         return nullptr;
-    if (datatypes.count(filename) == 0)
+
+    const string extension = FilePath::GetExtension(filename);
+    if (data_loaders_->count(extension) == 0)
         return nullptr;
 
-    return dynamic_cast<T *>(datatypes[filename]->Load(filename));
+    return dynamic_cast<T *>(data_loaders_->at(extension)->Load(filename));
 
 }
 

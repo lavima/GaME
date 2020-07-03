@@ -5,23 +5,19 @@
 
 #pragma once
 
-#define GLFWVULKAN_NAME "GLFWVulkan"
-#define GLFWVULKAN_PLATFORM_CONFIG "glfw_vulkan.platform_config"
-
+#define PLATFORM_GLFWVULKAN_NAME "GLFWVulkan"
 
 class GLFWVulkan : public Platform {
 
 private:
 
-    GraphicalPlatformConfig *config;
+    GraphicalPlatformConfig* config_;
 
-    GLFWwindow *window;
+    GLFWwindow* window_;
 
-    GLFWVulkan(Engine &engine, PlatformConfig *config);
+    GLFWVulkan(Engine& engine, PlatformConfig* config);
 
 public:
-
-    static Platform * Create(Engine &engine, PlatformConfig *config);
 
     bool Initialize();
 
@@ -31,23 +27,24 @@ public:
 
     void SwapBuffers();
 
-    void *LoadLibrary(const string &filename);
+    void* LoadLibrary(const string& filename);
 
-    void UnloadLibrary(void *handle);
+    void UnloadLibrary(void* handle);
 
-    void *LoadLibrarySymbol(void *handle, const string &name);
+    void* LoadLibrarySymbol(void* handle, const string& name);
 
-    unsigned long long GetSystemTime();
-
-    const string &GetCommandLine();
+    double GetSystemTime();
 
 private:
 
-    class __Register {
-        private:
-            static __Register singleton;
-        public:
-            __Register() { Platform::RegisterImplementation(GLFWVULKAN_NAME, &(GLFWVulkan::Create)); }
+    class Creator : public Platform::Creator {
+    private:
+        static Creator singleton_;
+    public:
+        Creator();
+        Platform* Create(Engine& engine, PlatformConfig* config) override;
     };
+
+    
 
 };

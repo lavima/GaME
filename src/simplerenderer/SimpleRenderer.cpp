@@ -5,12 +5,12 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-SimpleRenderer::SimpleRenderer(Engine &engine) : EngineComponent(engine) {
+SimpleRenderer::SimpleRenderer(Engine &engine) : EngineComponent(engine, TYPENAME_SIMPLERENDERER) {
   
     vkAppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     vkAppInfo.apiVersion = VK_API_VERSION_1_0;
     
-    const GameInfo *gameInfo = &engine.GetGame().GetInfo();
+    const GameHeader *gameInfo = &engine.GetGame().GetHeader();
     vkAppInfo.pApplicationName = gameInfo->GetName().c_str();
     vkAppInfo.applicationVersion = 
         VK_MAKE_VERSION(gameInfo->GetVersion().GetMajor(), gameInfo->GetVersion().GetMinor(), gameInfo->GetVersion().GetRelease());

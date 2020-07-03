@@ -5,21 +5,23 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-using namespace std;
-
 class FilePath {
 private:
 
-    string filename, directory;
+    string filename_;
+    string directory_;
+    string extension_;
 
 public:
 
     FilePath(const string &filePath);
 
-    static string GetFilename(const string &filePath);
-    const string &GetFilename();
+    static const string GetFilename(const string &filePath);
+    const string &GetFilename() const;
 
-    static string GetDirectory(const string &filePath);
-    const string &GetDirectory();
+    static const string GetDirectory(const string &filePath);
+    const string &GetDirectory() const;
 
+    static const string GetExtension(const string& file_path);
+    const string& GetExtension() const;
 };

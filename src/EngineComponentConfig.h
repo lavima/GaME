@@ -9,36 +9,31 @@ Author: Lars Vidar Magnusson
 #define XMLNAME_ENGINECOMPONENTCONFIG_NAME "name"
 #define XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME "typeName"
 
-class EngineComponentConfig;
 
-typedef EngineComponentConfig *(*LoadEngineComponentConfigFun)(const string &, pugi::xml_node rootNode);
-#define ADDINFUN_ENGINECOMPONENTCONFIG_LOAD "LoadEngineComponentConfig" 
-typedef void (*SaveEngineComponentConfigFun)(const string &, EngineComponentConfig &config, pugi::xml_node rootNode);
-#define ADDINFUN_ENGINECOMPONENTCONFIG_SAVE "SaveEngineComponentConfig" 
 
-class EngineComponentConfig : XMLSerializable {
+class EngineComponentConfig : XmlSerializable {
 private:
 
-	static unordered_map<string, LoadEngineComponentConfigFun> configLoaders;
-	static unordered_map<string, SaveEngineComponentConfigFun> configSavers;
+	static unordered_map<string, LoadEngineComponentConfigFun> config_loaders_;
+	static unordered_map<string, SaveEngineComponentConfigFun> config_savers_;
 
-	string name;
-	string typeName;
+	string name_;
+	string type_name_;
 
 protected:
 
 	EngineComponentConfig() {}
-	EngineComponentConfig(const string &name, const string &typeName);
+	EngineComponentConfig(const string &name, const string &type_name);
 
 public:
 
-	static EngineComponentConfig *Create(pugi::xml_node rootNode);
+	static EngineComponentConfig *Create(XmlNode root_node);
 	static void RegisterProvider(const string &typeName, LoadEngineComponentConfigFun loadFun, SaveEngineComponentConfigFun saveFun);
 
 	const string &GetName() const;
 	const string &GetTypeName() const;
 
-	bool Load(pugi::xml_node) override;
-	bool Save(pugi::xml_node) override;
+	bool Load(XmlNode root_node) override;
+	bool Save(XmlNode root_node) override;
 
 };

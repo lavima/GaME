@@ -1,48 +1,48 @@
 /*
-File: XMLData.h
+File: XmlData.h
 Author: Lars Vidar Magnusson
 */
 
 #pragma once
 
+#define EXTENSION_XML "xml"
+
 /*
 * Base class for XML serializable classes.
 */
-class XMLData : public WritableData, public XMLSerializable {
+class XmlData : public WritableData, public XmlSerializable {
 private:
 
-    unique_ptr<pugi::xml_document> xmlDocument;
+    XmlDocument xml_document_;
 
 public:
 
-    XMLData(const string &filename);
-    XMLData(const string &filename, pugi::xml_document *document);
+    XmlData(const string &filename);
+    XmlData(const string &filename, XmlDocument document);
 
-    bool Load();
-    virtual bool Load(pugi::xml_node) = 0;
+    bool Load() override;
+    virtual bool Load(XmlNode) = 0;
 
-    bool Save();
-    virtual bool Save(pugi::xml_node) = 0;
+    bool Save() override;
+    virtual bool Save(XmlNode) = 0;
 
 
 protected:
 
-    static bool Parse(const string &filename, pugi::xml_document *document);
-
-    pugi::xml_document &GetXMLDocument();
+     XmlDocument GetDocument();
 
 private:
 
-    class __Factory : public DataFactory {
-    private:
+    //class Loader : public DataLoader {
+    //private:
 
-        static __Factory singleton;
+    //    static Loader singleton_;
 
-        __Factory();
+    //    Loader();
 
-    public:
-        
-        Data *Load(const string &filename); 
+    //public:
+    //    
+    //    Data *Load(const string &filename_); 
 
-    };
+    //};
 };

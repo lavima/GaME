@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<EngineConfig>
-  <GraphicalPlatformConfig type="Win32Vulkan">
-    <Width>1024</Width>
-    <Height>600</Height>
-    <Fullscreen>false</Fullscreen>
-  </GraphicalPlatformConfig>
-  <Addin source="content/SimpleRenderer.xml" />
-</EngineConfig>

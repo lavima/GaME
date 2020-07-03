@@ -91,7 +91,7 @@ public:
 
 };
 
-class __InputKeyWritable : public InputKey {
+class InputKeyWritable : public InputKey {
 
 public:
     

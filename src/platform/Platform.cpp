@@ -5,30 +5,35 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-unordered_map<string, CreatePlatformFun> Platform::implementations;
+// 
+// Declare the static member pointer. The creation of the object uses a First Use idiom 
+// to avoid static fiasco.
+//
+unordered_map<string, Platform::Creator*>* Platform::implementations_ = nullptr;
 
 
 Platform *Platform::Create(Engine &engine, PlatformConfig *config) {
 
-    if (!implementations.count(config->GetTypeName()))
+    if (!implementations_->count(config->GetImplementationName()))
         return nullptr;
-    
-    CreatePlatformFun createPlatform;
-    createPlatform = implementations[config->GetTypeName()];
-    
-    return createPlatform(engine, config);
+
+    Platform::Creator* creator = (Platform::Creator*)implementations_->at(config->GetImplementationName());
+    return creator->Create(engine, config);
 
 }
 
 const unordered_map<KeyCode, reference_wrapper<const InputKey>> Platform::GetInputKeys() {
-    return unordered_map<KeyCode, reference_wrapper<const InputKey>>(inputKeys.begin(), inputKeys.end()); 
+    return unordered_map<KeyCode, reference_wrapper<const InputKey>>(input_keys_.begin(), input_keys_.end()); 
 }
 
-void Platform::RegisterImplementation(const string &name, CreatePlatformFun createFun) {
+void Platform::RegisterImplementation(const string &name, Platform::Creator* creator) {
 
-    implementations[name] = createFun;
+    if (!implementations_)
+        implementations_ = new unordered_map<string, Platform::Creator*>();
+
+    implementations_->insert_or_assign(name, creator);
 
 }
 
-Engine &Platform::GetEngine() { return engine; }
-unordered_map<KeyCode, __InputKeyWritable> Platform::GetWritableInputKeys() { return inputKeys; }
+Engine &Platform::GetEngine() { return engine_; }
+unordered_map<KeyCode, InputKeyWritable> Platform::GetWritableInputKeys() { return input_keys_; }

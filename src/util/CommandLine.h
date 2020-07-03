@@ -83,6 +83,6 @@ public:
 
 private:
 
-    static bool isCommandName(const string &arg);
+    static bool IsOptionName(const string &arg);
 
 };

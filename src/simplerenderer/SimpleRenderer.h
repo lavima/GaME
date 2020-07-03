@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+#define TYPENAME_SIMPLERENDERER "SimpleRenderer"
+
 class SimpleRenderer : public EngineComponent {
 
 private:

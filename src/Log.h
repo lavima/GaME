@@ -6,14 +6,14 @@ Author: Lars Vidar Magnusson
 #pragma once
 
 /*
-* Event type enumeration
+* Event type_ enumeration
 */
-enum EventType {
-    EVENT_ERROR = 0, 
-    EVENT_WARNING = 1,
-    EVENT_INFO = 2, 
-    EVENT_DEBUG = 3,
-    EVENT_ALL = 4
+enum class EventType {
+    Error = 0, 
+    Warning = 1,
+    Info = 2, 
+    Debug = 3,
+    All = 4
 };
 
 #define ERROR_PREFIX string("ERROR: ") 
@@ -24,38 +24,38 @@ enum EventType {
 class LogListener;
 
 /*
-* A log with different event levels. Events are filtered in accordance with the log instance 
+* A log_ with different event levels. Events are filtered in accordance with the log_ instance 
 * iisten level.
 *
-* Supports event listeners through the LogListener interface. Event listeners can have different 
-* listen level than the log itself.
+* Supports event listeners_ through the LogListener interface. Event listeners_ can have different 
+* listen level than the log_ itself.
 * Supports multiple output streams. Note that the Log class does not close the streams 
-* before destruction, except in the case where the stream has been created internally. Output 
-* streams can have different listen levels than the log itself.
+* before destruction, except in the cases where the stream has been created internally. Output 
+* streams can have different listen levels than the log_ itself.
 */
 class Log {
 
 private:
 
-    unique_ptr<ofstream> fileOut;
-    unique_ptr<stringstream> textOut;
+    unique_ptr<ofstream> out_main_;
+    unique_ptr<stringstream> out_string_;
 
-    struct outStream {
-        EventType Level;
-        ostream *Out;
+    struct OutStream {
+        EventType level;
+        ostream *out;
     };
 
-    vector<outStream> outStreams;
+    vector<OutStream> out_streams_;
 
-    list<LogListener *> listeners;
+    list<LogListener *> listeners_;
 
-    EventType listenLevel;
+    EventType level_;
 
 public:
 
-    Log(EventType level = EVENT_ALL);
-    Log(const string &filename, EventType level = EVENT_ALL);
-    Log(ostream &out, EventType level = EVENT_ALL);
+    Log(EventType level = EventType::All);
+    Log(const string &filename, EventType level = EventType::All);
+    Log(ostream &out, EventType level = EventType::All);
 
     ~Log();
 
@@ -63,33 +63,35 @@ public:
 
         unique_ptr<string> eventText(StringUtil::Create(format, args ...)); 
         (*eventText).append("\n");
-        output(EVENT_ALL, *eventText);
-        dispatchEvent(EVENT_ALL, *eventText);
+        output(EventType::All, *eventText);
+        dispatchEvent(EventType::All, *eventText);
 
     }
 
     template<typename ... T> void AddEvent(EventType type, const string &format, T ... args) {
 
-        if (type > listenLevel)
+        if (type > level_)
             return;
 
         unique_ptr<string> eventText(StringUtil::Create(format, args ...)); 
         (*eventText).append("\n");
-        if (type == EVENT_ERROR) 
-            output(EVENT_ERROR, ERROR_PREFIX + *eventText);
-        else if (type == EVENT_WARNING) 
-            output(EVENT_WARNING, WARNING_PREFIX + *eventText);
-        else if (type == EVENT_DEBUG)
-            output(EVENT_DEBUG, DEBUG_PREFIX + *eventText);
-        else // EVENT_INFO | EVENT_ALL
-            output(EVENT_ALL, *eventText);
+        if (type == EventType::Error)
+            output(EventType::Error, ERROR_PREFIX + *eventText);
+        else if (type ==EventType::Warning)
+            output(EventType::Warning, WARNING_PREFIX + *eventText);
+        else if (type ==EventType::Info)
+            output(EventType::Info, INFO_PREFIX + *eventText);
+        else if (type==EventType::Debug)
+            output(EventType::Debug, DEBUG_PREFIX+*eventText);
+        else // Info | All
+            output(EventType::All, *eventText);
 
         dispatchEvent(type, *eventText);
 
     }
 
     void AddListener(LogListener *listener);
-    void AddOutputStream(ostream &out, EventType level = EVENT_ALL);
+    void AddOutputStream(ostream &out, EventType level = EventType::All);
 
     void SetLevel(EventType level);
     EventType GetLevel();

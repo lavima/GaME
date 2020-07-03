@@ -5,58 +5,42 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-using namespace pugi;
+enum class GameStatus {
+    Created = 0,
+    Initialized,
+    Running,
+    Paused,
+    Terminated
+};
 
-#define EXTENSION_GAME "game"
-
-#define XMLNAME_GAME "Game"
-#define XMLNAME_GAME_INFO XMLNAME_GAMEINFO
-#define XMLNAME_GAME_CONFIG XMLNAME_GAMECONFIG
-
-class Game : public XMLData {
+class Game {
 
 private:
 
-    Engine *engine;
+    GameStatus status_;
 
-    unique_ptr<GameInfo> info;
-    unique_ptr<GameConfig> config;
+    unique_ptr<GameSpecification> specification_;
 
-    unique_ptr<Script> gameScript;
+    unique_ptr<Script> game_script_;
+
+    Engine* engine_;
 
 public:
 
-    Game(const string &filename) : XMLData(filename) {}
+    Game(GameSpecification* specification);
 
-    void Initialize(Engine &engine);
+    bool Initialize(Engine &engine);
 
-    void LoadContent();
+    void Run();
+
+    void LoadGlobalContent();
     void UnloadContent();
 
     void Update(GameTime &gameTime);
 
-    const GameInfo &GetInfo();
+    GameStatus GetStatus();
+    const GameHeader &GetHeader();
     GameConfig &GetConfig();
-
-    bool Load(pugi::xml_node rootNode);
-    bool Save(pugi::xml_node rootNode);
-
-	using XMLData::Load;
-	using XMLData::Save;
-
-private:
-    
-    class __Factory : DataFactory {
-    private:
-
-        static __Factory singleton;
-
-        __Factory();
-
-    public:
-
-        Data *Load(const string &filename);
-
-    };
+    GameSpecification& GetSpecification();
 
 };

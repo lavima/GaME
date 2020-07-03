@@ -6,63 +6,65 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 
-Engine::Engine() {
+Engine::Engine() : status_(EngineStatus::Created) {
 
-    isRunning = false;
-    scriptEnvironment = nullptr;
+    script_environment_ = nullptr;
 
-    log = unique_ptr<Log>(new Log(cout));
-    log->AddOutputStream(cerr, EVENT_ERROR);
+    log_ = unique_ptr<Log>(new Log(cout));
+    log_->AddOutputStream(cerr, EventType::Error);
 
 }
 
-void Engine::Initialize() {
+bool Engine::Initialize() {
 
-    EngineConfig *engineConfig = nullptr;
     if (CommandLine::HasOption("engineConfig")) {
-        (*log).AddEvent(EVENT_INFO, "Loading engine configuration from %s", CommandLine::GetOption("engineConfig"));
-        engineConfig = Data::Load<EngineConfig>((CommandLine::GetOption("engineConfig")));
+        (*log_).AddEvent("Loading engine configuration from %s", CommandLine::GetOption("engineConfig"));
+        config_ = unique_ptr<EngineConfig>(Data::Load<EngineConfig>(CommandLine::GetOption("engineConfig")));
     } 
-    else
-        engineConfig = new DefaultEngineConfig();
+    else {
+        (*log_).AddEvent("Loading default engine configuration");
+        config_ = unique_ptr<EngineConfig>(Data::Load<EngineConfig>(DEFAULT_ENGINECONFIG_FILENAME));
+    }
+
+    if (!config_) {
+        (*log_).AddEvent(EventType::Error, "No engine configuration loaded");
+        return false;
+    }
+
     if (CommandLine::HasOption("engineLogFilename"))
-        engineConfig->SetLogFilename(CommandLine::GetOption("engineLogFile"));
+        config_->SetLogFilename(CommandLine::GetOption("engineLogFile"));
+    
+    log_file_ = unique_ptr<ofstream>(new ofstream(config_->GetLogFilename()));
+    (*log_).AddOutputStream(*log_file_);
+    
+    (*log_).AddEvent("Initiliazing engine");
 
-    if (engineConfig->HasLogFilename()) {
-        logFileStream = unique_ptr<ofstream>(new ofstream(engineConfig->GetLogFilename()));
-        (*log).AddOutputStream(*logFileStream);
+    info_.executablePath = CommandLine::GetProgram();   
+
+    script_environment_ = ScriptEnvironment::Create(*this);
+
+    if (!config_->GetPlatformConfig()) {
+        (*log_).AddEvent("Creating default platform config");
+        config_->SetPlatformConfig(new DefaultPlatformConfig());
     }
 
-    (*log).AddEvent(EVENT_INFO, "Initiliazing engine");
+    platform_ = unique_ptr<Platform>(Platform::Create(*this, config_->GetPlatformConfig()));
 
-    info.executablePath = CommandLine::GetProgram();   
-
-    scriptEnvironment = ScriptEnvironment::Create(*this);
-
-    PlatformConfig *platformConfig = nullptr;
-    if (CommandLine::HasOption("platformConfig")) 
-        platformConfig = Data::Load<PlatformConfig>(CommandLine::GetOption("platformConfig"));
-
-    if (!platformConfig) {
-        (*log).AddEvent(EVENT_INFO, "Creating default platform config");
-        platformConfig = new DefaultPlatformConfig();
+    if (!platform_->Initialize()) {
+        (*log_).AddEvent(EventType::Error, "Platform failed to initialize. Can't initialize engine.");
+        return false;
     }
 
-    platform = unique_ptr<Platform>(Platform::Create(*this, platformConfig));
+    (*log_).AddEvent(EventType::All, "Loading addins");
+    for (const string &addin_filename : config_->GetAddinFilenames())
+        LoadAddin(addin_filename);
 
-    if (!platform->Initialize())
-        printf("WARNING: Failed to initialize the platform.\n");
-
-    (*log).AddEvent(EVENT_INFO, "Loading addins");
-    for (const string &addinFilename : config->GetAddinFilenames())
-        LoadAddin(addinFilename);
-
-    isRunning = true;
+    return true;
 
     /*
-    Script *engineScript = Script::Create(scriptContext, filename);
+    Script *engineScript = Script::Create(scriptContext, filename_);
     if (engineScript == NULL) {
-      printf("Could not load the engine script.\n");
+      printf("Could not load the engine_ script.\n");
       return;
     }
 
@@ -73,111 +75,155 @@ void Engine::Initialize() {
 
 }
 
-void Engine::Stop() {
-
-    if (!isRunning)
-        printf("The engine is not running. It cannot be stopped.\n");
-    isRunning = false;
-
-}
-
-void Engine::LoadGame(const string &filename) {
-
-    game = unique_ptr<Game>(Data::Load<Game>(filename));
-
-    game->Initialize(*this);
-
-    isGameRunning = isRunning;
-    while (isRunning && isGameRunning) {
-        platform->HandleEvents();
+void Engine::Run() {
+    if (!game_) {
+        log_->AddEvent("Nothing to run. Returning");
+        return;
+    }
+    
+    while (game_->GetStatus() == GameStatus::Running) {
+        platform_->HandleEvents();
 
         GameTime gameTime;
 
-        if (game)
-            game->Update(gameTime);
+        if (game_)
+            game_->Update(gameTime);
 
-        for (unordered_map<string, EngineComponent *>::iterator iter = components.begin(); iter != components.end(); ++iter)
+        for (unordered_map<string, EngineComponent*>::iterator iter = components_.begin(); iter!=components_.end(); ++iter)
             iter->second->Update(gameTime);
 
-        platform->SwapBuffers();
+        platform_->SwapBuffers();
     }
-
-    if (!isRunning)
-        shutdown();
 
 }
 
-void Engine::CloseGame() {
+void Engine::Stop() {
 
-    if (!isGameRunning) {
-        printf("No game is currently running.\n");
+    if (!game_) {
+        log_->AddEvent(EventType::Info, "No game is currently running.");
         return;
     }
-    isGameRunning = false;
 
 }
 
-bool Engine::LoadAddin(const string &filename) {
+bool Engine::LoadGame(const string &filename) {
 
-    Addin *addin = Addin::Load(*platform, filename);
-    addins.push_back(addin);
+    GameSpecification* game_spec = Data::Load<GameSpecification>(filename);
+    if (!game_spec) {
+        log_->AddEvent(EventType::Error, "Failed to load game specification");
+        return false;
+    }    
 
-    config->AddAddinFilename(filename);
+    game_ = unique_ptr<Game>(new Game(game_spec));
 
-    printf("Sucessfully loaded addin %s from %s\n", addin->GetInfo().GetName().c_str(), filename.c_str());
+    if (game_->Initialize(*this)) {
+        log_->AddEvent(EventType::Error, "Failed to initialize game");
+        return false;
+    }
 
     return true;
 
 }
 
+void Engine::UnloadGame() {
+
+    if (!game_) {
+        log_->AddEvent(EventType::Info, "No game is currently running.");
+        return;
+    }
+
+    game_->UnloadContent();
+
+}
+
+bool Engine::LoadAddin(const string &filename) {
+
+    Addin *addin = Addin::Load(*platform_, filename);
+    if (!addin)
+        return false;
+
+    addins_.push_back(addin);
+
+    // If the engine has already been initialized, we should add the addin filename
+    // to the engine configuration
+    if (status_ > EngineStatus::Created)
+        config_->AddAddinFilename(filename);
+
+    printf("Sucessfully loaded addin %s from %s\n", addin->GetHeader().GetName().c_str(), filename.c_str());
+
+    return true;
+
+}
+
+bool Engine::HasComponentType(const string& type_name) const {
+
+    bool found = false;
+
+    for (Addin* addin:addins_) {
+        
+        for (const EngineComponentVersionInfo& component_info:addin->GetHeader().GetEngineComponents()) {
+    
+            if (component_info.GetName()==type_name) {
+                found = true;
+                break;
+            }
+        }
+        
+        if (found)
+            break;
+    }
+
+    return found;
+
+}
+
 void Engine::AddComponent(const string &typeName, const string &name) {
 
-    if (components.find(name) != components.end())
+    if (components_.find(name) != components_.end())
         printf("The component with the specified name (%s) already exists\n", name.c_str());
 
-    components[name] = EngineComponent::Create(*this, typeName);
+    components_[name] = EngineComponent::Create(*this, typeName);
 
 }
 
 void Engine::AddComponent(EngineComponent *component) {
 
-    if (components.find(component->GetTypeName()) != components.end())
+    if (components_.find(component->GetTypeName()) != components_.end())
         printf("The component with the specified name (%s) already exists\n", component->GetTypeName().c_str());
 
-    components[component->GetTypeName()] = component;
+    components_[component->GetTypeName()] = component;
 
 }
 
 EngineComponent *Engine::GetComponent(const string &name) {
 
-    if (this->components.find(name) == this->components.end())
+    if (this->components_.find(name) == this->components_.end())
         return NULL;
-    return this->components[name];
+    return this->components_[name];
 
 }
 
-bool Engine::IsRunning() { return isRunning; }
-ScriptEnvironment &Engine::GetScriptEnvironment() { return *scriptEnvironment; }
-Platform &Engine::GetPlatform() { return *platform; }
-Game &Engine::GetGame() { return *game; }
+ScriptEnvironment &Engine::GetScriptEnvironment() { return *script_environment_; }
+Platform &Engine::GetPlatform() { return *platform_; }
+Game &Engine::GetGame() { return *game_; }
 
-const EngineInfo &Engine::GetInfo() { return (const EngineInfo &)info; }
+const EngineInfo &Engine::GetInfo() { return (const EngineInfo &)info_; }
 
-Log &Engine::GetLog() { return *log; }
+Log &Engine::GetLog() { return *log_; }
 
 void Engine::shutdown() {
 
-    platform->Shutdown();
+    platform_->Shutdown();
 
     std::vector<Addin *>::iterator iter;
-    for (iter = addins.begin(); iter != addins.end(); iter++) {
+    for (iter = addins_.begin(); iter != addins_.end(); iter++) {
 
-        platform->UnloadLibrary((*iter)->GetHandle());
+        platform_->UnloadLibrary((*iter)->GetHandle());
         delete *iter;
 
     }
 
-    delete scriptEnvironment;
+    delete script_environment_;
 
 }
 
@@ -212,6 +258,6 @@ void Engine::Scriptable::Register(ScriptEnvironment &environment) {
     engine->Set(v8::String::NewFromUtf8(environment.GetIsolate(), "loadAddin", v8::NewStringType::kNormal).ToLocalChecked(),
             v8::FunctionTemplate::New(environment.GetIsolate(), scriptableLoadAddin));
 
-    //(*(*environment.GetContext())->Global)->Set(v8::String::NewFromUtf8(environment.GetIsolate(), "engine", v8::NewStringType::kNormal).ToLocalChecked(), engine);
+    //(*(*environment.GetContext())->Global)->Set(v8::String::NewFromUtf8(environment.GetIsolate(), "engine_", v8::NewStringType::kNormal).ToLocalChecked(), engine_);
 
 }

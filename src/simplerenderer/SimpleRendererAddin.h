@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 extern "C" {
 
-void RegisterAddin(AddinInfo &addinInfo);
+void RegisterAddin(AddinHeader &addinInfo);
 
 EngineComponent *CreateEngineComponent(Engine &engine, const string &typeName, const string &name);
 

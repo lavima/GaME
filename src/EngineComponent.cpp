@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 unordered_map<string, CreateEngineComponentFun> EngineComponent::componentProviders;
 
-EngineComponent::EngineComponent(Engine &engine, const string &typeName) : __Instanceable(typeName) {
+EngineComponent::EngineComponent(Engine &engine, const string &typeName) : Instanceable(typeName) {
 
     this->engine = &engine;
 

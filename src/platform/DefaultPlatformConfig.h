@@ -11,7 +11,7 @@ Author: Lars Vidar Magnusson
 class DefaultPlatformConfig : public GraphicalPlatformConfig {
 public:
 
-    DefaultPlatformConfig() : GraphicalPlatformConfig(GLFWVULKAN_PLATFORM_CONFIG, GLFWVULKAN_NAME, 800, 600, false) {}
+    DefaultPlatformConfig() : GraphicalPlatformConfig(PLATFORM_GLFWVULKAN_NAME, 800, 600, false) {}
 
 };
 

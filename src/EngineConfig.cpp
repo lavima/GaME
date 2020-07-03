@@ -5,53 +5,61 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-using namespace pugi;
+EngineConfig::EngineConfig(const string &filename) : XmlData(filename) {}
 
-EngineConfig::EngineConfig(const string &filename) : XMLData(filename) {}
 
-EngineConfig::EngineConfig(const string &filename, const string &logFilename) : XMLData(filename) {
-
-    this->logFilename = unique_ptr<string>(new string(logFilename));
-
+const string &EngineConfig::GetLogFilename() const {
+    return log_filename_ ? *log_filename_ : ""; 
 }
 
-bool EngineConfig::HasLogFilename() { return (bool)logFilename; }
-const string &EngineConfig::GetLogFilename() { return *logFilename; }
-void EngineConfig::SetLogFilename(const string &logFilename) { this->logFilename.reset(new string(logFilename)); }
+void EngineConfig::SetLogFilename(const string &logFilename) { 
+    log_filename_ = unique_ptr<string>(new string(logFilename)); 
+}
 
-void EngineConfig::AddAddinFilename(const string &addinFilename) { addinFilenames.push_back(addinFilename); }
+void EngineConfig::AddAddinFilename(const string &addinFilename) { addin_filenames_.push_back(addinFilename); }
 const vector<reference_wrapper<const string>> EngineConfig::GetAddinFilenames() { 
-    return vector<reference_wrapper<const string>>(addinFilenames.begin(), addinFilenames.end()); 
+    return vector<reference_wrapper<const string>>(addin_filenames_.begin(), addin_filenames_.end()); 
 }
 
-bool EngineConfig::Load(xml_node rootNode) {
+PlatformConfig* EngineConfig::GetPlatformConfig() const {
+    return platform_config_.get();
+}
 
-    if (string(rootNode.name()).compare(XMLNAME_ENGINECONFIG))
+void EngineConfig::SetPlatformConfig(PlatformConfig* config) {
+    platform_config_ = unique_ptr<PlatformConfig>(config);
+}
+
+bool EngineConfig::Load(XmlNode root_node) {
+
+    if (root_node.GetName().compare(XMLNAME_ENGINECONFIG))
         return false;
 
-    xml_node nodeLogFilename = rootNode.child(XMLNAME_ENGINECONFIG_LOGFILENAME);
-    if (nodeLogFilename)
-        this->logFilename.reset(new string(nodeLogFilename.value()));
+    XmlNode log_filename_node = root_node.GetChild(XMLNAME_ENGINECONFIG_LOGFILENAME);
+    if (!log_filename_node)
+        log_filename_ = unique_ptr<string>(new string(DEFAULT_LOG_FILENAME));
+    log_filename_ = unique_ptr<string>(new string(log_filename_node.GetValue()));
 
-    for (xml_node addinNode = rootNode.child(XMLNAME_ENGINECONFIG_ADDIN); addinNode; addinNode = addinNode.next_sibling(XMLNAME_ENGINECONFIG_ADDIN))
-        this->addinFilenames.push_back(string(addinNode.value()));
+    XmlNode platform_config_node = root_node.GetChild(XMLNAME_ENGINECONFIG_PLATFORMCONFIG);
+    if (platform_config_node)
+        platform_config_ = unique_ptr<PlatformConfig>(PlatformConfig::Load(platform_config_node));
+
+    for (XmlNode addin_node : root_node.GetChildren(XMLNAME_ENGINECONFIG_ADDIN))
+        addin_filenames_.push_back(addin_node.GetValue());
 
     return true;
 
 }
 
-bool EngineConfig::Save(xml_node rootNode) {
+bool EngineConfig::Save(XmlNode root_node) {
 
-    rootNode.set_name(XMLNAME_ENGINECONFIG);
+    root_node.SetName(XMLNAME_ENGINECONFIG);
 
-    if (logFilename) {
-        xml_node logFilenameNode = rootNode.append_child(XMLNAME_ENGINECONFIG_LOGFILENAME);
-        logFilenameNode.set_value(logFilename->c_str());
-    }
+    XmlNode log_filename_node = root_node.AddChild(XMLNAME_ENGINECONFIG_LOGFILENAME);
+    log_filename_node.SetValue(*log_filename_);
         
-    for (const string &addinFilename : addinFilenames) {
-        xml_node addinFilenameNode = rootNode.append_child(XMLNAME_ENGINECONFIG_ADDIN);
-        addinFilenameNode.set_value(addinFilename.c_str());
+    for (const string &addinFilename : addin_filenames_) {
+        XmlNode addin_filename_node = root_node.AddChild(XMLNAME_ENGINECONFIG_ADDIN);
+        addin_filename_node.SetValue(addinFilename.c_str());
     }
 
     return true;
@@ -59,11 +67,11 @@ bool EngineConfig::Save(xml_node rootNode) {
 }
 
 
-EngineConfig::__Factory EngineConfig::__Factory::singleton;
+EngineConfig::Loader EngineConfig::Loader::singleton;
 
-EngineConfig::__Factory::__Factory() { Data::RegisterType(EXTENSION_ENGINECONFIG, &singleton); }
+EngineConfig::Loader::Loader() { Data::RegisterType(EXTENSION_ENGINECONFIG, &singleton); }
 
-Data *EngineConfig::__Factory::Load(const string &filename) { 
+Data *EngineConfig::Loader::Load(const string &filename) { 
 
     EngineConfig *newConfig = new EngineConfig(filename);
 

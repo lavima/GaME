@@ -12,7 +12,7 @@ void CommandLine::SpecifyArgument(const string &name, const string &description,
 
 bool CommandLine::Parse(const vector<string> &argumentValues) {
     
-    // Insert the option declarations into a map for quick name lookup
+    // Insert the option declarations into a map for quick implementation_name_ lookup
     unordered_map<string, CommandOption *> optionMap;
     for (CommandOption option : CommandLine::get().specifiedOptions)
         optionMap[option.Name] = &option;
@@ -22,13 +22,13 @@ bool CommandLine::Parse(const vector<string> &argumentValues) {
     
     auto argvIter = argumentValues.begin();
 
-    if (CommandLine::isCommandName(*argvIter)) {
+    if (CommandLine::IsOptionName(*argvIter)) {
         result.NumErrors++;
     }
     result.Program = *argvIter;
 
     ++argvIter;
-    while (argvIter != argumentValues.end() && CommandLine::isCommandName(*argvIter)) {
+    while (argvIter != argumentValues.end() && CommandLine::IsOptionName(*argvIter)) {
         
         string optionName = (*argvIter).substr(2);
         
@@ -42,7 +42,7 @@ bool CommandLine::Parse(const vector<string> &argumentValues) {
         if (option.Type == COMMANDOPTION_VALUE) {
 
             ++argvIter;
-            if (argvIter == argumentValues.end() || CommandLine::isCommandName(*argvIter)) 
+            if (argvIter == argumentValues.end() || CommandLine::IsOptionName(*argvIter)) 
                 result.NumErrors++;
             
             result.Options[optionName] = *argvIter;
@@ -124,7 +124,7 @@ CommandLine &CommandLine::get() {
 
 }
 
-bool CommandLine::isCommandName(const string &arg) {
+bool CommandLine::IsOptionName(const string &arg) {
 
     if (arg.find("--") != 0)
         return false;

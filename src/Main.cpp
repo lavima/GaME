@@ -8,11 +8,11 @@ Author: Lars Vidar Magnusson
 /*
  * Program entry.
  *
- * Usage: game ENGINECONFIG GAMESPEC
+ * Usage: game_ ENGINECONFIG GAMESPEC
  */
-#ifdef OS_WIN
+#ifdef PLATFORM_WIN32
 
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
     string commandLine = GetCommandLineA();
 
@@ -20,19 +20,18 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 int main(int argc, const char *argv[]) {
 
-    vector<string> argumentValues;
+    vector<string> arguments;
     for (int i=0; i<argc; ++i)
-        argumentValues.push_back(string(argv[i]));
+        arguments.push_back(string(argv[i]));
 
 #endif // OS_WIN
 
     CommandLine::SpecifyArgument("GAME_FILE", "Filename of the game to load at startup", 0, 1);
-    CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "platformConfig", "Filename of the platform configuration");
     CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "engineConfig", "Filename of the engine configuration");
-    CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "engineLogFilename", "The file to store the engine log");
+    CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "engineLog", "The filename of the engine log");
     CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "gameDirectory", "The directory to use as the root directory");
 
-    if (!CommandLine::Parse(argumentValues)) {
+    if (!CommandLine::Parse(arguments)) {
         cout << CommandLine::GetUsageString() << endl;
         return 0;
     }
@@ -42,6 +41,8 @@ int main(int argc, const char *argv[]) {
     engine.Initialize();
     
     engine.LoadGame(CommandLine::GetArgument("GAME_FILE")[0]);
+    
+    engine.Run();
 
     return 0;
 

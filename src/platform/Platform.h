@@ -6,32 +6,42 @@ Author: Lars Vidar Magnusson
 #pragma once
 
 class Engine;
-class Platform;
-
-typedef Platform *(*CreatePlatformFun)(Engine &, PlatformConfig *);
 
 /*
-* This class provides the interface for all platform implementations, and a factory function for 
-* creating instance implementations.
+* This class provides the interface for all platform_ implementations_, and a factory function for 
+* creating instance implementations_.
 */
 class Platform {
 
+protected:
+
+    /*
+    * Platform::Creator is a protected abstract class providing an interface for platform
+    * implementations to be created. 
+    */
+    class Creator {
+    public:
+        virtual Platform* Create(Engine& engine, PlatformConfig* config) = 0;
+    };
+
+    static void RegisterImplementation(const string& name, Platform::Creator* creator);
+
 private:
 
-    static unordered_map<string, CreatePlatformFun> implementations;
+    static unordered_map<string, Platform::Creator*>* implementations_;
 
-    Engine &engine;
+    const string implementation_name_;
 
-    unordered_map<KeyCode, __InputKeyWritable> inputKeys;
+    Engine& engine_;
+
+    unordered_map<KeyCode, InputKeyWritable> input_keys_;
 
 protected:
 
-    Platform(Engine &engine) : engine(engine) {}
+    Platform(const string& name, Engine& engine) : implementation_name_(name), engine_(engine) {}
 
 public:
     
-    static Platform *Create(Engine &engine, PlatformConfig *config);
-
     virtual bool Initialize() = 0;
 
     virtual void Shutdown() = 0;
@@ -41,6 +51,7 @@ public:
     * by this class.
     */
     virtual void HandleEvents() = 0;
+
     /*
     * Swap display buffers. This is required for all platforms supporting real-time rendering
     */
@@ -49,24 +60,26 @@ public:
 #ifdef LoadLibrary
 #undef LoadLibrary
 #endif
-    virtual void *LoadLibrary(const string &filename) = 0;
+    virtual void *LoadLibrary(const string& filename) = 0;
 
-    virtual void UnloadLibrary(void *handle) = 0;
+    virtual void UnloadLibrary(void* handle) = 0;
 
-    virtual void *LoadLibrarySymbol(void *handle, const string &name) = 0;
+    virtual void *LoadLibrarySymbol(void* handle, const string& name) = 0;
 
-    virtual unsigned long long GetSystemTime() = 0;
+    virtual double GetSystemTime() = 0;
 
     /*
     * Creates a new map with constant reference access to all input keys
     */
     const unordered_map<KeyCode, reference_wrapper<const InputKey>> GetInputKeys();
 
+public:
+
+    static Platform* Create(Engine& engine, PlatformConfig* config);
+
 protected:
 
-    static void RegisterImplementation(const string &name, CreatePlatformFun createFun);
-
     Engine &GetEngine();
-    unordered_map<KeyCode, __InputKeyWritable> GetWritableInputKeys();
+    unordered_map<KeyCode, InputKeyWritable> GetWritableInputKeys();
 
 };

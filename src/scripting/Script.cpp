@@ -30,7 +30,7 @@ Script *Script::Load(ScriptEnvironment &environment, const string &filename) {
     //v8::HandleScope handleScope;                                                                                                                     
     //v8::TryCatch tryCatch;                                                                                                                           
 
-    //v8::Handle<v8::String> nameString = v8::String::New(filename);                                                                       
+    //v8::Handle<v8::String> nameString = v8::String::New(filename_);                                                                       
     //v8::Handle<v8::String> sourceString = v8::String::New(source);                                                                                   
 
     //v8::Handle<v8::Script> script = v8::Script::Compile(sourceString, nameString);                                                                   

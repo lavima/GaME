@@ -209,9 +209,9 @@ LRESULT CALLBACK WindowCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM	lPar
         //keys[wParam] = FALSE;
         return 0;
 
-        // Resize window
+        // Resize window_
     case WM_SIZE:
-        // Resize OpenGL window
+        // Resize OpenGL window_
         //ReSizeGLWindow(LOWORD(lParam), HIWORD(lParam));
         return 0;								// Jump Back
     }

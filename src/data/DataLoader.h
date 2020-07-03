@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 class Data;
 
-class DataFactory {
+class DataLoader {
 public:
     virtual Data *Load(const string &filename) = 0;
 };

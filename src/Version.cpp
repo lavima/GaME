@@ -5,80 +5,76 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-using namespace pugi;
-
 Version::Version() {
-  this->major = 0;
-  this->minor = 0;
-  this->release = 0;
+  this->major_ = 0;
+  this->minor_ = 0;
+  this->release_ = 0;
 }
 Version::Version(int major, int minor, int release) {
 
-    this->major = major;
-    this->minor = minor;
-    this->release = release;
+    this->major_ = major;
+    this->minor_ = minor;
+    this->release_ = release;
 
 }
-Version::Version(pugi::xml_node &xmlNode) {
-    Version::Load(this, xmlNode);
-}
-Version::Version(pugi::xml_node &&xmlNode) { 
-    Version::Load(this, xmlNode);
+Version::Version(XmlNode node) {
+    Version::Load(this, node);
 }
 
-int Version::GetMajor() const { return major; }
-int Version::GetMinor() const { return minor; }
-int Version::GetRelease() const { return release; };
+
+int Version::GetMajor() const { return major_; }
+int Version::GetMinor() const { return minor_; }
+int Version::GetRelease() const { return release_; };
 
 const string *Version::GetVersionString() {
-    return (const string *)StringUtil::Create("%d-%d-%d", major, minor, release);
+    return (const string *)StringUtil::Create("%d-%d-%d", major_, minor_, release_);
 }
 
-bool Version::operator==(Version &other) { return major==other.major && minor==other.minor && release==other.release; }
+bool Version::operator==(Version &other) { return major_==other.major_ && minor_==other.minor_ && release_==other.release_; }
 
-bool Version::Load(Version *version, pugi::xml_node rootNode) {
+bool Version::Load(Version *version, XmlNode root_node) {
 
-    if (string(rootNode.value()).compare(XMLNAME_VERSION))
+    if (root_node.GetValue().compare(XMLNAME_VERSION))
         return false;
 
-    xml_node majorNode = rootNode.child(XMLNAME_VERSION_MAJOR);
-    if (!majorNode)
+    XmlNode major_node = root_node.GetChild(XMLNAME_VERSION_MAJOR);
+    if (!major_node)
         return false;
-    version->major = majorNode.text().as_int();
+    version->major_ = stoi(major_node.GetValue());
 
-    xml_node minorNode = rootNode.child(XMLNAME_VERSION_MINOR);
-    if (!minorNode)
+    XmlNode minor_node = root_node.GetChild(XMLNAME_VERSION_MINOR);
+    if (!minor_node)
         return false;
-    version->minor = minorNode.text().as_int(); 
+    version->minor_ = stoi(minor_node.GetValue());
 
-    xml_node releaseNode = rootNode.child(XMLNAME_VERSION_RELEASE);
-    if (!releaseNode)
+    XmlNode release_node = root_node.GetChild(XMLNAME_VERSION_RELEASE);
+    if (!release_node)
         return false;
-    version->release = releaseNode.text().as_int();
+    version->release_ = stoi(release_node.GetValue());
 
     return true;
 
 }
 
-bool Version::Save(Version &version, pugi::xml_node rootNode) {
+bool Version::Save(Version &version, XmlNode root_node) {
 
-    rootNode.set_name(XMLNAME_VERSION);
+    root_node.SetName(XMLNAME_VERSION);
 
-    xml_node majorNode = rootNode.append_child();
-    majorNode.set_name(XMLNAME_VERSION_MAJOR);
-    majorNode.set_value(to_string(version.major).c_str());
+    XmlNode major_node = root_node.AddChild();
+    major_node.SetName(XMLNAME_VERSION_MAJOR);
+    major_node.SetValue(to_string(version.major_));
     
-    xml_node minorNode = rootNode.append_child();
-    minorNode.set_name(XMLNAME_VERSION_MINOR);
-    minorNode.set_value(to_string(version.minor).c_str());
+    XmlNode minor_node = root_node.AddChild();
+    minor_node.SetName(XMLNAME_VERSION_MINOR);
+    minor_node.SetValue(to_string(version.minor_));
 
-    xml_node releaseNode = rootNode.append_child();
-    releaseNode.set_name(XMLNAME_VERSION_RELEASE);
-    releaseNode.set_value(to_string(version.release).c_str());
+    XmlNode release_node = root_node.AddChild();
+    release_node.SetName(XMLNAME_VERSION_RELEASE);
+    release_node.SetValue(to_string(version.release_));
 
     return true;
 
 }
 
-bool Version::Load(pugi::xml_node rootNode) { return Version::Load(this, rootNode); }
-bool Version::Save(pugi::xml_node rootNode) { return Version::Save(*this, rootNode); }
+bool Version::Load(XmlNode root_node) { return Version::Load(this, root_node); }
+bool Version::Save(XmlNode root_node) { return Version::Save(*this, root_node); }

@@ -5,66 +5,69 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
+unordered_map<string, LoadEngineComponentConfigFun> EngineComponentConfig::config_loaders_;
+unordered_map<string, SaveEngineComponentConfigFun> EngineComponentConfig::config_savers_;
+
 EngineComponentConfig::EngineComponentConfig(const string &name, const string &typeName) {
 
-    this->name = name;
-    this->typeName = typeName;
+    this->name_ = name;
+    this->type_name_ = typeName;
 
 }
 
-EngineComponentConfig *EngineComponentConfig::Create(pugi::xml_node rootNode) {
+EngineComponentConfig *EngineComponentConfig::Create(XmlNode root_node) {
 
-    if (string(rootNode.name()).compare(XMLNAME_ENGINECOMPONENTCONFIG))
+    if (root_node.GetName().compare(XMLNAME_ENGINECOMPONENTCONFIG))
         return nullptr;
 
-    xml_attribute typeNameAttribute = rootNode.attribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
-    if (!typeNameAttribute)
+    XmlAttribute type_attribute = root_node.GetAttribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
+    if (!type_attribute)
         return nullptr;
-    string typeName = string(typeNameAttribute.value());
-
-    LoadEngineComponentConfig loadConfig = configLoaders[typeName];
-    return loadConfig(typeName, rootNode);
+    
+    string type = type_attribute.GetValue();
+    LoadEngineComponentConfigFun loadConfig = config_loaders_[type];
+    return loadConfig(type, root_node);
 
 }
 
-void EngineComponentConfig::RegisterProvider(const string &typeName, LoadEngineComponentConfig loadFun, SaveEngineComponentConfig saveFun) { 
+void EngineComponentConfig::RegisterProvider(const string &typeName, LoadEngineComponentConfigFun loadFun, SaveEngineComponentConfigFun saveFun) {
 
-   configLoaders[typeName] = loadFun; 
-   configSavers[typeName] = saveFun; 
+   config_loaders_[typeName] = loadFun; 
+   config_savers_[typeName] = saveFun; 
     
 }
 
-const string &EngineComponentConfig::GetName() const { return name; }
-const string &EngineComponentConfig::GetTypeName() const { return typeName; }
+const string &EngineComponentConfig::GetName() const { return name_; }
+const string &EngineComponentConfig::GetTypeName() const { return type_name_; }
 
-bool EngineComponentConfig::Load(xml_node rootNode) { 
+bool EngineComponentConfig::Load(XmlNode root_node) { 
 
-    if (string(rootNode.name()).compare(XMLNAME_ENGINECOMPONENTCONFIG))
+    if (root_node.GetName().compare(XMLNAME_ENGINECOMPONENTCONFIG))
         return false;
 
-    xml_attribute nameAttribute = rootNode.attribute(XMLNAME_ENGINECOMPONENTCONFIG_NAME);
-    if (!nameAttribute)
+    XmlAttribute name_attribute = root_node.GetAttribute(XMLNAME_ENGINECOMPONENTCONFIG_NAME);
+    if (!name_attribute)
         return false;
-    name = string(nameAttribute.value());
+    name_ = name_attribute.GetValue();
 
-    xml_attribute typeNameAttribute = rootNode.attribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
-    if (!typeNameAttribute)
+    XmlAttribute type_attribute = root_node.GetAttribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
+    if (!type_attribute)
         return false;
-    typeName = string(typeNameAttribute.value());
+    type_name_ = type_attribute.GetValue();
 
     return true;
 
 }
 
-bool EngineComponentConfig::Save(xml_node rootNode) { 
+bool EngineComponentConfig::Save(XmlNode root_node) { 
 
-    rootNode.set_name(XMLNAME_ENGINECOMPONENTINSTANCE);
+    root_node.SetName(XMLNAME_ENGINECOMPONENTCONFIG);
 
-    xml_attribute nameAttribute = rootNode.append_attribute(XMLNAME_ENGINECOMPONENTINSTANCE_NAME);
-    nameAttribute.set_value(name.c_str());
+    XmlAttribute name_attribute = root_node.AddAttribute(XMLNAME_ENGINECOMPONENTCONFIG_NAME);
+    name_attribute.SetValue(name_.c_str());
 
-    xml_attribute typeNameAttribute = rootNode.append_attribute(XMLNAME_ENGINECOMPONENTINSTANCE_TYPENAME);
-    nameAttribute.set_value(typeName.c_str());
+    XmlAttribute type_attribute = root_node.AddAttribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
+    type_attribute.SetValue(type_name_.c_str());
 
     return true;
 

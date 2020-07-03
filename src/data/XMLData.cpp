@@ -5,45 +5,36 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-using namespace pugi;
+XmlData::XmlData(const string &filename) : WritableData(filename), xml_document_(XmlDocument()) {}
 
-XMLData::XMLData(const string &filename) : WritableData(filename) {
-    xmlDocument = unique_ptr<xml_document>(new xml_document());
-}
+XmlData::XmlData(const string &filename, XmlDocument document) : WritableData(filename), xml_document_(document) {}
 
-XMLData::XMLData(const string &filename, pugi::xml_document *document) : WritableData(filename) {
-    xmlDocument = unique_ptr<xml_document>(document);
-}
+bool XmlData::Load() {
 
-bool XMLData::Load() {
-
-    xml_parse_result result = xmlDocument->load_file(GetFilename().c_str());
-    if (!result) {
+    if (!xml_document_.Load(GetFilename())) 
         return false;    
-    }
 
-    return Load(xmlDocument->document_element());
-
-}
-
-bool XMLData::Save() {
-
-    Save(xmlDocument->document_element());
-
-    return xmlDocument->save_file(GetFilename().c_str()); 
+    return Load(xml_document_.GetDocumentElement());
 
 }
 
-bool XMLData::Parse(const string &filename, xml_document *document) {
+bool XmlData::Save() {
 
-    document = new xml_document();
-    xml_parse_result result = document->load_file(filename.c_str());
-    return (bool)result;
+    Save(xml_document_.GetDocumentElement());
+
+    return xml_document_.Save(GetFilename()); 
 
 }
 
-xml_document &XMLData::GetXMLDocument() { return *xmlDocument; }
+XmlDocument XmlData::GetDocument() { return xml_document_; }
 
-XMLData::__Factory XMLData::__Factory::singleton;
-XMLData::__Factory::__Factory() { Data::RegisterType("xml", &singleton); }
-Data *XMLData::__Factory::Load(const string &filename) {}
+//XmlData::Loader XmlData::Loader::singleton_;
+//XmlData::Loader::Loader() { Data::RegisterType(EXTENSION_XML, &singleton_); }
+//Data * XmlData::Loader::Load(const string &filename_) {
+//    XmlData* data = new XmlData(filename_);
+//
+//    if (!data->Load())
+//        return nullptr;
+//
+//    return newGame;
+//}

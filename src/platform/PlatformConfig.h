@@ -7,37 +7,42 @@ Author: Lars Vidar Magnusson
 
 #define PLATFORM_CONFIG_EXTENSION "platform_config"
 
-class PlatformConfig : public XMLData {
+#define XMLNAME_PLATFORMCONFIG "PlatformConfig"
+
+/*
+* PlatformConfig is the base class for all platform configuration types. The class 
+* features a factory pattern for loading all registered configuration types.
+*   
+*/
+class PlatformConfig : public XmlSerializable {
+
+protected:
+
+    class Loader {
+    public:
+        virtual PlatformConfig* Load(const string& implementation_name, XmlNode root_node) = 0;
+    };
+
 private:
+
+    static unordered_map<string, Loader*>* configuration_loaders_;
     
-    string typeName;
+    string implementation_name_;
 
 
 protected:
 
-    PlatformConfig(const string &filename);
-    PlatformConfig(const string &filename, pugi::xml_document *document);
-    PlatformConfig(const string &filename, const string &typeName);
+    PlatformConfig(const string& implementation_name);
 
+    static void RegisterImplementation(const string& implementation_name, Loader* loader);
+    
 public:
 
-    const string &GetTypeName();
-    void SetTypeName(const string &typeName);
+    static PlatformConfig* Load(XmlNode root_node);
 
-private:
 
-    class __Factory : public DataFactory {
-    private:
-
-        static __Factory singleton;
-
-        __Factory();
-
-    public:
-
-        Data *Load(const string &filename);
-
-    };
+    const string &GetImplementationName();
+    void SetImplementationName(const string &name);
 
 };
 
@@ -45,28 +50,24 @@ private:
 #define DEFAULT_GRAPHICALPLATFORM_HEIGHT 600
 #define DEFAULT_GRAPHICALPLATFORM_FULLSCREEN false
 
-#define XMLNAME_GRAPHICALPLATFORMCONFIG "GraphicalPlatformConfig"
-#define XMLNAME_GRAPHICALPLATFORMCONFIG_WIDTH "Width"
-#define XMLNAME_GRAPHICALPLATFORMCONFIG_HEIGHT "Height"
-#define XMLNAME_GRAPHICALPLATFORMCONFIG_FULLSCREEN "Fullscreen"
+#define XMLNAME_PLATFORMCONFIG_WIDTH "Width"
+#define XMLNAME_PLATFORMCONFIG_HEIGHT "Height"
+#define XMLNAME_PLATFORMCONFIG_FULLSCREEN "Fullscreen"
 
 class GraphicalPlatformConfig : public PlatformConfig {
 private:
 
-    int width;
-    int height;
-    bool fullscreen;
+    int width_;
+    int height_;
+    bool fullscreen_;
 
 public:
 
-    GraphicalPlatformConfig(const string &filename);
-    GraphicalPlatformConfig(const string &filename, pugi::xml_document *document);
-    GraphicalPlatformConfig(const string &filename, const string &name);
-    GraphicalPlatformConfig(const string &filename, const string &name, int width, int height, bool fullscreen);
+    GraphicalPlatformConfig(const string& implementation_name);
+    GraphicalPlatformConfig(const string &implementation_name, int width, int height, bool fullscreen);
 
-
-    bool Load(pugi::xml_node rootNode); 
-    bool Save(pugi::xml_node rootNode);
+    bool Load(XmlNode root_node) override; 
+    bool Save(XmlNode root_node) override;
 
     int GetWidth();
     void SetWidth(int width);
