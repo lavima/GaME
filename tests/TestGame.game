@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Game>
+    <Header>
+        <Name>Test Game</Name>
+        <Description>Used for testing</Description>
+        <Version>
+            <Major>0</Major>
+            <Minor>0</Minor>
+            <Release>1</Release>
+        </Version>
+        <EngineComponent>
+            <Name>SimpleRenderer</Name>
+            <Version>
+                <Major>0</Major>
+                <Minor>0</Minor>
+                <Release>1</Release>
+            </Version>
+        </EngineComponent>
+    </Header>
+    <GameComponent name="renderer" type="SimpleRenderer" />
+</Game>
