@@ -22,7 +22,6 @@ Author: Lars Vidar Magnusson
 *   
 */
 class PlatformConfig : public XmlSerializable {
-
 protected:
 
     class Loader {

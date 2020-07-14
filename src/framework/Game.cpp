@@ -77,4 +77,3 @@ GameConfig &Game::GetConfig() { return *specification_->config_; }
 
 GameSpecification& Game::GetSpecification() { return *specification_; }
 
-

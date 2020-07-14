@@ -13,15 +13,15 @@ Author: Lars Vidar Magnusson
 #define ENGINEOPTION_CONFIG "engineConfig"
 #define ENGINEOPTION_CONFIG_FILENAME "engineLogFilename"
 
-/*
-* EngineInfo provides engine_ meta information at runtime. Allthough this class
-* derives from VersionInfo, an XML serializable type, this functionality is never
-* utilized i.e. the information is provided either at compile time or at runtime.
-*/
+ /*
+ * EngineInfo provides engine_ meta information at runtime. Allthough this class
+ * derives from VersionInfo, an XML serializable type, this functionality is never
+ * utilized i.e. the information is provided either at compile time or at runtime.
+ */
 class EngineInfo : public VersionInfo {
 
     friend class Engine;
-    
+
 private:
 
     string executablePath;
@@ -30,7 +30,7 @@ public:
 
     EngineInfo() : VersionInfo(ENGINE_NAME, ENGINE_DESCRIPTION, ENGINE_VERSION) {}
 
-    const string &GetExecutablePath() const { return executablePath; }
+    const string& GetExecutablePath() const { return executablePath; }
 
 };
 
@@ -41,21 +41,31 @@ enum class EngineStatus {
 };
 
 /*
- * The Engine class represents the actual Game Mechanics Engine (GaME). 
+ * The Engine class represents the actual Game Mechanics Engine (GaME).
  */
 class Engine {
 private:
 
+    EngineInfo info;
+    string configFilename;
+    EngineConfig* config;
+
+    vector<Addin*> addins;
+    unordered_map<string, EngineComponent*> components;
+
+    ScriptEnvironment* scriptEnvironment;
+    unique_ptr<Platform> platform;
+
     EngineInfo info_;
     EngineStatus status_;
-        
+
     string config_filename_;
     unique_ptr<EngineConfig> config_;
 
-    vector<Addin *> addins_;
-    unordered_map<string, EngineComponent *> components_;
+    vector<Addin*> addins_;
+    unordered_map<string, EngineComponent*> components_;
 
-    ScriptEnvironment *script_environment_;
+    ScriptEnvironment* script_environment_;
     unique_ptr<Platform> platform_;
 
     unique_ptr<Log> log_;
@@ -71,30 +81,30 @@ public:
     void Run();
     void Stop();
 
-    bool LoadGame(const string &filename);
+    bool LoadGame(const string& filename);
     void UnloadGame();
 
-    bool LoadAddin(const string &filename);
+    bool LoadAddin(const string& filename);
 
     bool HasComponentType(const string& type_name) const;
     //void AddComponent(const string &name, const string &type_name);
     void AddComponent(EngineComponentConfig& config);
-    EngineComponent *GetComponent(const string &name);
+    EngineComponent* GetComponent(const string& name);
 
-    const EngineInfo &GetInfo();
-    ScriptEnvironment &GetScriptEnvironment();
-    Platform &GetPlatform();
-    Game &GetGame();
-    Log &GetLog(); 
+    const EngineInfo& GetInfo();
+    ScriptEnvironment& GetScriptEnvironment();
+    Platform& GetPlatform();
+    Game& GetGame();
+    Log& GetLog();
 
 private:
 
-    void shutdown(); 
+    void shutdown();
 
     class Scriptable : public _Scriptable {
     public:
 
-        virtual void Register(ScriptEnvironment &environment);
+        virtual void Register(ScriptEnvironment& environment);
 
     };
 

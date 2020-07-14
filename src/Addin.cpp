@@ -5,10 +5,10 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-Addin *Addin::Load(Engine& engine, const string &filename) {
+Addin* Addin::Load(Engine& engine, const string& filename) {
 
-    Addin *newAddin = new Addin(Data::Load<AddinHeader>(filename));
-    AddinHeader &header = newAddin->GetHeader();
+    Addin* newAddin = new Addin(Data::Load<AddinHeader>(filename));
+    AddinHeader& header = newAddin->GetHeader();
 
     string libraryFilename = FilePath::GetFilename(header.GetLibraryFilename());
 
@@ -18,7 +18,7 @@ Addin *Addin::Load(Engine& engine, const string &filename) {
         return nullptr;
     }
 
-    void *address = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_REGISTERADDIN);
+    void* address = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_REGISTERADDIN);
     if (!address) {
         delete newAddin;
         return nullptr;
@@ -29,7 +29,7 @@ Addin *Addin::Load(Engine& engine, const string &filename) {
     RegisterAddinFun registerAddin = (RegisterAddinFun)address;
     registerAddin(engine, header);
 
-    if (header.GetType() == AddinType::EngineComponent) {
+    if (header.GetType()==AddinType::EngineComponent) {
 
         auto createAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENT_CREATE);
         if (!createAddr) {
@@ -52,7 +52,7 @@ Addin *Addin::Load(Engine& engine, const string &filename) {
         }
         newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_SAVE] = saveConfigAddr;
 
-        for (const EngineComponentVersionInfo &componentInfo : header.GetEngineComponents()) {
+        for (const EngineComponentVersionInfo& componentInfo:header.GetEngineComponents()) {
 
             const string& name = componentInfo.GetName();
             EngineComponent::RegisterProvider(name, (CreateEngineComponentFun)createAddr);
@@ -65,11 +65,11 @@ Addin *Addin::Load(Engine& engine, const string &filename) {
 
 }
 
-bool Addin::HasSymbol(const string &name) { 
-    return this->symbol_map_.find(name) != this->symbol_map_.end(); 
+bool Addin::HasSymbol(const string& name) {
+    return this->symbol_map_.find(name)!=this->symbol_map_.end();
 }
 
-void *Addin::GetSymbolAddr(const string &name) {
+void* Addin::GetSymbolAddr(const string& name) {
 
     if (this->HasSymbol(name))
         return this->symbol_map_[name];
@@ -82,17 +82,16 @@ const vector<reference_wrapper<const string>> Addin::GetLoadedSymbolNames() cons
 
     vector<reference_wrapper<const string>> symbolNames;
 
-    for (pair<string, void *> symbolPair : symbol_map_)
+    for (pair<string, void*> symbolPair:symbol_map_)
         symbolNames.push_back(symbolPair.first);
 
     return symbolNames;
 
 }
 
-AddinHeader &Addin::GetHeader() { return *(this->header_); }
-void *Addin::GetHandle() { return this->handle_; }
+AddinHeader& Addin::GetHeader() { return *(this->header_); }
+void* Addin::GetHandle() { return this->handle_; }
 
 AddinType Addin::GetType() const {
     return header_->GetType();
 }
-

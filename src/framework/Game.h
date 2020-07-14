@@ -13,7 +13,7 @@ enum class GameStatus {
     Terminated
 };
 
-class Game {
+class Game  {
 
 private:
 

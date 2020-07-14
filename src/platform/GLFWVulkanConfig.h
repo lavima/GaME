@@ -17,6 +17,7 @@ public:
     bool Save(XmlNode root_node) override;
 
 private:
+
     class Loader : public PlatformConfig::Loader {
     private:
         static Loader singleton_;
