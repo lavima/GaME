@@ -14,7 +14,7 @@ const vector<reference_wrapper<const EngineComponentVersionInfo>> AddinHeader::G
 
 bool AddinHeader::Load(XmlNode root_node) {
 
-    if (root_node.GetValue().compare(XMLNAME_ADDININFO))
+    if (root_node.GetName()!=XMLNAME_ADDININFO)
         return false;
 
     XmlAttribute library_attribute = root_node.GetAttribute(XMLNAME_ADDININFO_LIBRARYFILENAME);
@@ -22,6 +22,22 @@ bool AddinHeader::Load(XmlNode root_node) {
         return false;
     library_filename_ = library_attribute.GetValue();
 
+    XmlNode name_node = root_node.GetChild(XMLNAME_ADDININFO_NAME);
+    if (!name_node)
+        return false;
+    SetName(name_node.GetValue());
+
+    XmlNode description_node = root_node.GetChild(XMLNAME_ADDININFO_DESCRIPTION);
+    if (!description_node)
+        return false;
+    SetDescription(description_node.GetValue());
+
+    XmlNode version_node = root_node.GetChild(XMLNAME_ADDININFO_VERSION);
+    if (!version_node)
+        return false;
+    SetVersion(Version(version_node));
+
+    // For now, only engine_ components addins are supported
     if (!root_node.HasChild(XMLNAME_ADDININFO_ENGINECOMPONENT))
         return false;
     

@@ -8,8 +8,8 @@ XmlNode::XmlNode(pugi::xml_node node) : internal_(node) {}
 const string XmlNode::GetName() const { return string(internal_.name()); }
 void XmlNode::SetName(const string& name) { internal_.set_name(name.c_str()); }
 
-const string XmlNode::GetValue() const { return string(internal_.value()); }
-void XmlNode::SetValue(const string& value) { internal_.set_value(value.c_str()); }
+const string XmlNode::GetValue() const { return string(internal_.child_value()); }
+void XmlNode::SetValue(const string& value) { internal_.first_child().set_value(value.c_str()); }
 
 XmlNode XmlNode::AddChild() {
     return XmlNode(internal_.append_child());
@@ -32,7 +32,7 @@ XmlRange<XmlNode::Iterator> XmlNode::GetChildren() {
 }
 
 XmlRange<XmlNode::NamedIterator> XmlNode::GetChildren(const string& name) {
-    return XmlRange<XmlNode::NamedIterator>(XmlNode::NamedIterator(internal_.first_child(), name), XmlNode::NamedIterator(xml_node(), name));
+    return XmlRange<XmlNode::NamedIterator>(XmlNode::NamedIterator(internal_.child(name.c_str()), name), XmlNode::NamedIterator(xml_node(), name));
 }
 
 XmlAttribute XmlNode::AddAttribute(const string& name) {

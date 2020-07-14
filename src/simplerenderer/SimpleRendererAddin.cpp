@@ -3,20 +3,30 @@ File: Addin.cpp
 Author: Lars Vidar Magnusson
 */
 
+#include <vulkan/vulkan.h>
+
 #include "../GaME.h"
 
 #include "SimpleRendererAddin.h"
 #include "SimpleRenderer.h"
 
 
-void RegisterAddin(AddinHeader &addinInfo) {
-  
-  printf("Addin %s\n", addinInfo.GetName().c_str());
+void RegisterAddin(Engine& engine, AddinHeader& addinInfo) {
+
+    engine.GetLog().AddEvent("Addin %s registered", addinInfo.GetName().c_str());
 
 }
 
-EngineComponent *CreateEngineComponent(Engine &engine, const string &typeName, const string &name) {
+EngineComponentConfig* LoadEngineComponentConfig(XmlNode root_node) {
+    return new EngineComponentConfig(root_node);
+}
 
-  return new SimpleRenderer(engine);
+bool SaveEngineComponentConfig(EngineComponentConfig& config, XmlNode root_node) {
+    return false;
+}
+
+EngineComponent* CreateEngineComponent(Engine& engine, EngineComponentConfig& config) {
+
+    return new SimpleRenderer(engine, config);
 
 }

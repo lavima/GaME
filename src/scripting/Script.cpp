@@ -53,7 +53,7 @@ bool Script::Run() {
     //v8::HandleScope handleScope;
     //v8::TryCatch tryCatch;
 
-    //v8::Handle<v8::Value> result = script->Run();
+    //v8::Handle<v8::Value> result = script->Start();
 
     //if (result.IsEmpty()) {
     //    assert(tryCatch.HasCaught());

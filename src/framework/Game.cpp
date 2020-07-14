@@ -25,8 +25,8 @@ bool Game::Initialize(Engine &engine) {
         }
     }
 
-    for(EngineComponentConfig* component_config : GetConfig().GetEngineComponentConfigs())
-        engine.AddComponent(component_config->GetTypeName(), component_config->GetName());
+    for(EngineComponentConfig component_config : GetConfig().GetEngineComponentConfigs())
+        engine.AddComponent(component_config);
 
     status_ = GameStatus::Initialized;
 
@@ -34,12 +34,29 @@ bool Game::Initialize(Engine &engine) {
 
 }
 
-void Game::Run() {
+bool Game::Start() {
     
+    if (status_!=GameStatus::Initialized)
+        return false;
+
+    status_ = GameStatus::Running;
+
+    return true;
 
 }
 
-void Game::LoadGlobalContent() {
+void Game::Stop() {
+
+    if (status_!=GameStatus::Running)
+        return;
+
+    status_ = GameStatus::Terminated;
+
+}
+
+bool Game::LoadGlobalContent() {
+
+    return true;
 
 }
 

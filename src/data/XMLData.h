@@ -42,7 +42,7 @@ private:
 
     //public:
     //    
-    //    Data *Load(const string &filename_); 
+    //    Data *Create(const string &filename_); 
 
     //};
 };

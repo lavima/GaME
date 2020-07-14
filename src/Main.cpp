@@ -38,12 +38,19 @@ int main(int argc, const char *argv[]) {
 
     Engine engine;
 
-    engine.Initialize();
+    if (!engine.Initialize()) {
+        cout<<"Couldn't initialize engine";
+        return 0;
+    }
+
     
-    engine.LoadGame(CommandLine::GetArgument("GAME_FILE")[0]);
+    if (!engine.LoadGame(CommandLine::GetArgument("GAME_FILE")[0])) {
+        cout<<"Couldn't load game";
+        return 0;
+    }
     
     engine.Run();
 
-    return 0;
+    return 1;
 
 }

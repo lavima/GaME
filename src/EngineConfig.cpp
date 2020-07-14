@@ -17,6 +17,7 @@ void EngineConfig::SetLogFilename(const string &logFilename) {
 }
 
 void EngineConfig::AddAddinFilename(const string &addinFilename) { addin_filenames_.push_back(addinFilename); }
+
 const vector<reference_wrapper<const string>> EngineConfig::GetAddinFilenames() { 
     return vector<reference_wrapper<const string>>(addin_filenames_.begin(), addin_filenames_.end()); 
 }
@@ -37,14 +38,20 @@ bool EngineConfig::Load(XmlNode root_node) {
     XmlNode log_filename_node = root_node.GetChild(XMLNAME_ENGINECONFIG_LOGFILENAME);
     if (!log_filename_node)
         log_filename_ = unique_ptr<string>(new string(DEFAULT_LOG_FILENAME));
-    log_filename_ = unique_ptr<string>(new string(log_filename_node.GetValue()));
+    else
+        log_filename_ = unique_ptr<string>(new string(log_filename_node.GetValue()));
 
     XmlNode platform_config_node = root_node.GetChild(XMLNAME_ENGINECONFIG_PLATFORMCONFIG);
     if (platform_config_node)
-        platform_config_ = unique_ptr<PlatformConfig>(PlatformConfig::Load(platform_config_node));
+        platform_config_ = unique_ptr<PlatformConfig>(PlatformConfig::Create(platform_config_node));
 
-    for (XmlNode addin_node : root_node.GetChildren(XMLNAME_ENGINECONFIG_ADDIN))
+    if (!platform_config_)
+        return false;
+
+    for (XmlNode addin_node : root_node.GetChildren(XMLNAME_ENGINECONFIG_ADDIN)) {
+        const string& value = addin_node.GetValue();
         addin_filenames_.push_back(addin_node.GetValue());
+    }
 
     return true;
 

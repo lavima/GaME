@@ -7,8 +7,12 @@ Author: Lars Vidar Magnusson
 
 extern "C" {
 
-void RegisterAddin(AddinHeader &addinInfo);
+__declspec(dllexport) void RegisterAddin(Engine& engine, AddinHeader &addinInfo);
 
-EngineComponent *CreateEngineComponent(Engine &engine, const string &typeName, const string &name);
+__declspec(dllexport) EngineComponent* CreateEngineComponent(Engine &engine, EngineComponentConfig& config);
+
+__declspec(dllexport) EngineComponentConfig* LoadEngineComponentConfig(XmlNode root_node);
+
+__declspec(dllexport) bool SaveEngineComponentConfig(EngineComponentConfig& config, XmlNode root_node);
 
 }

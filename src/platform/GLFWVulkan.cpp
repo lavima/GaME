@@ -3,13 +3,14 @@
 * Author: Lars Vidar Magnusson
 */
 
-#ifdef PLATFORM_GLFW_VULKAN
+#ifdef PLATFORM_GLFWVULKAN
 
 #include "../GaME.h"
 
-GLFWVulkan::GLFWVulkan(Engine &engine, PlatformConfig *config) : Platform(PLATFORM_GLFWVULKAN_NAME, engine) {
-
-    this->config_ = (GraphicalPlatformConfig *)&config;
+GLFWVulkan::GLFWVulkan(Engine& engine, PlatformConfig& config) 
+    : Platform(PLATFORM_GLFWVULKAN_NAME, engine, config) {
+    
+    window_ = nullptr;
 
 }
 
@@ -18,8 +19,9 @@ void callbackKey(GLFWwindow *window, int, int, int, int);
 bool GLFWVulkan::Initialize() {
 
     Log &log = GetEngine().GetLog();
+    GraphicalPlatformConfig& config = (GraphicalPlatformConfig&)GetConfig();
 
-    // Initialize GLFW
+    log.AddEvent("Initializing GLFW");
     if (!glfwInit()) {
         log.AddEvent(EventType::Error, "Could not initialize GLFW");
         return false;
@@ -28,16 +30,22 @@ bool GLFWVulkan::Initialize() {
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-    window_ = glfwCreateWindow(config_->GetWidth(), config_->GetHeight(), GetEngine().GetInfo().GetName().c_str(), nullptr, nullptr);
+    log.AddEvent("Creating GLFW window with Vulkan support");
+    window_ = glfwCreateWindow(config.GetWidth(),
+                               config.GetHeight(), 
+                               GetEngine().GetInfo().GetName().c_str(), 
+                               nullptr, nullptr);
     if (!window_) {
-        log.AddEvent(EventType::Error, "Could not create GLFW window");
-        glfwTerminate();
+        const char* description;
+        glfwGetError(&description);
+        log.AddEvent(EventType::Error, "Could not create GLFW window: %s", description);
         return false;
     }
 
-    //glfwSetWindowUserPointer(window_, this);
-
-    //glfwSetKeyCallback(window_, 
+    uint32_t glfw_extension_count = 0;
+    const char** glfw_extensions;
+    glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
+    required_extensions_ = vector<string>(glfw_extensions, glfw_extensions+glfw_extension_count);
 
     return true;
 
@@ -45,21 +53,32 @@ bool GLFWVulkan::Initialize() {
 
 void GLFWVulkan::Shutdown() {
 
-    glfwDestroyWindow(window_);
+    
+    if (window_ != nullptr)
+        glfwDestroyWindow(window_);
+
     glfwTerminate();
 
 }
 
 void GLFWVulkan::HandleEvents() {
+    
+    if (glfwWindowShouldClose(window_))
+        GetEngine().Stop();
+
+    glfwPollEvents();
 
 }
 
 void GLFWVulkan::SwapBuffers() {
 
+    glfwSwapBuffers(window_);
+
 }
 
 void *GLFWVulkan::LoadLibrary(const string &filename) {
-    return nullptr;
+    HMODULE handle = LoadLibraryA(filename.c_str());
+    return (void*)handle;
 }
 
 void GLFWVulkan::UnloadLibrary(void *handle) {
@@ -67,11 +86,21 @@ void GLFWVulkan::UnloadLibrary(void *handle) {
 }
 
 void *GLFWVulkan::LoadLibrarySymbol(void *handle, const string &name) {
-    return nullptr;
+    void *address = GetProcAddress((HMODULE)handle, name.c_str());
+    return address;
 }
 
 double GLFWVulkan::GetSystemTime() {
     return glfwGetTime();
+}
+
+const vector<reference_wrapper<const string>> GLFWVulkan::GetRequiredExtensions() {
+    return vector<reference_wrapper<const string>>(required_extensions_.begin(), required_extensions_.end());
+}
+
+bool GLFWVulkan::CreateSurface(VkInstance instance, VkSurfaceKHR* surface) {
+    VkResult result = glfwCreateWindowSurface(instance, window_, nullptr, surface);
+    return result==VK_SUCCESS;
 }
 
 void callbackKey(GLFWwindow *window, int, int, int, int) {
@@ -80,14 +109,14 @@ void callbackKey(GLFWwindow *window, int, int, int, int) {
 
 }
 
-#endif // PLATFORM_GLFW_VULKAN
-
 GLFWVulkan::Creator GLFWVulkan::Creator::singleton_;
 
 GLFWVulkan::Creator::Creator() {
     Platform::RegisterImplementation(PLATFORM_GLFWVULKAN_NAME, &singleton_);
 }
 
-Platform* GLFWVulkan::Creator::Create(Engine& engine, PlatformConfig* config) {
+Platform* GLFWVulkan::Creator::Create(Engine& engine, PlatformConfig& config) {
     return new GLFWVulkan(engine, config);
 }
+
+#endif // PLATFORM_GLFWVULKAN

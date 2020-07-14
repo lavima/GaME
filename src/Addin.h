@@ -10,10 +10,10 @@ class Engine;
 class EngineComponent;
 class EngineComponentConfig;
 
-typedef void (*RegisterAddinFun)(AddinHeader &);
-typedef EngineComponent* (*CreateEngineComponentFun)(Engine&, const string&);
-typedef EngineComponentConfig* (*LoadEngineComponentConfigFun)(const string&, XmlNode);
-typedef void (*SaveEngineComponentConfigFun)(const string&, EngineComponentConfig&, XmlNode);
+typedef void (*RegisterAddinFun)(Engine&, AddinHeader&);
+typedef EngineComponent* (*CreateEngineComponentFun)(Engine&, EngineComponentConfig&);
+typedef EngineComponentConfig* (*LoadEngineComponentConfigFun)(XmlNode);
+typedef bool (*SaveEngineComponentConfigFun)(EngineComponentConfig&, XmlNode);
 
 #define ADDINFUN_REGISTERADDIN "RegisterAddin"
 #define ADDINFUN_ENGINECOMPONENT_CREATE string("CreateEngineComponent")
@@ -32,11 +32,11 @@ private:
     
     unordered_map<string, void *> symbol_map_;
 
-    Addin(AddinHeader* header) : header_(unique_ptr<AddinHeader>(header)) {}
+    Addin(AddinHeader* header) : handle_(nullptr), header_(unique_ptr<AddinHeader>(header)) {}
 
 public:
 
-    static Addin *Load(Platform &platform, const string &filename);
+    static Addin *Load(Engine& engine, const string &filename);
 
     bool HasSymbol(const string &name);
     void *GetSymbolAddr(const string &name);

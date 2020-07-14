@@ -5,7 +5,7 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-#ifdef PLATFORM_GLFW_VULKAN
+#ifdef PLATFORM_GLFWVULKAN
 
 
 class DefaultPlatformConfig : public GraphicalPlatformConfig {

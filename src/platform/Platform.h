@@ -21,7 +21,7 @@ protected:
     */
     class Creator {
     public:
-        virtual Platform* Create(Engine& engine, PlatformConfig* config) = 0;
+        virtual Platform* Create(Engine& engine, PlatformConfig& config) = 0;
     };
 
     static void RegisterImplementation(const string& name, Platform::Creator* creator);
@@ -33,12 +33,14 @@ private:
     const string implementation_name_;
 
     Engine& engine_;
+    PlatformConfig& config_;
 
     unordered_map<KeyCode, InputKeyWritable> input_keys_;
 
 protected:
 
-    Platform(const string& name, Engine& engine) : implementation_name_(name), engine_(engine) {}
+    Platform(const string& name, Engine& engine, PlatformConfig& config) 
+        : implementation_name_(name), engine_(engine), config_(config) {}
 
 public:
     
@@ -75,11 +77,12 @@ public:
 
 public:
 
-    static Platform* Create(Engine& engine, PlatformConfig* config);
+    static Platform* Create(Engine& engine, PlatformConfig& config);
 
 protected:
 
-    Engine &GetEngine();
+    Engine& GetEngine();
+    PlatformConfig& GetConfig();
     unordered_map<KeyCode, InputKeyWritable> GetWritableInputKeys();
 
 };

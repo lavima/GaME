@@ -31,9 +31,10 @@ public:
 
     bool Initialize(Engine &engine);
 
-    void Run();
+    bool Start();
+    void Stop();
 
-    void LoadGlobalContent();
+    bool LoadGlobalContent();
     void UnloadContent();
 
     void Update(GameTime &gameTime);

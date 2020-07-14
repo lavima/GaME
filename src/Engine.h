@@ -13,6 +13,11 @@ Author: Lars Vidar Magnusson
 #define ENGINEOPTION_CONFIG "engineConfig"
 #define ENGINEOPTION_CONFIG_FILENAME "engineLogFilename"
 
+/*
+* EngineInfo provides engine_ meta information at runtime. Allthough this class
+* derives from VersionInfo, an XML serializable type, this functionality is never
+* utilized i.e. the information is provided either at compile time or at runtime.
+*/
 class EngineInfo : public VersionInfo {
 
     friend class Engine;
@@ -72,8 +77,8 @@ public:
     bool LoadAddin(const string &filename);
 
     bool HasComponentType(const string& type_name) const;
-    void AddComponent(const string &typeName, const string &name);
-    void AddComponent(EngineComponent *component);
+    //void AddComponent(const string &name, const string &type_name);
+    void AddComponent(EngineComponentConfig& config);
     EngineComponent *GetComponent(const string &name);
 
     const EngineInfo &GetInfo();

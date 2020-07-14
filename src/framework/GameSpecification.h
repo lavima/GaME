@@ -3,7 +3,7 @@
 #define EXTENSION_GAME "game"
 
 #define XMLNAME_GAME "Game"
-#define XMLNAME_GAME_INFO XMLNAME_GAMEHEADER
+#define XMLNAME_GAME_HEADER XMLNAME_GAMEHEADER
 #define XMLNAME_GAME_CONFIG XMLNAME_GAMECONFIG
 
 class GameSpecification : public XmlData {

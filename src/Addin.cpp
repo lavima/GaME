@@ -5,20 +5,20 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-Addin *Addin::Load(Platform &platform, const string &filename) {
+Addin *Addin::Load(Engine& engine, const string &filename) {
 
     Addin *newAddin = new Addin(Data::Load<AddinHeader>(filename));
     AddinHeader &header = newAddin->GetHeader();
 
     string libraryFilename = FilePath::GetFilename(header.GetLibraryFilename());
 
-    newAddin->handle_ = platform.LoadLibrary(libraryFilename);
+    newAddin->handle_ = engine.GetPlatform().LoadLibrary(libraryFilename);
     if (!newAddin->GetHandle()) {
         delete newAddin;
         return nullptr;
     }
 
-    void *address = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_REGISTERADDIN);
+    void *address = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_REGISTERADDIN);
     if (!address) {
         delete newAddin;
         return nullptr;
@@ -27,25 +27,25 @@ Addin *Addin::Load(Platform &platform, const string &filename) {
     newAddin->symbol_map_[ADDINFUN_REGISTERADDIN] = address;
 
     RegisterAddinFun registerAddin = (RegisterAddinFun)address;
-    registerAddin(header);
+    registerAddin(engine, header);
 
     if (header.GetType() == AddinType::EngineComponent) {
 
-        auto createAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENT_CREATE);
+        auto createAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENT_CREATE);
         if (!createAddr) {
             delete newAddin;
             return nullptr;
         }
         newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENT_CREATE] = createAddr;
 
-        auto loadConfigAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_LOAD);
+        auto loadConfigAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_LOAD);
         if (!loadConfigAddr) {
             delete newAddin;
             return nullptr;
         }
         newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_LOAD] = loadConfigAddr;
 
-        auto saveConfigAddr = platform.LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_SAVE);
+        auto saveConfigAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_SAVE);
         if (!saveConfigAddr) {
             delete newAddin;
             return nullptr;

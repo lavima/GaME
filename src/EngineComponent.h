@@ -10,27 +10,32 @@ Author: Lars Vidar Magnusson
 * or audio system. All engine_ components_ must be created through the factory pattern provided by this 
 * class.
 */
-class EngineComponent : public Instanceable {
+class EngineComponent {
 private:
 
-    static unordered_map<string, CreateEngineComponentFun> componentProviders;
+    static unordered_map<string, CreateEngineComponentFun> component_providers_;
 
-    Engine *engine;
+    Engine* engine_;
+    EngineComponentConfig* config_;
         
 protected:
 
     /*
-    * Protected constructor to ensure that engine_ components_ must be created through the static Create
+    * Protected constructor to ensure that engine_ components must be created through the static Create
     * function
     */
-    EngineComponent(Engine &engine, const string &typeName);
+    EngineComponent(Engine &engine, EngineComponentConfig& config);
+
+    Engine& GetEngine();
+    EngineComponentConfig& GetConfig();
 
 public:
 
+
     /*
-    * Create provides the only way to instantiate engine_ components_.
+    * Create provides the only way to instantiate engine_ components.
     */
-    static EngineComponent *Create(Engine &engine, const string &typeName);
+    static EngineComponent *Create(Engine &engine, EngineComponentConfig& config);
 
     /*
     * RegisterProvider must be invoked by all engine_ component implementation providers.
@@ -40,12 +45,17 @@ public:
     /*
     * Initialize is invoked by the engine_ to initialize an engine_ component
     */
-    virtual void Initialize() = 0;
+    virtual bool Initialize() = 0;
     
     /*
-    * Update is invoked by the engine on regular intervals
+    * Update is invoked by the engine_ on regular intervals
     */
     virtual void Update(GameTime &gameTime) = 0;
+
+    /*
+    * Destroy the engine component
+    */
+    virtual void Destroy() = 0;
 
     
 };

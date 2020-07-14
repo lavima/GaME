@@ -12,12 +12,14 @@ Author: Lars Vidar Magnusson
 unordered_map<string, Platform::Creator*>* Platform::implementations_ = nullptr;
 
 
-Platform *Platform::Create(Engine &engine, PlatformConfig *config) {
+Platform *Platform::Create(Engine &engine, PlatformConfig &config) {
 
-    if (!implementations_->count(config->GetImplementationName()))
+    if (!implementations_->count(config.GetImplementationName()))
         return nullptr;
 
-    Platform::Creator* creator = (Platform::Creator*)implementations_->at(config->GetImplementationName());
+    Platform::Creator* creator = 
+        (Platform::Creator*)implementations_->at(config.GetImplementationName());
+    
     return creator->Create(engine, config);
 
 }
@@ -36,4 +38,5 @@ void Platform::RegisterImplementation(const string &name, Platform::Creator* cre
 }
 
 Engine &Platform::GetEngine() { return engine_; }
+PlatformConfig& Platform::GetConfig() { return config_; }
 unordered_map<KeyCode, InputKeyWritable> Platform::GetWritableInputKeys() { return input_keys_; }

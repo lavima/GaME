@@ -18,7 +18,7 @@ bool GameConfig::Load(GameConfig *config, XmlNode root_node) {
         if (!component_config)
             return false;
 
-        config->engine_component_configs_.push_back(component_config); 
+        config->engine_component_configs_.push_back(*component_config); 
 
     }
         
@@ -30,7 +30,9 @@ bool GameConfig::Save(const GameConfig &config, XmlNode root_node) {
     return true;
 }
 
-const vector<EngineComponentConfig *> &GameConfig::GetEngineComponentConfigs() { return engine_component_configs_; }
+const vector<reference_wrapper<EngineComponentConfig>> GameConfig::GetEngineComponentConfigs() { 
+    return vector<reference_wrapper<EngineComponentConfig>>(engine_component_configs_.begin(), engine_component_configs_.end()); 
+}
 
 bool GameConfig::Load(XmlNode root_node) { return GameConfig::Load(this, root_node); }
 bool GameConfig::Save(XmlNode root_node) { return GameConfig::Save(*this, root_node); }

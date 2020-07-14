@@ -8,6 +8,13 @@ Author: Lars Vidar Magnusson
 #define PLATFORM_CONFIG_EXTENSION "platform_config"
 
 #define XMLNAME_PLATFORMCONFIG "PlatformConfig"
+#define XMLNAME_PLATFORMCONFIG_WIDTH "Width"
+#define XMLNAME_PLATFORMCONFIG_HEIGHT "Height"
+#define XMLNAME_PLATFORMCONFIG_FULLSCREEN "Fullscreen"
+
+#define DEFAULT_GRAPHICALPLATFORM_WIDTH 800
+#define DEFAULT_GRAPHICALPLATFORM_HEIGHT 600
+#define DEFAULT_GRAPHICALPLATFORM_FULLSCREEN false
 
 /*
 * PlatformConfig is the base class for all platform configuration types. The class 
@@ -38,7 +45,7 @@ protected:
     
 public:
 
-    static PlatformConfig* Load(XmlNode root_node);
+    static PlatformConfig* Create(XmlNode root_node);
 
 
     const string &GetImplementationName();
@@ -46,19 +53,13 @@ public:
 
 };
 
-#define DEFAULT_GRAPHICALPLATFORM_WIDTH 800
-#define DEFAULT_GRAPHICALPLATFORM_HEIGHT 600
-#define DEFAULT_GRAPHICALPLATFORM_FULLSCREEN false
 
-#define XMLNAME_PLATFORMCONFIG_WIDTH "Width"
-#define XMLNAME_PLATFORMCONFIG_HEIGHT "Height"
-#define XMLNAME_PLATFORMCONFIG_FULLSCREEN "Fullscreen"
 
 class GraphicalPlatformConfig : public PlatformConfig {
 private:
 
-    int width_;
-    int height_;
+    uint32_t width_;
+    uint32_t height_;
     bool fullscreen_;
 
 public:
@@ -69,13 +70,13 @@ public:
     bool Load(XmlNode root_node) override; 
     bool Save(XmlNode root_node) override;
 
-    int GetWidth();
-    void SetWidth(int width);
+    uint32_t GetWidth() const;
+    void SetWidth(uint32_t width);
 
-    int GetHeight();
-    void SetHeight(int height);
+    uint32_t GetHeight() const;
+    void SetHeight(uint32_t height);
     
-    bool GetFullscreen();
+    bool GetFullscreen() const;
     void SetFullscreen(bool fullscreen);
 
 };

@@ -7,33 +7,37 @@
 
 #define PLATFORM_GLFWVULKAN_NAME "GLFWVulkan"
 
-class GLFWVulkan : public Platform {
+class GLFWVulkan : public Platform, public IVulkanPlatform {
 
 private:
 
-    GraphicalPlatformConfig* config_;
-
     GLFWwindow* window_;
 
-    GLFWVulkan(Engine& engine, PlatformConfig* config);
+    vector<string> required_extensions_;
+
+    GLFWVulkan(Engine& engine, PlatformConfig& config);
 
 public:
 
-    bool Initialize();
+    bool Initialize() override;
 
-    void Shutdown();
+    void Shutdown() override;
 
-    void HandleEvents();
+    void HandleEvents() override;
 
-    void SwapBuffers();
+    void SwapBuffers() override;
 
-    void* LoadLibrary(const string& filename);
+    void* LoadLibrary(const string& filename) override;
 
-    void UnloadLibrary(void* handle);
+    void UnloadLibrary(void* handle) override;
 
-    void* LoadLibrarySymbol(void* handle, const string& name);
+    void* LoadLibrarySymbol(void* handle, const string& name) override;
 
-    double GetSystemTime();
+    double GetSystemTime() override;
+
+
+    const vector<reference_wrapper<const string>> GetRequiredExtensions() override;
+    bool CreateSurface(VkInstance, VkSurfaceKHR*) override;
 
 private:
 
@@ -42,9 +46,7 @@ private:
         static Creator singleton_;
     public:
         Creator();
-        Platform* Create(Engine& engine, PlatformConfig* config) override;
-    };
-
-    
+        Platform* Create(Engine& engine, PlatformConfig& config) override;
+    };    
 
 };

@@ -30,10 +30,10 @@ XmlDocument XmlData::GetDocument() { return xml_document_; }
 
 //XmlData::Loader XmlData::Loader::singleton_;
 //XmlData::Loader::Loader() { Data::RegisterType(EXTENSION_XML, &singleton_); }
-//Data * XmlData::Loader::Load(const string &filename_) {
+//Data * XmlData::Loader::Create(const string &filename_) {
 //    XmlData* data = new XmlData(filename_);
 //
-//    if (!data->Load())
+//    if (!data->Create())
 //        return nullptr;
 //
 //    return newGame;

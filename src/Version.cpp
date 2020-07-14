@@ -34,7 +34,7 @@ bool Version::operator==(Version &other) { return major_==other.major_ && minor_
 
 bool Version::Load(Version *version, XmlNode root_node) {
 
-    if (root_node.GetValue().compare(XMLNAME_VERSION))
+    if (root_node.GetName() != XMLNAME_VERSION)
         return false;
 
     XmlNode major_node = root_node.GetChild(XMLNAME_VERSION_MAJOR);

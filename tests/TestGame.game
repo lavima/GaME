@@ -17,5 +17,7 @@
             </Version>
         </EngineComponent>
     </Header>
-    <GameComponent name="renderer" type="SimpleRenderer" />
+    <Config>
+        <EngineComponent name="renderer" typeName="SimpleRenderer" />
+    </Config>
 </Game>

@@ -9,17 +9,18 @@ Author: Lars Vidar Magnusson
 #define XMLNAME_GAMEHEADER_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTINFO 
 
 /*
-* Game version_ information. Specifies a game_ header containing game_ title, description_ and the 
-* game_ version_ along wit the engine_ components_ required to run the game_.
+* GameHeader contains version information. Contains game title, description and the 
+* game version along with the version information for the engine_ components required
+* to run the game.
 */
 class GameHeader : public VersionInfo {
 private:
     
-    vector<EngineComponentVersionInfo> requiredEngineComponents;
+    vector<EngineComponentVersionInfo> required_components_;
 
 public:
 
-    GameHeader() {}
+    GameHeader() : VersionInfo(XMLNAME_GAMEHEADER) {}
     GameHeader(XmlNode root_node);
 
     static bool Load(GameHeader *info, XmlNode root_node);

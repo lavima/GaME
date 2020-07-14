@@ -1,5 +1,6 @@
 #include "../../GaME.h"
 
+using namespace std;
 using namespace pugi;
 
 XmlAttribute::XmlAttribute() {}

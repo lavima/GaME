@@ -5,7 +5,7 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-#define XMLNAME_ENGINECOMPONENTCONFIG "EngineComponentConfig"
+#define XMLNAME_ENGINECOMPONENTCONFIG "EngineComponent"
 #define XMLNAME_ENGINECOMPONENTCONFIG_NAME "name"
 #define XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME "typeName"
 
@@ -23,9 +23,12 @@ private:
 protected:
 
 	EngineComponentConfig() {}
-	EngineComponentConfig(const string &name, const string &type_name);
+	
 
 public:
+
+	EngineComponentConfig(const string& name, const string& type_name);
+	EngineComponentConfig(XmlNode root_node);
 
 	static EngineComponentConfig *Create(XmlNode root_node);
 	static void RegisterProvider(const string &typeName, LoadEngineComponentConfigFun loadFun, SaveEngineComponentConfigFun saveFun);

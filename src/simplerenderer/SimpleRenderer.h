@@ -11,14 +11,24 @@ class SimpleRenderer : public EngineComponent {
 
 private:
 
-    VkInstance vkInstance;
-    VkApplicationInfo vkAppInfo;
+    VkInstance instance_;
+    VkPhysicalDevice physical_device_;
+    VkDevice device_;
+    VkSurfaceKHR surface_;
+    VkQueue graphics_queue_;
+    VkQueue present_queue_;
+    VkSwapchainKHR swap_chain_;
+    vector<VkImage> swap_chain_images_;
+    vector<VkImageView> swap_chain_image_views_;
+    VkFormat swap_chain_image_format_;
+    VkExtent2D swap_chain_extent_;
 
 public:
 
-  SimpleRenderer(Engine &);
+  SimpleRenderer(Engine& engine, EngineComponentConfig& config);
 
-  virtual void Initialize();
-  virtual void Update(GameTime &);
+  virtual bool Initialize() override;
+  virtual void Update(GameTime &) override;
+  virtual void Destroy() override;
 
 };

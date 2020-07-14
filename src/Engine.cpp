@@ -18,7 +18,7 @@ Engine::Engine() : status_(EngineStatus::Created) {
 bool Engine::Initialize() {
 
     if (CommandLine::HasOption("engineConfig")) {
-        (*log_).AddEvent("Loading engine configuration from %s", CommandLine::GetOption("engineConfig"));
+        (*log_).AddEvent("Loading engine configuration from %s", CommandLine::GetOption("engineConfig").c_str());
         config_ = unique_ptr<EngineConfig>(Data::Load<EngineConfig>(CommandLine::GetOption("engineConfig")));
     } 
     else {
@@ -41,14 +41,14 @@ bool Engine::Initialize() {
 
     info_.executablePath = CommandLine::GetProgram();   
 
-    script_environment_ = ScriptEnvironment::Create(*this);
+    //script_environment_ = ScriptEnvironment::Create(*this);
 
     if (!config_->GetPlatformConfig()) {
         (*log_).AddEvent("Creating default platform config");
         config_->SetPlatformConfig(new DefaultPlatformConfig());
     }
 
-    platform_ = unique_ptr<Platform>(Platform::Create(*this, config_->GetPlatformConfig()));
+    platform_ = unique_ptr<Platform>(Platform::Create(*this, *config_->GetPlatformConfig()));
 
     if (!platform_->Initialize()) {
         (*log_).AddEvent(EventType::Error, "Platform failed to initialize. Can't initialize engine.");
@@ -56,8 +56,13 @@ bool Engine::Initialize() {
     }
 
     (*log_).AddEvent(EventType::All, "Loading addins");
-    for (const string &addin_filename : config_->GetAddinFilenames())
-        LoadAddin(addin_filename);
+    for (const string& addin_filename:config_->GetAddinFilenames()) {
+        if (!LoadAddin(addin_filename)) {
+            (*log_).AddEvent(EventType::Error, "Failed to load addin %s", addin_filename);
+            return false;
+        }
+
+    }
 
     return true;
 
@@ -68,7 +73,7 @@ bool Engine::Initialize() {
       return;
     }
 
-    engineScript->Run();
+    engineScript->Start();
 
     delete engineScript;
     */
@@ -76,8 +81,26 @@ bool Engine::Initialize() {
 }
 
 void Engine::Run() {
+
     if (!game_) {
         log_->AddEvent("Nothing to run. Returning");
+        return;
+    }
+
+    for (pair<string, EngineComponent*> component_pair:components_) {
+
+        log_->AddEvent("Initializing engine component %s", component_pair.first);
+        if (!component_pair.second->Initialize()) {
+            log_->AddEvent(EventType::Error, "Couldn't initialize engine component %s", component_pair.first);
+            return;
+        }
+
+    }
+        
+
+    log_->AddEvent("Starting game");
+    if (!game_->Start()) {
+        log_->AddEvent("Failed to start game. Returning");
         return;
     }
     
@@ -104,22 +127,26 @@ void Engine::Stop() {
         return;
     }
 
+    game_->Stop();
+
 }
 
 bool Engine::LoadGame(const string &filename) {
 
     GameSpecification* game_spec = Data::Load<GameSpecification>(filename);
     if (!game_spec) {
-        log_->AddEvent(EventType::Error, "Failed to load game specification");
+        log_->AddEvent(EventType::Error, "Failed to load game specification from %s", filename);
         return false;
     }    
 
     game_ = unique_ptr<Game>(new Game(game_spec));
 
-    if (game_->Initialize(*this)) {
+    if (!game_->Initialize(*this)) {
         log_->AddEvent(EventType::Error, "Failed to initialize game");
         return false;
     }
+
+    log_->AddEvent("Game %s loaded and initialized", (const string&)game_->GetHeader().GetName());
 
     return true;
 
@@ -138,18 +165,18 @@ void Engine::UnloadGame() {
 
 bool Engine::LoadAddin(const string &filename) {
 
-    Addin *addin = Addin::Load(*platform_, filename);
+    Addin *addin = Addin::Load(*this, filename);
     if (!addin)
         return false;
 
     addins_.push_back(addin);
 
-    // If the engine has already been initialized, we should add the addin filename
-    // to the engine configuration
+    // If the engine_ has already been initialized, we should add the addin filename
+    // to the engine_ configuration
     if (status_ > EngineStatus::Created)
         config_->AddAddinFilename(filename);
 
-    printf("Sucessfully loaded addin %s from %s\n", addin->GetHeader().GetName().c_str(), filename.c_str());
+    log_->AddEvent("Sucessfully loaded addin %s from %s\n", addin->GetHeader().GetName().c_str(), filename.c_str());
 
     return true;
 
@@ -177,21 +204,21 @@ bool Engine::HasComponentType(const string& type_name) const {
 
 }
 
-void Engine::AddComponent(const string &typeName, const string &name) {
+//void Engine::AddComponent(const string &name, const string &type_name) {
+//
+//    if (components_.find(type_name) != components_.end())
+//        printf("The component with the specified name (%s) already exists\n", type_name.c_str());
+//
+//    components_[type_name] = EngineComponent::Create(*this, new EngineComponentConfig(name, type_name));
+//
+//}
 
-    if (components_.find(name) != components_.end())
-        printf("The component with the specified name (%s) already exists\n", name.c_str());
+void Engine::AddComponent(EngineComponentConfig& config) {
 
-    components_[name] = EngineComponent::Create(*this, typeName);
+    if (components_.find(config.GetTypeName()) != components_.end())
+        printf("The component with the specified name (%s) already exists\n", config.GetTypeName().c_str());
 
-}
-
-void Engine::AddComponent(EngineComponent *component) {
-
-    if (components_.find(component->GetTypeName()) != components_.end())
-        printf("The component with the specified name (%s) already exists\n", component->GetTypeName().c_str());
-
-    components_[component->GetTypeName()] = component;
+    components_[config.GetTypeName()] = EngineComponent::Create(*this, config);
 
 }
 

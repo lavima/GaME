@@ -15,6 +15,10 @@ EngineComponentConfig::EngineComponentConfig(const string &name, const string &t
 
 }
 
+EngineComponentConfig::EngineComponentConfig(XmlNode root_node) {
+    assert(this->Load(root_node));
+}
+
 EngineComponentConfig *EngineComponentConfig::Create(XmlNode root_node) {
 
     if (root_node.GetName().compare(XMLNAME_ENGINECOMPONENTCONFIG))
@@ -26,7 +30,7 @@ EngineComponentConfig *EngineComponentConfig::Create(XmlNode root_node) {
     
     string type = type_attribute.GetValue();
     LoadEngineComponentConfigFun loadConfig = config_loaders_[type];
-    return loadConfig(type, root_node);
+    return loadConfig(root_node);
 
 }
 

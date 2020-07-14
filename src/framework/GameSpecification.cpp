@@ -5,7 +5,7 @@ bool GameSpecification::Load(XmlNode root_node) {
     if (root_node.GetName().compare(XMLNAME_GAME))
         return false;
 
-    XmlNode header_node = root_node.GetChild(XMLNAME_GAME_INFO);
+    XmlNode header_node = root_node.GetChild(XMLNAME_GAME_HEADER);
     header_ = unique_ptr<GameHeader>(new GameHeader());
     if (!header_->Load(header_node))
         return false;

@@ -22,8 +22,13 @@ void PlatformConfig::RegisterImplementation(const string& implementation_name, P
 
 }
 
-PlatformConfig* PlatformConfig::Load(XmlNode root_node) {
+PlatformConfig* PlatformConfig::Create(XmlNode root_node) {
+   
+    if (!configuration_loaders_)
+        return nullptr;
+
     const string implementation_name = root_node.GetAttribute("implementation").GetValue();
+   
     return configuration_loaders_->at(implementation_name)->Load(implementation_name, root_node);
 }
 
@@ -57,6 +62,7 @@ bool GraphicalPlatformConfig::Load(XmlNode root_node) {
     XmlNode width_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_WIDTH);
     if (!width_node)
         return false;
+    const string& value = width_node.GetValue();
     width_ = stoi(width_node.GetValue());
 
     XmlNode height_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_HEIGHT);
@@ -90,11 +96,11 @@ bool GraphicalPlatformConfig::Save(XmlNode root_node) {
 
 }
 
-int GraphicalPlatformConfig::GetWidth() { return this->width_; }
-void GraphicalPlatformConfig::SetWidth(int width) { this->width_ = width; }
+uint32_t GraphicalPlatformConfig::GetWidth() const { return this->width_; }
+void GraphicalPlatformConfig::SetWidth(uint32_t width) { this->width_ = width; }
 
-int GraphicalPlatformConfig::GetHeight() { return this->height_; }
-void GraphicalPlatformConfig::SetHeight(int width) { this->height_ = height_; }
+uint32_t GraphicalPlatformConfig::GetHeight() const { return this->height_; }
+void GraphicalPlatformConfig::SetHeight(uint32_t width) { this->height_ = height_; }
 
-bool GraphicalPlatformConfig::GetFullscreen() { return this->fullscreen_; }
+bool GraphicalPlatformConfig::GetFullscreen() const { return this->fullscreen_; }
 void GraphicalPlatformConfig::SetFullscreen(bool fullscreen) { this->fullscreen_ = fullscreen; }

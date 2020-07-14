@@ -16,7 +16,7 @@ Author: Lars Vidar Magnusson
 #define XMLNAME_ENGINECONFIG_ADDIN XMLNAME_ADDININFO
 
 /**
- * EngineConfig provides the setup details for the engine.
+ * EngineConfig provides the setup details for the engine_.
  */
 class EngineConfig : public XmlData {
 

@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <EngineConfig>
-  <PlatformConfig implementation="GLFWVulkan">
-    <Width>1024</Width>
-    <Height>600</Height>
-    <Fullscreen>false</Fullscreen>
-  </PlatformConfig>
-  <Addin source="SimpleRenderer.xml" />
+    <PlatformConfig implementation="GLFWVulkan">
+        <Width>1024</Width>
+        <Height>600</Height>
+        <Fullscreen>false</Fullscreen>
+        
+    </PlatformConfig>
+    <Addin>SimpleRenderer/SimpleRenderer.addin</Addin>>
 </EngineConfig>

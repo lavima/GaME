@@ -11,8 +11,6 @@ Author: Lars Vidar Magnusson
 #define MOUSE_EVENT_MASK (ButtonPressMask | ButtonReleaseMask | PointerMotionMask | ButtonMotionMask )
 #define X_EVENT_MASK (KEY_EVENT_MASK | MOUSE_EVENT_MASK | VisibilityChangeMask | StructureNotifyMask )
 
-using namespace std;
-
 class X11SystemOpenGL : public System {
 
 private:

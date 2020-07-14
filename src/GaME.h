@@ -12,31 +12,38 @@
 #include <list>
 #include <vector>
 #include <utility>
+#include <optional>
 #include <unordered_map>
 #include <memory>
 #include <functional>
+#include <algorithm>
+#include <set>
 #include <cassert>
 #include <cstdint>
 
-using namespace std;
+#include <windows.h>
 
 #include <v8.h>
 #include <libplatform/libplatform.h>
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WIN32_VULKAN
 #define VK_USE_PLATFORM_WIN32_KHR
-#include "vulkan/vulkan.h"
+#include <vulkan/vulkan.h>
 #include <windows.h>
 #endif
-#ifdef PLATFORM_GLFW_VULKAN
-#include "vulkan/vulkan.h"
-#include "GLFW/glfw3.h"
+#ifdef PLATFORM_GLFWVULKAN
+#include <vulkan/vulkan.h>
+#include <GLFW/glfw3.h>
 #endif
 
 #include <pugixml.hpp>
 
-#include "util/StringUtil.h"
-#include "util/FilePath.h"
-#include "util/CommandLine.h"
+using namespace std;
+
+#include "lib/StringUtil.h"
+#include "lib/FilePath.h"
+#include "lib/CommandLine.h"
+#include "lib/V8.h"
+#include "lib/vulkan/Vulkan.h"
 #include "data/DataLoader.h"
 #include "data/Data.h"
 #include "data/xml/XmlRange.h"
@@ -46,9 +53,7 @@ using namespace std;
 #include "data/xml/XmlSerializable.h"
 #include "data/XmlData.h"
 #include "Log.h"
-#include "lib/Vulkan.h"
 #include "Version.h"
-#include "Instanceable.h"
 #include "VersionInfo.h"
 #include "EngineComponentVersionInfo.h"
 #include "AddinHeader.h"
@@ -56,14 +61,15 @@ using namespace std;
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Scriptable.h"
 #include "scripting/Script.h"
-#include "lib/V8.h"
+
 #include "platform/InputKey.h"
 #include "platform/PlatformConfig.h"
 #include "platform/Platform.h"
-#ifdef PLATFORM_WIN32
+#ifdef PLATFORM_WIN32VULKAN
 #include "platform/Win32Vulkan.h"
 #endif
-#ifdef PLATFORM_GLFW_VULKAN
+#ifdef PLATFORM_GLFWVULKAN
+#include "platform/VulkanPlatform.h"
 #include "platform/GLFWVulkanConfig.h"
 #include "platform/GLFWVulkan.h"
 #endif
@@ -78,5 +84,4 @@ using namespace std;
 #include "EngineComponent.h"
 #include "EngineConfig.h"
 #include "Engine.h"
-#include "simplerenderer/SimpleRenderer.h"
 
