@@ -5,46 +5,44 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Platform;
-class Engine;
-class EngineComponent;
-class EngineComponentConfig;
+namespace game {
 
-typedef void (*RegisterAddinFun)(Engine&, AddinHeader&);
-typedef EngineComponent* (*CreateEngineComponentFun)(Engine&, EngineComponentConfig&);
-typedef EngineComponentConfig* (*LoadEngineComponentConfigFun)(XmlNode);
-typedef bool (*SaveEngineComponentConfigFun)(EngineComponentConfig&, XmlNode);
+    class Engine;
+
+    typedef void (*RegisterAddinFun)(Engine&, AddinHeader&);
+    typedef void (*UnregisterAddinFun)(Engine&);
 
 #define ADDINFUN_REGISTERADDIN "RegisterAddin"
-#define ADDINFUN_ENGINECOMPONENT_CREATE string("CreateEngineComponent")
-#define ADDINFUN_ENGINECOMPONENTCONFIG_LOAD "LoadEngineComponentConfig" 
-#define ADDINFUN_ENGINECOMPONENTCONFIG_SAVE "SaveEngineComponentConfig" 
+#define ADDINFUN_UNREGISTERADDIN "UnregisterAddin"
 
-/*
-* Addin provides functionality for importing functionality. 
-*/
-class Addin {
-private:
+    /*
+    * Addin provides functionality for loading external functionality into the engine
+    */
+    class GAME_API Addin {
+    private:
 
-    void* handle_;
+        void* handle_;
 
-    unique_ptr<AddinHeader> header_;
-    
-    unordered_map<string, void *> symbol_map_;
+        unique_ptr<AddinHeader> header_;
 
-    Addin(AddinHeader* header) : handle_(nullptr), header_(unique_ptr<AddinHeader>(header)) {}
+        RegisterAddinFun register_fun_;
+        UnregisterAddinFun unregister_fun_;
 
-public:
+        Addin(AddinHeader* header);
 
-    static Addin *Load(Engine& engine, const string &filename);
+        void Register(Engine& engine, AddinHeader& header);
+        void Unregister(Engine& engine);
 
-    bool HasSymbol(const string &name);
-    void *GetSymbolAddr(const string &name);
-    const vector<reference_wrapper<const string>> GetLoadedSymbolNames() const;
+    public:
 
-    AddinHeader &GetHeader();
-    void *GetHandle();
+        static Addin* Load(Engine& engine, const string& filename);
 
-    AddinType GetType() const;
+        bool Unload(Engine& engine);
 
-};
+        AddinHeader& GetHeader();
+
+        AddinType GetType() const;
+
+    };
+
+}

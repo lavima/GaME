@@ -5,9 +5,10 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Data;
+namespace game::data {
 
-class DataLoader {
-public:
-    virtual Data *Load(const string &filename) = 0;
-};
+    class GAME_API Data;
+
+    
+
+}

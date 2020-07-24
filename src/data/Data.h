@@ -5,52 +5,66 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Data {
-private:
+namespace game::data {
 
-    static unordered_map<string, DataLoader*>* data_loaders_;
+    class GAME_API Data {
+    protected:
 
-    string filename_; 
+        class DataLoader {
+        public:
+            virtual Data* Load(const string& filename) = 0;
+        };
 
-protected:
+    private:
 
-    Data(const string& filename);
+        static unordered_map<string, DataLoader*>* data_loaders_;
 
-public:
+        string filename_;
 
-    template<typename T> static T* Load(const string& filename);
+    protected:
 
-    virtual bool Load() = 0;
-    bool LoadFrom(const string& filename);
+        Data(const string& filename);
 
-    const string &GetFilename();
+    public:
 
-protected:
+        template<typename T> static T* Load(const string& filename);
 
-    static void RegisterType(const string &extension, DataLoader* loader);
+        virtual bool Load() = 0;
+        bool LoadFrom(const string& filename);
+        
+        virtual void Unload() = 0;
 
-};
+        const string& GetFilename();
 
-template<typename T> T *Data::Load(const string &filename) {
+    protected:
 
-    if (!is_base_of<Data, T>::value)
-        return nullptr;
+        static void RegisterType(const string& extension, DataLoader* loader);
+        static void RegisterTypes(const vector<string>& extensions, DataLoader* loader);
 
-    const string extension = FilePath::GetExtension(filename);
-    if (data_loaders_->count(extension) == 0)
-        return nullptr;
+    };
 
-    return dynamic_cast<T *>(data_loaders_->at(extension)->Load(filename));
+    template<typename T> T* Data::Load(const string& filename) {
+
+        if (!is_base_of<Data, T>::value)
+            return nullptr;
+
+        const string extension = lib::FilePath::GetExtension(filename);
+        if (data_loaders_->count(extension)==0)
+            return nullptr;
+
+        return dynamic_cast<T*>(data_loaders_->at(extension)->Load(filename));
+
+    }
+
+    class GAME_API WritableData : public Data {
+    protected:
+
+        WritableData(const string& filename) : Data(filename) {}
+
+    public:
+
+        virtual bool Save() = 0;
+
+    };
 
 }
-
-class WritableData : public Data {
-protected:
-
-    WritableData(const string &filename) : Data(filename) {}
-
-public:
-
-    virtual bool Save() = 0;
-
-};

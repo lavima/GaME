@@ -5,35 +5,39 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Engine;
-class Script;
+namespace game::scripting {
 
-class ScriptEnvironment {
+    class game::Engine;
+    class Script;
 
-    friend class V8;
-    
-protected:
+    class GAME_API ScriptEnvironment {
 
-    Engine *engine;
+        friend class V8;
 
-    v8::Isolate *isolate;
-    v8::ArrayBuffer::Allocator *allocator;
+    protected:
 
-    v8::Persistent<v8::Context> context;
+        Engine* engine;
 
-    ScriptEnvironment(Engine &engine);
+        v8::Isolate* isolate;
+        v8::ArrayBuffer::Allocator* allocator;
 
-public:
+        v8::Persistent<v8::Context> context;
 
-    ~ScriptEnvironment();
+        ScriptEnvironment(Engine& engine);
 
-    static ScriptEnvironment *Create(Engine &);
+    public:
 
-    Script *LoadScript(const std::string &);
-    v8::Handle<v8::Value> RunScript(Script &);
+        ~ScriptEnvironment();
 
-    v8::Isolate *GetIsolate();
-    v8::ArrayBuffer::Allocator *GetAllocator();
-    v8::Local<v8::Context> GetContext();
+        static ScriptEnvironment* Create(Engine&);
 
-};
+        Script* LoadScript(const std::string&);
+        v8::Handle<v8::Value> RunScript(Script&);
+
+        v8::Isolate* GetIsolate();
+        v8::ArrayBuffer::Allocator* GetAllocator();
+        v8::Local<v8::Context> GetContext();
+
+    };
+
+}

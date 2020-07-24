@@ -1,48 +1,52 @@
 #include "../GaME.h"
 
-bool GameSpecification::Load(XmlNode root_node) {
+namespace game::framework {
 
-    if (root_node.GetName().compare(XMLNAME_GAME))
-        return false;
+    bool GameSpecification::Load(data::xml::XmlNode root_node) {
 
-    XmlNode header_node = root_node.GetChild(XMLNAME_GAME_HEADER);
-    header_ = unique_ptr<GameHeader>(new GameHeader());
-    if (!header_->Load(header_node))
-        return false;
+        if (root_node.GetName().compare(XMLNAME_GAME))
+            return false;
 
-    XmlNode config_node = root_node.GetChild(XMLNAME_GAME_CONFIG);
-    config_ = unique_ptr<GameConfig>(new GameConfig());
-    if (!config_->Load(config_node))
-        return false;
+        data::xml::XmlNode header_node = root_node.GetChild(XMLNAME_GAME_HEADER);
+        header_ = unique_ptr<GameHeader>(new GameHeader());
+        if (!header_->Load(header_node))
+            return false;
 
-    return true;
+        data::xml::XmlNode config_node = root_node.GetChild(XMLNAME_GAME_CONFIG);
+        config_ = unique_ptr<GameConfig>(new GameConfig());
+        if (!config_->Load(config_node))
+            return false;
 
-}
+        return true;
 
-bool GameSpecification::Save(XmlNode root_node) {
+    }
 
-    root_node.SetName(XMLNAME_GAME);
+    bool GameSpecification::Save(data::xml::XmlNode root_node) {
 
-    if (!header_->Save(root_node.AddChild()))
-        return false;
+        root_node.SetName(XMLNAME_GAME);
 
-    if (!config_->Save(root_node.AddChild()))
-        return false;
+        if (!header_->Save(root_node.AddChild()))
+            return false;
 
-    return true;
-}
+        if (!config_->Save(root_node.AddChild()))
+            return false;
 
-GameSpecification::Loader GameSpecification::Loader::singleton;
+        return true;
+    }
 
-GameSpecification::Loader::Loader() { Data::RegisterType(EXTENSION_GAME, &singleton); }
+    GameSpecification::Loader GameSpecification::Loader::singleton;
 
-Data* GameSpecification::Loader::Load(const string& filename) {
+    GameSpecification::Loader::Loader() { Data::RegisterType(EXTENSION_GAME, &singleton); }
 
-    GameSpecification* newGame = new GameSpecification(filename);
+    data::Data* GameSpecification::Loader::Load(const string& filename) {
 
-    if (!newGame->Load())
-        return nullptr;
+        GameSpecification* newGame = new GameSpecification(filename);
 
-    return newGame;
+        if (!newGame->Load())
+            return nullptr;
+
+        return newGame;
+
+    }
 
 }

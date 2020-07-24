@@ -1,16 +1,20 @@
 #pragma once
 
-template<typename I> class XmlRange {
-private:
+namespace game::data::xml {
 
-    I begin_;
-    I end_;
+    template<typename I> class GAME_API XmlRange {
+    private:
 
-public:
+        I begin_;
+        I end_;
 
-    XmlRange(I begin, I end) : begin_(begin), end_(end) {}
+    public:
 
-    I begin() { return begin_; }
-    I end() { return end_; }
+        XmlRange(I begin, I end) : begin_(begin), end_(end) {}
 
-};
+        I begin() { return begin_; }
+        I end() { return end_; }
+
+    };
+
+}

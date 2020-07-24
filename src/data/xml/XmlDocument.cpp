@@ -1,27 +1,35 @@
 #include "../../GaME.h"
 
-using namespace pugi;
+namespace game::data::xml {
 
-XmlDocument::XmlDocument() : internal_(unique_ptr<xml_document>(new xml_document())) {}
+    using namespace pugi;
 
-XmlDocument::XmlDocument(XmlDocument& other) {
-    internal_.reset(other.internal_.release());
-}
+    XmlDocument::XmlDocument() : internal_(unique_ptr<xml_document>(new xml_document())) {}
 
-bool XmlDocument::Load(const string& filename) {
-   
-    xml_parse_result result = internal_->load_file(filename.c_str());
-    if (!result)
-        return false;
+    XmlDocument::XmlDocument(XmlDocument& other) {
+        internal_.reset(other.internal_.release());
+    }
 
-    return true;
+    bool XmlDocument::Load(const string& filename) {
 
-}
+        xml_parse_result result = internal_->load_file(filename.c_str());
+        if (!result)
+            return false;
 
-bool XmlDocument::Save(const string& filename) {
-    return internal_->save_file(filename.c_str());
-}
+        return true;
 
-XmlNode XmlDocument::GetDocumentElement() {
-    return XmlNode(internal_->document_element());
+    }
+
+    bool XmlDocument::Save(const string& filename) {
+        return internal_->save_file(filename.c_str());
+    }
+
+    void XmlDocument::Unload() {
+        internal_.reset();
+    }
+
+    XmlNode XmlDocument::GetDocumentElement() {
+        return XmlNode(internal_->document_element());
+    }
+
 }

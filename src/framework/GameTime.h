@@ -5,10 +5,14 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-struct GameTime {
-public:
+namespace game::framework {
 
-    double time_since_start;
-    double time_since_previous;
-  
-};
+    struct GAME_API GameTime {
+    public:
+
+        double time_since_start;
+        double time_since_previous;
+
+    };
+
+}

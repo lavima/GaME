@@ -5,44 +5,50 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+namespace game::data {
+
 #define EXTENSION_XML "xml"
 
-/*
-* Base class for XML serializable classes.
-*/
-class XmlData : public WritableData, public XmlSerializable {
-private:
+    /*
+    * Base class for XML serializable classes.
+    */
+    class GAME_API XmlData : public WritableData, public xml::IXmlSerializable {
+    private:
 
-    XmlDocument xml_document_;
+        xml::XmlDocument xml_document_;
 
-public:
+    public:
 
-    XmlData(const string &filename);
-    XmlData(const string &filename, XmlDocument document);
+        XmlData(const string& filename);
+        XmlData(const string& filename, xml::XmlDocument document);
 
-    bool Load() override;
-    virtual bool Load(XmlNode) = 0;
+        bool Load() override;
+        virtual bool Load(xml::XmlNode) = 0;
 
-    bool Save() override;
-    virtual bool Save(XmlNode) = 0;
+        bool Save() override;
+        virtual bool Save(xml::XmlNode) = 0;
+
+        void Unload() override;
 
 
-protected:
+    protected:
 
-     XmlDocument GetDocument();
+        xml::XmlDocument GetDocument();
 
-private:
+    private:
 
-    //class Loader : public DataLoader {
-    //private:
+        //class Loader : public DataLoader {
+        //private:
 
-    //    static Loader singleton_;
+        //    static Loader singleton_;
 
-    //    Loader();
+        //    Loader();
 
-    //public:
-    //    
-    //    Data *Create(const string &filename_); 
+        //public:
+        //    
+        //    Data *Create(const string &filename_); 
 
-    //};
-};
+        //};
+    };
+
+}

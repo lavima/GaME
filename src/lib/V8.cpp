@@ -5,7 +5,6 @@
 
 #include "../GaME.h"
 
-using namespace GaME;
 
 /*
 void GaME::V8::ReportException(v8::TryCatch &tryCatch) {

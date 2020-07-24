@@ -5,93 +5,109 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
-Addin* Addin::Load(Engine& engine, const string& filename) {
+namespace game {
 
-    Addin* newAddin = new Addin(Data::Load<AddinHeader>(filename));
-    AddinHeader& header = newAddin->GetHeader();
+    Addin::Addin(AddinHeader* header) 
+        : handle_(nullptr), header_(unique_ptr<AddinHeader>(header)), register_fun_(nullptr) {}
+    
+    void Addin::Register(Engine& engine, AddinHeader& header) {
+     
+        assert(register_fun_);
+        register_fun_(engine, header);
 
-    string libraryFilename = FilePath::GetFilename(header.GetLibraryFilename());
-
-    newAddin->handle_ = engine.GetPlatform().LoadLibrary(libraryFilename);
-    if (!newAddin->GetHandle()) {
-        delete newAddin;
-        return nullptr;
     }
 
-    void* address = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_REGISTERADDIN);
-    if (!address) {
-        delete newAddin;
-        return nullptr;
+    void Addin::Unregister(Engine& engine) {
+    
+        assert(unregister_fun_);
+        unregister_fun_(engine);
+
     }
 
-    newAddin->symbol_map_[ADDINFUN_REGISTERADDIN] = address;
+    Addin* Addin::Load(Engine& engine, const string& filename) {
 
-    RegisterAddinFun registerAddin = (RegisterAddinFun)address;
-    registerAddin(engine, header);
+        Addin* newAddin = new Addin(data::Data::Load<AddinHeader>(filename));
+        AddinHeader& header = newAddin->GetHeader();
 
-    if (header.GetType()==AddinType::EngineComponent) {
+        string libraryFilename = lib::FilePath::GetFilename(header.GetLibraryFilename());
 
-        auto createAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENT_CREATE);
-        if (!createAddr) {
+        newAddin->handle_ = engine.GetPlatform().LoadLibrary(libraryFilename);
+        if (!newAddin->handle_) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENT_CREATE] = createAddr;
 
-        auto loadConfigAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_LOAD);
-        if (!loadConfigAddr) {
+        void* address = engine.GetPlatform().LoadLibrarySymbol(newAddin->handle_, ADDINFUN_REGISTERADDIN);
+        if (!address) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_LOAD] = loadConfigAddr;
+        newAddin->register_fun_ = (RegisterAddinFun)address;
 
-        auto saveConfigAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_SAVE);
-        if (!saveConfigAddr) {
+        address = engine.GetPlatform().LoadLibrarySymbol(newAddin->handle_, ADDINFUN_UNREGISTERADDIN);
+        if (!address) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_SAVE] = saveConfigAddr;
+        newAddin->unregister_fun_ = (UnregisterAddinFun)address;
+       
 
-        for (const EngineComponentVersionInfo& componentInfo:header.GetEngineComponents()) {
+        newAddin->Register(engine, header);
 
-            const string& name = componentInfo.GetName();
-            EngineComponent::RegisterProvider(name, (CreateEngineComponentFun)createAddr);
-            EngineComponentConfig::RegisterProvider(name, (LoadEngineComponentConfigFun)loadConfigAddr, (SaveEngineComponentConfigFun)saveConfigAddr);
+        //if (header.GetType()==AddinType::EngineComponent) {
 
-        }
+        //    auto createAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->handle_, ADDINFUN_ENGINECOMPONENT_CREATE);
+        //    if (!createAddr) {
+        //        delete newAddin;
+        //        return nullptr;
+        //    }
+        //    newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENT_CREATE] = createAddr;
+
+        //    auto loadConfigAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_LOAD);
+        //    if (!loadConfigAddr) {
+        //        delete newAddin;
+        //        return nullptr;
+        //    }
+        //    newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_LOAD] = loadConfigAddr;
+
+        //    auto saveConfigAddr = engine.GetPlatform().LoadLibrarySymbol(newAddin->GetHandle(), ADDINFUN_ENGINECOMPONENTCONFIG_SAVE);
+        //    if (!saveConfigAddr) {
+        //        delete newAddin;
+        //        return nullptr;
+        //    }
+        //    newAddin->symbol_map_[ADDINFUN_ENGINECOMPONENTCONFIG_SAVE] = saveConfigAddr;
+
+        //    for (const SystemVersionInfo& componentInfo:header.GetEngineComponents()) {
+
+        //        const string& name = componentInfo.GetName();
+        //        System::RegisterProvider(name, (CreateEngineComponentFun)createAddr);
+        //        SystemConfig::RegisterProvider(name, (LoadEngineComponentConfigFun)loadConfigAddr, (SaveEngineComponentConfigFun)saveConfigAddr);
+
+        //    }
+        //}
+
+        return newAddin;
+
     }
 
-    return newAddin;
+    bool Addin::Unload(Engine& engine) {
 
-}
+        if (!handle_)
+            return false;
 
-bool Addin::HasSymbol(const string& name) {
-    return this->symbol_map_.find(name)!=this->symbol_map_.end();
-}
+        Unregister(engine);
 
-void* Addin::GetSymbolAddr(const string& name) {
+        engine.GetPlatform().UnloadLibrary(handle_);
 
-    if (this->HasSymbol(name))
-        return this->symbol_map_[name];
+        return true;
 
-    return nullptr;
+    }
 
-}
+    
 
-const vector<reference_wrapper<const string>> Addin::GetLoadedSymbolNames() const {
+    AddinHeader& Addin::GetHeader() { return *(this->header_); }
 
-    vector<reference_wrapper<const string>> symbolNames;
-
-    for (pair<string, void*> symbolPair:symbol_map_)
-        symbolNames.push_back(symbolPair.first);
-
-    return symbolNames;
-
-}
-
-AddinHeader& Addin::GetHeader() { return *(this->header_); }
-void* Addin::GetHandle() { return this->handle_; }
-
-AddinType Addin::GetType() const {
-    return header_->GetType();
+    AddinType Addin::GetType() const {
+        return header_->GetType();
+    }
 }

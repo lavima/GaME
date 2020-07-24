@@ -5,32 +5,36 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+namespace game::framework {
+
 #define XMLNAME_GAMEHEADER string("Header")
-#define XMLNAME_GAMEHEADER_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTINFO 
+#define XMLNAME_GAMEHEADER_ENGINECOMPONENT XMLNAME_SYSTEMVERSIONINFO 
 
-/*
-* GameHeader contains version information. Contains game title, description and the 
-* game version along with the version information for the engine_ components required
-* to run the game.
-*/
-class GameHeader : public VersionInfo {
-private:
-    
-    vector<EngineComponentVersionInfo> required_components_;
+    /*
+    * GameHeader contains version information. Contains game title, description and the
+    * game version along with the version information for the engine_ components required
+    * to run the game.
+    */
+    class GAME_API GameHeader : public VersionInfo {
+    private:
 
-public:
+        vector<SystemVersionInfo> required_components_;
 
-    GameHeader() : VersionInfo(XMLNAME_GAMEHEADER) {}
-    GameHeader(XmlNode root_node);
+    public:
 
-    static bool Load(GameHeader *info, XmlNode root_node);
-    static bool Save(GameHeader &info, XmlNode root_node);
+        GameHeader() : VersionInfo(XMLNAME_GAMEHEADER) {}
+        GameHeader(data::xml::XmlNode root_node);
 
-    void AddRequiredComponent(EngineComponentVersionInfo&component);
+        static bool Load(GameHeader* info, data::xml::XmlNode root_node);
+        static bool Save(GameHeader& info, data::xml::XmlNode root_node);
 
-    const vector<reference_wrapper<const EngineComponentVersionInfo>> GetRequiredComponents() const;
+        void AddRequiredComponent(SystemVersionInfo& component);
 
-    bool Load(XmlNode root_node) override;
-    bool Save(XmlNode root_node) override;
+        const vector<reference_wrapper<const SystemVersionInfo>> GetRequiredComponents() const;
 
-};
+        bool Load(data::xml::XmlNode root_node) override;
+        bool Save(data::xml::XmlNode root_node) override;
+
+    };
+
+}

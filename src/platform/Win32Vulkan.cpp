@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-
+namespace game {
 
 Win32Vulkan::Win32Vulkan(PlatformConfig &config) {
 
@@ -221,5 +221,7 @@ LRESULT CALLBACK WindowCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM	lPar
 }
 
 Win32Vulkan::__Register Win32Vulkan::__Register::singleton;
+
+}
 
 #endif // OS_WIN32_VULKAN

@@ -5,25 +5,29 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+namespace game::framework {
+
 #define XMLNAME_GAMECONFIG "Config"
 #define XMLNAME_GAMECONFIG_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTCONFIG
 
-class GameConfig : XmlSerializable {
-private:
+    class GAME_API GameConfig : data::xml::IXmlSerializable {
+    private:
 
-    vector<EngineComponentConfig> engine_component_configs_;
+        vector<SystemConfig> engine_component_configs_;
 
-public:
+    public:
 
-    GameConfig() {} 
-    GameConfig(XmlNode root_node);
+        GameConfig() {}
+        GameConfig(data::xml::XmlNode root_node);
 
-    static bool Load(GameConfig *config, XmlNode root_node);
-    static bool Save(const GameConfig &config, XmlNode root_node);
+        static bool Load(GameConfig* config, data::xml::XmlNode root_node);
+        static bool Save(const GameConfig& config, data::xml::XmlNode root_node);
 
-    const vector<reference_wrapper<EngineComponentConfig>> GetEngineComponentConfigs();
+        const vector<reference_wrapper<SystemConfig>> GetEngineComponentConfigs();
 
-    bool Load(XmlNode root_node);
-    bool Save(XmlNode root_node);
+        bool Load(data::xml::XmlNode root_node);
+        bool Save(data::xml::XmlNode root_node);
 
-};
+    };
+
+}

@@ -7,7 +7,7 @@
         <Minor>0</Minor>
         <Release>1</Release>
     </Version>
-    <EngineComponent>
+    <System>
         <Name>SimpleRenderer</Name>
         <Description>Test renderer</Description>
         <Version>
@@ -15,5 +15,5 @@
             <Minor>0</Minor>
             <Release>1</Release>
         </Version>
-    </EngineComponent>
+    </System>
 </Addin>

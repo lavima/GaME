@@ -1,18 +1,23 @@
 /*
-File: XmlSerializable.h
+File: IXmlSerializable.h
 Author: Lars Vidar Magnusson
 */
 
 #pragma once
 
-/*
-* An interface for objects that can be serialized to and from XML 
-*/
-class XmlSerializable {
+namespace game::data::xml {
 
-public:
+    /*
+    * IXmlSerializable is a interface implemented by objects that can be serialized 
+    * to and from XML
+    */
+    class GAME_API IXmlSerializable {
 
-    virtual bool Load(XmlNode root_node) = 0;
-    virtual bool Save(XmlNode root_node) = 0;
+    public:
 
-};
+        virtual bool Load(XmlNode root_node) = 0;
+        virtual bool Save(XmlNode root_node) = 0;
+
+    };
+
+}

@@ -5,32 +5,41 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-// 
-// Declare the static member pointer. The creation of the object uses a First Use idiom 
-// to avoid static fiasco.
-//
-unordered_map<string, DataLoader*>* Data::data_loaders_ = nullptr;
+namespace game::data {
 
-Data::Data(const string &filename) {
-    this->filename_ = filename;
-}
+    // 
+    // Declare the static member pointer. The creation of the object uses a First Use idiom 
+    // to avoid static fiasco.
+    //
+    unordered_map<string, Data::DataLoader*>* Data::data_loaders_ = nullptr;
 
-bool Data::LoadFrom(const string &filename) {
+    Data::Data(const string& filename) {
+        this->filename_ = filename;
+    }
 
-    this->filename_ = filename;
-    return Load();
+    bool Data::LoadFrom(const string& filename) {
 
-}
+        this->filename_ = filename;
+        return Load();
 
-const string &Data::GetFilename() { return filename_; }
+    }
 
-void Data::RegisterType(const string &extension, DataLoader* loader) {
+    const string& Data::GetFilename() { return filename_; }
 
-    // Create the map to store the loaders if it doesn't already exist. This memory is
-    // cleared by the OS on exit
-    if (!data_loaders_)
-        data_loaders_ = new unordered_map<string, DataLoader*>();
+    void Data::RegisterType(const string& extension, Data::DataLoader* loader) {
 
-    data_loaders_->insert_or_assign(extension, loader);
+        // Create the map to store the loaders if it doesn't already exist. This memory is
+        // cleared by the OS on exit
+        if (!data_loaders_)
+            data_loaders_ = new unordered_map<string, Data::DataLoader*>();
+
+        data_loaders_->insert_or_assign(extension, loader);
+
+    }
+
+    void Data::RegisterTypes(const vector<string>& extensions, DataLoader* loader) {
+        for (const auto extension:extensions)
+            RegisterType(extension, loader);
+    }
 
 }

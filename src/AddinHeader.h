@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+namespace game {
+
 #define EXTENSION_ADDIN "addin"
 
 #define XMLNAME_ADDININFO "Addin"
@@ -12,47 +14,49 @@ Author: Lars Vidar Magnusson
 #define XMLNAME_ADDININFO_NAME XMLNAME_INFOBASE_NAME
 #define XMLNAME_ADDININFO_DESCRIPTION XMLNAME_INFOBASE_DESCRIPTION
 #define XMLNAME_ADDININFO_VERSION XMLNAME_INFOBASE_VERSION
-#define XMLNAME_ADDININFO_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTINFO 
+#define XMLNAME_ADDININFO_ENGINECOMPONENT XMLNAME_SYSTEMVERSIONINFO 
 
-enum class AddinType {
-    EngineComponent = 1
-};
+    enum class GAME_API AddinType {
+        EngineComponent = 1
+    };
 
-class AddinHeader : public VersionInfo, public XmlData {
+    class GAME_API AddinHeader : public VersionInfo, public data::XmlData {
 
-private:
-
-    AddinType type_;
-
-    string library_filename_;
-
-    vector<EngineComponentVersionInfo> engine_components_;
-
-public:
-
-    AddinHeader(const string &filename) : XmlData(filename), type_(AddinType::EngineComponent) {}
-
-    AddinType GetType();
-    
-    const string &GetLibraryFilename();
-    const vector<reference_wrapper<const EngineComponentVersionInfo>> GetEngineComponents() const;
-
-    bool Load(XmlNode root_node) override;        
-    bool Save(XmlNode root_node) override;
-
-private:
-
-    class Loader : public DataLoader {
     private:
 
-        static Loader singleton;
+        AddinType type_;
 
-        Loader();
+        string library_filename_;
+
+        vector<SystemVersionInfo> engine_components_;
 
     public:
 
-        Data *Load(const string &filename);
+        AddinHeader(const string& filename) : data::XmlData(filename), type_(AddinType::EngineComponent) {}
+
+        AddinType GetType();
+
+        const string& GetLibraryFilename();
+        const vector<reference_wrapper<const SystemVersionInfo>> GetEngineComponents() const;
+
+        bool Load(data::xml::XmlNode root_node) override;
+        bool Save(data::xml::XmlNode root_node) override;
+
+    private:
+
+        class Loader : public data::Data::DataLoader {
+        private:
+
+            static Loader singleton;
+
+            Loader();
+
+        public:
+
+            data::Data* Load(const string& filename);
+
+        };
 
     };
-  
-};
+
+}

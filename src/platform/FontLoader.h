@@ -5,14 +5,18 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Font {
+namespace game::platform {
 
-};
+    class GAME_API Font {
 
-class FontLoader {
+    };
 
-public:
+    class FontLoader {
 
-    Font * Load(const string &name, int size);
+    public:
 
-};
+        Font* Load(const string& name, int size);
+
+    };
+
+}

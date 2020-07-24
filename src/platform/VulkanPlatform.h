@@ -1,13 +1,17 @@
 #pragma once
 
-/*
-* IVulkanPlatform provides an interface for Vulkan specific platform functions
-*/
-class IVulkanPlatform {
-public:
+namespace game::platform {
 
-    virtual const vector<reference_wrapper<const string>> GetRequiredExtensions() = 0;
+    /*
+    * IVulkanPlatform provides an interface for Vulkan specific platform functions
+    */
+    class GAME_API IVulkanPlatform {
+    public:
 
-    virtual bool CreateSurface(VkInstance, VkSurfaceKHR*) = 0;
+        virtual vector<reference_wrapper<const string>> GetRequiredExtensions() const = 0;
 
-};
+        virtual bool CreateSurface(VkInstance, VkSurfaceKHR*) = 0;
+
+    };
+
+}

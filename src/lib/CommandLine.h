@@ -5,82 +5,86 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-enum OptionType {
-    COMMANDOPTION_VALUE,
-    COMMANDOPTION_LITERAL
-};
+namespace game::lib {
 
-/*
-* Structure for specifying command line options
-*/
-struct CommandOption {
+    enum OptionType {
+        COMMANDOPTION_VALUE,
+        COMMANDOPTION_LITERAL
+    };
 
-    const OptionType Type;
-    const string Name;
-    const string Description;
+    /*
+    * Structure for specifying command line options
+    */
+    struct GAME_API CommandOption {
 
-};
-
-/*
-* Structure for specifying command line arguments
-*/
-struct CommandArgument {
-
-    const string Name;
-    const string Description;
-    const int MinInstances;
-    const int MaxInstances;
-
-};
-
-/*
-* CommandLine contains functionality for parsing a command line. This provides functionality similar to parse_args
-* in GNU. 
-* The format of the command line is PROGRAM [OPTIONS]... [ARGS]..., meaning that command line options must come before
-* the command line arguments.
-*/
-class CommandLine {
-
-private:
-   
-    struct commandResult {
-
-        int NumErrors = 0;
-
-        string Program;
-        unordered_map<string, string> Options;
-        unordered_map<string, vector<string>> Arguments;
+        const OptionType Type;
+        const string Name;
+        const string Description;
 
     };
 
-    static CommandLine *singleton;
+    /*
+    * Structure for specifying command line arguments
+    */
+    struct GAME_API CommandArgument {
 
-    vector<CommandOption> specifiedOptions;
-    vector<CommandArgument> specifiedArguments;
+        const string Name;
+        const string Description;
+        const int MinInstances;
+        const int MaxInstances;
 
-    unique_ptr<commandResult> result;
+    };
 
-    CommandLine() {}
+    /*
+    * CommandLine contains functionality for parsing a command line. This provides functionality similar to parse_args
+    * in GNU.
+    * The format of the command line is PROGRAM [OPTIONS]... [ARGS]..., meaning that command line options must come before
+    * the command line arguments.
+    */
+    class GAME_API CommandLine {
 
-    static CommandLine &get();
+    private:
 
-public:
+        struct commandResult {
 
-    static void SpecifyOption(OptionType type, const string &name, const string &description); 
-    static void SpecifyArgument(const string &name, const string &description, int minInstances, int maxInstances); 
+            int NumErrors = 0;
 
-    static bool Parse(const vector<string> &argumentValues);
+            string Program;
+            unordered_map<string, string> Options;
+            unordered_map<string, vector<string>> Arguments;
 
-    static const string GetUsageString();
+        };
 
-    static const string &GetProgram();
+        static CommandLine* singleton;
 
-    static bool HasOption(const string &name);
-    static const string &GetOption(const string &name);
-    static const vector<reference_wrapper<const string>> GetArgument(const string &name);
+        vector<CommandOption> specifiedOptions;
+        vector<CommandArgument> specifiedArguments;
 
-private:
+        unique_ptr<commandResult> result;
 
-    static bool IsOptionName(const string &arg);
+        CommandLine() {}
 
-};
+        static CommandLine& get();
+
+    public:
+
+        static void SpecifyOption(OptionType type, const string& name, const string& description);
+        static void SpecifyArgument(const string& name, const string& description, int minInstances, int maxInstances);
+
+        static bool Parse(const vector<string>& argumentValues);
+
+        static const string GetUsageString();
+
+        static const string& GetProgram();
+
+        static bool HasOption(const string& name);
+        static const string& GetOption(const string& name);
+        static const vector<reference_wrapper<const string>> GetArgument(const string& name);
+
+    private:
+
+        static bool IsOptionName(const string& arg);
+
+    };
+
+}

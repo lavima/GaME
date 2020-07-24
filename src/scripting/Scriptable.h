@@ -5,14 +5,18 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class _Scriptable {
+namespace game::scripting {
 
-protected:
+    class GAME_API _Scriptable {
 
-    ScriptEnvironment *environment;
+    protected:
 
-public:
+        ScriptEnvironment* environment;
 
-    virtual void Register(ScriptEnvironment &environment);
+    public:
 
-};
+        virtual void Register(ScriptEnvironment& environment);
+
+    };
+
+}

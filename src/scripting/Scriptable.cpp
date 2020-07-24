@@ -5,6 +5,10 @@ Author: Lars Vidar Magnusson
 
 #include "../GaME.h"
 
-void _Scriptable::Register(ScriptEnvironment &environment) {
-    this->environment = &environment;
+namespace game::scripting {
+
+    void _Scriptable::Register(ScriptEnvironment& environment) {
+        this->environment = &environment;
+    }
+
 }

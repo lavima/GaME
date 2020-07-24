@@ -1,19 +1,25 @@
 #pragma once
 
-class XmlDocument {
+namespace game::data::xml {
 
-private:
+    class GAME_API XmlDocument {
 
-    unique_ptr<pugi::xml_document> internal_;
+    private:
 
-public:
+        unique_ptr<pugi::xml_document> internal_;
 
-    XmlDocument();
-    XmlDocument(XmlDocument& other);
+    public:
 
-    bool Load(const string& filename);
-    bool Save(const string& filename);
-    
-    XmlNode GetDocumentElement();
+        XmlDocument();
+        XmlDocument(XmlDocument& other);
 
-};
+        bool Load(const string& filename);
+        bool Save(const string& filename);
+
+        void Unload();
+
+        XmlNode GetDocumentElement();
+
+    };
+
+}

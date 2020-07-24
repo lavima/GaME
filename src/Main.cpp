@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #include "GaME.h"
 
+using namespace game;
+
 /*
  * Program entry.
  *

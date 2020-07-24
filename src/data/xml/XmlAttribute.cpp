@@ -1,34 +1,37 @@
 #include "../../GaME.h"
 
-using namespace std;
-using namespace pugi;
+namespace game::data::xml {
 
-XmlAttribute::XmlAttribute() {}
+    using namespace pugi;
 
-XmlAttribute::XmlAttribute(pugi::xml_attribute attribute) : internal_(attribute) {}
+    XmlAttribute::XmlAttribute() {}
 
-const string XmlAttribute::GetName() { return string(internal_.name()); }
+    XmlAttribute::XmlAttribute(pugi::xml_attribute attribute) : internal_(attribute) {}
 
-void XmlAttribute::SetName(const string& name) { internal_.set_name(name.c_str()); }
+    const string XmlAttribute::GetName() { return string(internal_.name()); }
 
-const string XmlAttribute::GetValue() { return string(internal_.value()); }
+    void XmlAttribute::SetName(const string& name) { internal_.set_name(name.c_str()); }
 
-void XmlAttribute::SetValue(const string& value) { internal_.set_value(value.c_str()); }
+    const string XmlAttribute::GetValue() { return string(internal_.value()); }
 
-bool XmlAttribute::operator!() {
-    return internal_.empty();
-}
+    void XmlAttribute::SetValue(const string& value) { internal_.set_value(value.c_str()); }
+
+    bool XmlAttribute::operator!() {
+        return internal_.empty();
+    }
 
 
-XmlAttribute::Iterator::Iterator(xml_attribute attribute) : attribute_(attribute) {}
+    XmlAttribute::Iterator::Iterator(xml_attribute attribute) : attribute_(attribute) {}
 
-XmlAttribute::Iterator XmlAttribute::Iterator::operator++() {
-    attribute_ = attribute_.next_attribute();
-    return *this;
-}
-bool XmlAttribute::Iterator::operator!=(const Iterator& other) const {
-    return attribute_ != other.attribute_;
-}
-const XmlAttribute XmlAttribute::Iterator::operator*() const {
-    return XmlAttribute(attribute_);
+    XmlAttribute::Iterator XmlAttribute::Iterator::operator++() {
+        attribute_ = attribute_.next_attribute();
+        return *this;
+    }
+    bool XmlAttribute::Iterator::operator!=(const Iterator& other) const {
+        return attribute_!=other.attribute_;
+    }
+    const XmlAttribute XmlAttribute::Iterator::operator*() const {
+        return XmlAttribute(attribute_);
+    }
+
 }

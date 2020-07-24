@@ -5,43 +5,47 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-enum class GameStatus {
-    Created = 0,
-    Initialized,
-    Running,
-    Paused,
-    Terminated
-};
+namespace game::framework {
 
-class Game  {
+    enum class GAME_API GameStatus {
+        Created = 0,
+        Initialized,
+        Running,
+        Paused,
+        Terminated
+    };
 
-private:
+    class GAME_API Game {
 
-    GameStatus status_;
+    private:
 
-    unique_ptr<GameSpecification> specification_;
+        GameStatus status_;
 
-    unique_ptr<Script> game_script_;
+        unique_ptr<GameSpecification> specification_;
 
-    Engine* engine_;
+        unique_ptr<scripting::Script> game_script_;
 
-public:
+        Engine* engine_;
 
-    Game(GameSpecification* specification);
+    public:
 
-    bool Initialize(Engine &engine);
+        Game(GameSpecification* specification);
 
-    bool Start();
-    void Stop();
+        bool Initialize(Engine& engine);
 
-    bool LoadGlobalContent();
-    void UnloadContent();
+        bool Start();
+        void Stop();
 
-    void Update(GameTime &gameTime);
+        bool LoadGlobalContent();
+        void UnloadContent();
 
-    GameStatus GetStatus();
-    const GameHeader &GetHeader();
-    GameConfig &GetConfig();
-    GameSpecification& GetSpecification();
+        void Update(GameTime& gameTime);
 
-};
+        GameStatus GetStatus();
+        const GameHeader& GetHeader();
+        GameConfig& GetConfig();
+        GameSpecification& GetSpecification();
+
+    };
+
+}

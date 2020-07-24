@@ -5,23 +5,27 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class FilePath {
-private:
+namespace game::lib {
 
-    string filename_;
-    string directory_;
-    string extension_;
+    class GAME_API FilePath {
+    private:
 
-public:
+        string filename_;
+        string directory_;
+        string extension_;
 
-    FilePath(const string &filePath);
+    public:
 
-    static const string GetFilename(const string &filePath);
-    const string &GetFilename() const;
+        FilePath(const string& filePath);
 
-    static const string GetDirectory(const string &filePath);
-    const string &GetDirectory() const;
+        static const string GetFilename(const string& filePath);
+        const string& GetFilename() const;
 
-    static const string GetExtension(const string& file_path);
-    const string& GetExtension() const;
-};
+        static const string GetDirectory(const string& filePath);
+        const string& GetDirectory() const;
+
+        static const string GetExtension(const string& file_path);
+        const string& GetExtension() const;
+    };
+
+}

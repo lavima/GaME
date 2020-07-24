@@ -5,27 +5,30 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class Script {
+namespace game::scripting {
 
-private:
+    class GAME_API Script {
 
-    ScriptEnvironment *environment;
-    std::string name;
+    private:
 
-    v8::Persistent<v8::Script> *script;
+        ScriptEnvironment* environment;
+        std::string name;
 
-    Script(const string &name); 
+        //v8::Persistent<v8::Script>* script;
 
-public:
+        Script(const string& name);
 
-    static Script *Load(ScriptEnvironment &environment, const std::string &filename);
+    public:
 
-    bool Run();
+        static Script* Load(ScriptEnvironment& environment, const std::string& filename);
 
-    void InvokeMethod(const std::string &methodName);
+        bool Run();
 
-    const string &GetName();
-    ScriptEnvironment &GetEnvironment();
+        void InvokeMethod(const std::string& methodName);
 
-};
+        const string& GetName();
+        ScriptEnvironment& GetEnvironment();
 
+    };
+
+}

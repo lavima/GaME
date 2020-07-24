@@ -5,6 +5,8 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+namespace game::platform {
+
 #define PLATFORM_CONFIG_EXTENSION "platform_config"
 
 #define XMLNAME_PLATFORMCONFIG "PlatformConfig"
@@ -16,66 +18,68 @@ Author: Lars Vidar Magnusson
 #define DEFAULT_GRAPHICALPLATFORM_HEIGHT 600
 #define DEFAULT_GRAPHICALPLATFORM_FULLSCREEN false
 
-/*
-* PlatformConfig is the base class for all platform configuration types. The class 
-* features a factory pattern for loading all registered configuration types.
-*   
-*/
-class PlatformConfig : public XmlSerializable {
-protected:
+    /*
+    * PlatformConfig is the base class for all platform configuration types. The class
+    * features a factory pattern for loading all registered configuration types.
+    *
+    */
+    class PlatformConfig : public data::xml::IXmlSerializable {
+    protected:
 
-    class Loader {
+        class Loader {
+        public:
+            virtual PlatformConfig* Load(const string& implementation_name, data::xml::XmlNode root_node) = 0;
+        };
+
+    private:
+
+        static unordered_map<string, Loader*>* configuration_loaders_;
+
+        string implementation_name_;
+
+
+    protected:
+
+        PlatformConfig(const string& implementation_name);
+
+        static void RegisterImplementation(const string& implementation_name, Loader* loader);
+
     public:
-        virtual PlatformConfig* Load(const string& implementation_name, XmlNode root_node) = 0;
+
+        static PlatformConfig* Create(data::xml::XmlNode root_node);
+
+
+        const string& GetImplementationName();
+        void SetImplementationName(const string& name);
+
     };
 
-private:
-
-    static unordered_map<string, Loader*>* configuration_loaders_;
-    
-    string implementation_name_;
 
 
-protected:
+    class GAME_API GraphicalPlatformConfig : public PlatformConfig {
+    private:
 
-    PlatformConfig(const string& implementation_name);
+        uint32_t width_;
+        uint32_t height_;
+        bool fullscreen_;
 
-    static void RegisterImplementation(const string& implementation_name, Loader* loader);
-    
-public:
+    public:
 
-    static PlatformConfig* Create(XmlNode root_node);
+        GraphicalPlatformConfig(const string& implementation_name);
+        GraphicalPlatformConfig(const string& implementation_name, int width, int height, bool fullscreen);
 
+        bool Load(data::xml::XmlNode root_node) override;
+        bool Save(data::xml::XmlNode root_node) override;
 
-    const string &GetImplementationName();
-    void SetImplementationName(const string &name);
+        uint32_t GetWidth() const;
+        void SetWidth(uint32_t width);
 
-};
+        uint32_t GetHeight() const;
+        void SetHeight(uint32_t height);
 
+        bool GetFullscreen() const;
+        void SetFullscreen(bool fullscreen);
 
+    };
 
-class GraphicalPlatformConfig : public PlatformConfig {
-private:
-
-    uint32_t width_;
-    uint32_t height_;
-    bool fullscreen_;
-
-public:
-
-    GraphicalPlatformConfig(const string& implementation_name);
-    GraphicalPlatformConfig(const string &implementation_name, int width, int height, bool fullscreen);
-
-    bool Load(XmlNode root_node) override; 
-    bool Save(XmlNode root_node) override;
-
-    uint32_t GetWidth() const;
-    void SetWidth(uint32_t width);
-
-    uint32_t GetHeight() const;
-    void SetHeight(uint32_t height);
-    
-    bool GetFullscreen() const;
-    void SetFullscreen(bool fullscreen);
-
-};
+}
