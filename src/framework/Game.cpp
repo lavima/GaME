@@ -15,6 +15,24 @@ namespace game::framework {
     }
 
 
+    Game* Game::Create() {
+        return nullptr;
+    }
+
+    Game* Game::Create(GameSpecification* specification) {
+        return nullptr;
+    }
+
+    Game* Game::Create(const string& specification_filename) {
+        
+        GameSpecification* specification = data::Data::Load<GameSpecification>(specification_filename);
+        if (!specification)
+            return nullptr;
+
+        return Create(specification);
+
+    }
+
     bool Game::Initialize(Engine& engine) {
 
         engine_ = &engine;
@@ -27,8 +45,8 @@ namespace game::framework {
             }
         }
 
-        for (SystemConfig component_config : GetConfig().GetEngineComponentConfigs())
-            engine.AddComponent(component_config.GetName(), System::Create(engine, component_config));
+        for (SystemConfig &component_config : GetConfig().GetEngineComponentConfigs())
+            engine.AddSystem(System::Create(engine, component_config));
 
         status_ = GameStatus::Initialized;
 

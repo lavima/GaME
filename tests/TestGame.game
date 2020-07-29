@@ -8,16 +8,16 @@
             <Minor>0</Minor>
             <Release>1</Release>
         </Version>
-        <EngineComponent>
+        <System>
             <Name>SimpleRenderer</Name>
             <Version>
                 <Major>0</Major>
                 <Minor>0</Minor>
                 <Release>1</Release>
             </Version>
-        </EngineComponent>
+        </System>
     </Header>
     <Config>
-        <EngineComponent name="renderer" typeName="SimpleRenderer" />
+        <System name="renderer" typeName="SimpleRenderer" />
     </Config>
 </Game>

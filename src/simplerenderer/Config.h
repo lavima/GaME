@@ -13,18 +13,18 @@ namespace game::simplerenderer {
 
     public:
         
-        Config(XmlNode root_node);
+        Config(data::xml::XmlNode root_node);
 
-        bool Load(XmlNode root_node) override;
-        bool Save(XmlNode root_node) override;
+        bool Load(data::xml::XmlNode root_node) override;
+        bool Save(data::xml::XmlNode root_node) override;
 
-        class Loader : public SystemConfig::Loader {
+        class Loader : public SystemConfig::ILoader {
         private:
             static Loader* singleton_;
             Loader();
         public:
             static Loader* Get();
-            SystemConfig* Load(XmlNode root_node) override;
+            SystemConfig* Load(data::xml::XmlNode root_node) override;
         };
 
     };

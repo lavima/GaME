@@ -25,9 +25,9 @@ namespace game::simplerenderer {
     bool SimpleRenderer::CreateInstance() {
         
         const EngineInfo& engine_info = GetEngine().GetInfo();
-        const GameHeader& game_header = GetEngine().GetGame().GetHeader();
+        const framework::GameHeader& game_header = GetEngine().GetGame().GetHeader();
 
-        GraphicalPlatformConfig& config = (GraphicalPlatformConfig&)GetConfig();
+        platform::GraphicalPlatformConfig& config = (platform::GraphicalPlatformConfig&)GetConfig();
 
         uint32_t layer_count;
         vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
@@ -171,7 +171,7 @@ namespace game::simplerenderer {
             queue_create_infos.push_back(queue_create_info);
         }
 
-        // Create logical device
+        // Load logical device
 
         VkPhysicalDeviceFeatures device_features{};
 
@@ -200,7 +200,7 @@ namespace game::simplerenderer {
 
     bool SimpleRenderer::CreateSwapChain(QueueFamilyIndices queue_indices) {
 
-        GraphicalPlatformConfig& config = (GraphicalPlatformConfig&)GetConfig();
+        platform::GraphicalPlatformConfig& config = (platform::GraphicalPlatformConfig&)GetConfig();
 
         SwapChainDetails swap_chain_details = Vulkan::GetSwapChainDetails(physical_device_, surface_);
 
@@ -262,7 +262,7 @@ namespace game::simplerenderer {
         swap_chain_extent_ = swap_chain_extent;
 
 
-        // Create image views
+        // Load image views
 
         swap_chain_image_views_.resize(swap_chain_images_.size());
         for (size_t index = 0; index<swap_chain_images_.size(); ++index) {
@@ -797,7 +797,7 @@ namespace game::simplerenderer {
         _log = log_;
 #endif
 
-        platform_ = (GLFWVulkan*)&engine.GetPlatform();
+        platform_ = (platform::GLFWVulkan*)&engine.GetPlatform();
 
         instance_ = VK_NULL_HANDLE;
         physical_device_ = VK_NULL_HANDLE;
@@ -825,7 +825,7 @@ namespace game::simplerenderer {
             return false;
         }
 #endif
-        // Create a vector with all required device extensions
+        // Load a vector with all required device extensions
 
         const vector<string> mandatory_extensions = {
             VK_KHR_SWAPCHAIN_EXTENSION_NAME
@@ -952,7 +952,7 @@ namespace game::simplerenderer {
 
     }
 
-    bool SimpleRenderer::Update(GameTime& gameTime) {
+    bool SimpleRenderer::Update(framework::GameTime& gameTime) {
 
         Log& log = GetEngine().GetLog();
 
@@ -1090,7 +1090,7 @@ namespace game::simplerenderer {
     SimpleRenderer::Creator* SimpleRenderer::Creator::singleton_ = nullptr;
 
     SimpleRenderer::Creator::Creator() {
-        System::RegisterProvider(SIMPLERENDERER_TYPENAME, this);
+        System::RegisterType(SIMPLERENDERER_TYPENAME, this);
     }
 
     SimpleRenderer::Creator* SimpleRenderer::Creator::Get() {

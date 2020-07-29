@@ -7,22 +7,24 @@ Author: Lars Vidar Magnusson
 
 namespace game {
 
-#define XMLNAME_ENGINECOMPONENTCONFIG "EngineComponent"
-#define XMLNAME_ENGINECOMPONENTCONFIG_NAME "name"
-#define XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME "typeName"
+#define XMLNAME_SYSTEMCONFIG "System"
+#define XMLNAME_SYSTEMCONFIG_NAME "name"
+#define XMLNAME_SYSTEMCONFIG_TYPENAME "typeName"
 
+	//class addin::ISystemProvider;
 
 	class GAME_API SystemConfig : data::xml::IXmlSerializable {
+		friend class addin::ISystemProvider;
 	protected:
 
-		class Loader {
+		class ILoader {
 		public:
 			virtual SystemConfig* Load(data::xml::XmlNode root_node) = 0;
 		};
 
 	private:
 
-		static unordered_map<string, Loader*> config_loaders_;
+		static unordered_map<string, ILoader*>* loaders_;
 
 		string name_;
 		string type_name_;
@@ -36,7 +38,7 @@ namespace game {
 	public:
 
 		static SystemConfig* Create(data::xml::XmlNode root_node);
-		static void RegisterProvider(const string& typeName, Loader* loader);
+		static void RegisterType(const string& typeName, ILoader* loader);
 
 		const string& GetName() const;
 		const string& GetTypeName() const;

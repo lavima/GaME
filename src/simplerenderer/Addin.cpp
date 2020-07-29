@@ -11,22 +11,41 @@ using namespace game::graphics::vulkan;
 #include "Config.h"
 #include "SimpleRenderer.h"
 
-namespace game {
+namespace game::addin {
 
-    void RegisterAddin(Engine& engine, AddinHeader& header) {
+    SystemProvider* SystemProvider::singleton_ = nullptr;
 
-        // Initialize creator and loader singletons 
+    bool CreateAddin(Engine& engine, AddinHeader& header, AddinBindingInfo* create_info) {
 
-        simplerenderer::SimpleRenderer::Creator::Get();
-        simplerenderer::Config::Loader::Get();
+        create_info->type_flags = static_cast<uint32_t>(AddinType::System);
 
-        engine.GetLog().AddEvent("Addin %s registered", header.GetName().c_str());
+        create_info->system_creator = &SystemProvider::Get();
+
+        return true;
 
     }
 
-    void UnregisterAddin(Engine& engine) {
-    
-        // TODO
+    SystemProvider& SystemProvider::Get() {
+        
+        if (!singleton_)
+            singleton_ = new SystemProvider();
+        
+        return *singleton_;
 
+    }
+
+    SystemConfig* SystemProvider::Load(data::xml::XmlNode root_node) {
+        return nullptr;
+    }
+
+    System* SystemProvider::Create(Engine& engine, SystemConfig& config) {
+        return nullptr;
+    }
+
+    framework::Component* SystemProvider::Create(const string& name, const string& type_name) {
+        return nullptr;
+    }
+    framework::Component* SystemProvider::Create(framework::ComponentConfig& config) {
+        return nullptr;
     }
 }

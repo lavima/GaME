@@ -17,6 +17,17 @@ namespace game::framework {
         if (!config_->Load(config_node))
             return false;
 
+        for (auto entity_node:root_node.GetChildren(XMLNAME_GAME_ENTITY)) {
+
+            EntitySpecification* entity = Data::Load<EntitySpecification>(root_node.GetValue());
+            
+            if (!entity)
+                return false;
+
+            entities_.insert_or_assign(entity->GetName(), unique_ptr<EntitySpecification>(entity));
+
+        }
+
         return true;
 
     }
@@ -31,12 +42,22 @@ namespace game::framework {
         if (!config_->Save(root_node.AddChild()))
             return false;
 
+        for (const auto& [name, entity]:entities_) {
+
+            if (!entity->Save())
+                return false;
+
+            data::xml::XmlNode entity_node = root_node.AddChild();
+            entity_node.SetValue(entity->GetFilename());
+
+        }
+
         return true;
     }
 
-    GameSpecification::Loader GameSpecification::Loader::singleton;
+    GameSpecification::Loader GameSpecification::Loader::singleton_;
 
-    GameSpecification::Loader::Loader() { Data::RegisterType(EXTENSION_GAME, &singleton); }
+    GameSpecification::Loader::Loader() { Data::RegisterType(EXTENSION_GAME, &singleton_); }
 
     data::Data* GameSpecification::Loader::Load(const string& filename) {
 

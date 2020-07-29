@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 namespace game {
 
-    unordered_map<string, SystemConfig::Loader*> SystemConfig::config_loaders_;
+    unordered_map<string, SystemConfig::ILoader*>* SystemConfig::loaders_ = nullptr;
 
     SystemConfig::SystemConfig(const string& name, const string& typeName) {
 
@@ -22,22 +22,25 @@ namespace game {
 
     SystemConfig* SystemConfig::Create(data::xml::XmlNode root_node) {
 
-        if (root_node.GetName().compare(XMLNAME_ENGINECOMPONENTCONFIG))
+        if (root_node.GetName().compare(XMLNAME_SYSTEMCONFIG))
             return nullptr;
 
-        data::xml::XmlAttribute type_attribute = root_node.GetAttribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
+        data::xml::XmlAttribute type_attribute = root_node.GetAttribute(XMLNAME_SYSTEMCONFIG_TYPENAME);
         if (!type_attribute)
             return nullptr;
 
         string type = type_attribute.GetValue();
 
-        return config_loaders_[type]->Load(root_node);
+        return (*loaders_)[type]->Load(root_node);
 
     }
 
-    void SystemConfig::RegisterProvider(const string& typeName, Loader* loader) {
+    void SystemConfig::RegisterType(const string& typeName, ILoader* loader) {
 
-        config_loaders_.insert_or_assign(typeName, loader);
+        if (!loaders_)
+            loaders_ = new unordered_map<string, ILoader*>();
+
+        loaders_->insert_or_assign(typeName, loader);
 
     }
 
@@ -46,15 +49,15 @@ namespace game {
 
     bool SystemConfig::Load(data::xml::XmlNode root_node) {
 
-        if (root_node.GetName().compare(XMLNAME_ENGINECOMPONENTCONFIG))
+        if (root_node.GetName().compare(XMLNAME_SYSTEMCONFIG))
             return false;
 
-        data::xml::XmlAttribute name_attribute = root_node.GetAttribute(XMLNAME_ENGINECOMPONENTCONFIG_NAME);
+        data::xml::XmlAttribute name_attribute = root_node.GetAttribute(XMLNAME_SYSTEMCONFIG_NAME);
         if (!name_attribute)
             return false;
         name_ = name_attribute.GetValue();
 
-        data::xml::XmlAttribute type_attribute = root_node.GetAttribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
+        data::xml::XmlAttribute type_attribute = root_node.GetAttribute(XMLNAME_SYSTEMCONFIG_TYPENAME);
         if (!type_attribute)
             return false;
         type_name_ = type_attribute.GetValue();
@@ -65,12 +68,12 @@ namespace game {
 
     bool SystemConfig::Save(data::xml::XmlNode root_node) {
 
-        root_node.SetName(XMLNAME_ENGINECOMPONENTCONFIG);
+        root_node.SetName(XMLNAME_SYSTEMCONFIG);
 
-        data::xml::XmlAttribute name_attribute = root_node.AddAttribute(XMLNAME_ENGINECOMPONENTCONFIG_NAME);
+        data::xml::XmlAttribute name_attribute = root_node.AddAttribute(XMLNAME_SYSTEMCONFIG_NAME);
         name_attribute.SetValue(name_.c_str());
 
-        data::xml::XmlAttribute type_attribute = root_node.AddAttribute(XMLNAME_ENGINECOMPONENTCONFIG_TYPENAME);
+        data::xml::XmlAttribute type_attribute = root_node.AddAttribute(XMLNAME_SYSTEMCONFIG_TYPENAME);
         type_attribute.SetValue(type_name_.c_str());
 
         return true;

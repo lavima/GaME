@@ -7,6 +7,7 @@ namespace game::framework {
 #define XMLNAME_GAME "Game"
 #define XMLNAME_GAME_HEADER XMLNAME_GAMEHEADER
 #define XMLNAME_GAME_CONFIG XMLNAME_GAMECONFIG
+#define XMLNAME_GAME_ENTITY XMLNAME_ENTITY
 
     class GAME_API GameSpecification: public data::XmlData{
         friend class Game;
@@ -14,6 +15,8 @@ namespace game::framework {
 
         unique_ptr<GameHeader> header_;
         unique_ptr<GameConfig> config_;
+
+        unordered_map<string, unique_ptr<EntitySpecification>> entities_;
 
     public:
 
@@ -27,17 +30,12 @@ namespace game::framework {
 
     private:
 
-        class Loader : DataLoader {
+        class Loader : ILoader {
         private:
-
-            static Loader singleton;
-
+            static Loader singleton_;
             Loader();
-
         public:
-
             Data* Load(const string& filename);
-
         };
 
 

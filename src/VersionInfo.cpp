@@ -74,7 +74,7 @@ namespace game {
         name_node.SetValue(info.name_);
 
         data::xml::XmlNode description_node = root_node.AddChild(XMLNAME_INFOBASE_DESCRIPTION);
-        description_node.SetValue(info.description_.c_str());
+        description_node.SetValue(info.description_);
 
         data::xml::XmlNode version_node = root_node.AddChild();
         return info.version_.Save(version_node);

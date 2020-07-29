@@ -27,7 +27,7 @@ namespace game::simplerenderer {
         };
 
         Log* log_;
-        GLFWVulkan* platform_;
+        platform::GLFWVulkan* platform_;
 
         
         VkInstance instance_;
@@ -126,10 +126,10 @@ namespace game::simplerenderer {
 
 
         virtual bool Initialize() override;
-        virtual bool Update(GameTime&) override;
+        virtual bool Update(framework::GameTime&) override;
         virtual void Destroy() override;
 
-        class Creator : public System::Creator {
+        class Creator : public System::ICreator {
         private:
             static Creator* singleton_;
             Creator();

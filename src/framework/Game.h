@@ -19,17 +19,26 @@ namespace game::framework {
 
     private:
 
+        Engine* engine_;
+
+
         GameStatus status_;
 
         unique_ptr<GameSpecification> specification_;
 
         unique_ptr<scripting::Script> game_script_;
 
-        Engine* engine_;
+        unordered_map<string, unique_ptr<Entity>> entities_;
+
+
+        Game();
+        Game(GameSpecification* specification);
 
     public:
 
-        Game(GameSpecification* specification);
+        static Game* Create();
+        static Game* Create(const string& specification_filename);
+        static Game* Create(GameSpecification* specification);
 
         bool Initialize(Engine& engine);
 

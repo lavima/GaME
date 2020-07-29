@@ -7,7 +7,9 @@ Author: Lars Vidar Magnusson
 
 namespace game {
 
-    unordered_map<string, System::Creator*> System::system_providers_;
+#ifndef DLL_BUILD
+    unordered_map<string, System::ICreator*>* System::creators_ = nullptr;
+#endif
 
     System::System(Engine& engine, SystemConfig& config) {
 
@@ -26,25 +28,30 @@ namespace game {
 
     System* System::Create(Engine& engine, SystemConfig& config) {
 
+        assert(creators_);
+
         if (!IsTypeAvailable(config.GetTypeName())) {
             engine.GetLog().AddEvent(EventType::Error, "Could not find the specified game component type %s", config.GetTypeName());
             return nullptr;
         }
 
-        return system_providers_[config.GetTypeName()]->Create(engine, config);
+        return (*creators_)[config.GetTypeName()]->Create(engine, config);
 
     }
 
-    void System::RegisterProvider(const string& typeName, Creator* creator) {
+    void System::RegisterType(const string& typeName, ICreator* creator) {
 
-        system_providers_.insert_or_assign(typeName, creator);
+        if (!creators_)
+            creators_ = new unordered_map<string, ICreator*>();
+
+        creators_->insert_or_assign(typeName, creator);
 
     }
 
     bool System::IsTypeAvailable(const string& type_name) {
         
-        auto iter = system_providers_.find(type_name);
-        if (iter==system_providers_.end())
+        auto iter = creators_->find(type_name);
+        if (iter==creators_->end())
             return false;
 
         return true;

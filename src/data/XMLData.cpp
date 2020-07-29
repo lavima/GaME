@@ -34,12 +34,12 @@ namespace game::data {
 
     xml::XmlDocument XmlData::GetDocument() { return xml_document_; }
 
-    //XmlData::Loader XmlData::Loader::singleton_;
-    //XmlData::Loader::Loader() { Data::RegisterType(EXTENSION_XML, &singleton_); }
-    //Data * XmlData::Loader::Create(const string &filename_) {
+    //XmlData::ICreator XmlData::ICreator::singleton_;
+    //XmlData::ICreator::ICreator() { Data::RegisterType(EXTENSION_XML, &singleton_); }
+    //Data * XmlData::ICreator::Load(const string &filename_) {
     //    XmlData* data = new XmlData(filename_);
     //
-    //    if (!data->Create())
+    //    if (!data->Load())
     //        return nullptr;
     //
     //    return newGame;

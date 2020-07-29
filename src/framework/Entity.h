@@ -7,21 +7,36 @@ Author: Lars Vidar Magnusson
 
 namespace game::framework {
 
+    class Game;
+
     class GAME_API Entity {
     private:
 
-        string name_;
+        Game* game_;
 
-        //unordered_map<string, unique_ptr<Component>> components_;
+        unique_ptr<EntitySpecification> specification_;
 
-        Entity(const string& name);
+        unordered_map<string, unique_ptr<Component>> components_;
+
+        Entity(const string& name, const string& description);
+
+    protected:
+
+        EntitySpecification& GetSpecification();
 
     public:
 
-        static Entity* Create(const string& name);
+        static Entity* Create(const string& name, const string& description = "");
+        static Entity* Create(EntitySpecification* specification);
+        static Entity* Create(const Entity& parent);
 
-        void Initialize();
+        bool Initialize();
         void Update(GameTime& gameTime);
+        void Destroy();
+
+
+        const string& GetName() const;
+        const string& GetDescription() const;
 
     };
 

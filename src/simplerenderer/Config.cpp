@@ -7,16 +7,16 @@ using namespace game::graphics::vulkan;
 
 namespace game::simplerenderer {
 
-    Config::Config(XmlNode root_node) : SystemConfig(root_node) {}
+    Config::Config(data::xml::XmlNode root_node) : SystemConfig(root_node) {}
 
-    bool Config::Load(XmlNode root_node) {
+    bool Config::Load(data::xml::XmlNode root_node) {
         if (!SystemConfig::Load(root_node))
             return false;
 
         return true;
     }
 
-    bool Config::Save(XmlNode root_node) {
+    bool Config::Save(data::xml::XmlNode root_node) {
         if (!SystemConfig::Save(root_node))
             return false;
 
@@ -26,7 +26,7 @@ namespace game::simplerenderer {
     Config::Loader* Config::Loader::singleton_ = nullptr;
 
     Config::Loader::Loader() {
-        SystemConfig::RegisterProvider(SIMPLERENDERER_TYPENAME, this);
+        SystemConfig::RegisterType(SIMPLERENDERER_TYPENAME, this);
     }
 
     Config::Loader* Config::Loader::Get() {
@@ -35,7 +35,7 @@ namespace game::simplerenderer {
         return singleton_;
     }
 
-    SystemConfig* Config::Loader::Load(XmlNode root_node) {
+    SystemConfig* Config::Loader::Load(data::xml::XmlNode root_node) {
         return new Config(root_node);
     }
 

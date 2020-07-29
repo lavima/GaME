@@ -37,16 +37,16 @@ namespace game::data {
 
     private:
 
-        //class Loader : public DataLoader {
+        //class ICreator : public ILoader {
         //private:
 
-        //    static Loader singleton_;
+        //    static ICreator singleton_;
 
-        //    Loader();
+        //    ICreator();
 
         //public:
         //    
-        //    Data *Create(const string &filename_); 
+        //    Data *Load(const string &filename_); 
 
         //};
     };

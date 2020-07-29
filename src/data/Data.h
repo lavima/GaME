@@ -10,14 +10,14 @@ namespace game::data {
     class GAME_API Data {
     protected:
 
-        class DataLoader {
+        class ILoader {
         public:
             virtual Data* Load(const string& filename) = 0;
         };
 
     private:
 
-        static unordered_map<string, DataLoader*>* data_loaders_;
+        static unordered_map<string, ILoader*>* data_loaders_;
 
         string filename_;
 
@@ -38,8 +38,8 @@ namespace game::data {
 
     protected:
 
-        static void RegisterType(const string& extension, DataLoader* loader);
-        static void RegisterTypes(const vector<string>& extensions, DataLoader* loader);
+        static void RegisterType(const string& extension, ILoader* loader);
+        static void RegisterTypes(const vector<string>& extensions, ILoader* loader);
 
     };
 

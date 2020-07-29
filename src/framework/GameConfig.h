@@ -8,7 +8,7 @@ Author: Lars Vidar Magnusson
 namespace game::framework {
 
 #define XMLNAME_GAMECONFIG "Config"
-#define XMLNAME_GAMECONFIG_ENGINECOMPONENT XMLNAME_ENGINECOMPONENTCONFIG
+#define XMLNAME_GAMECONFIG_SYSTEM XMLNAME_SYSTEMCONFIG
 
     class GAME_API GameConfig : data::xml::IXmlSerializable {
     private:

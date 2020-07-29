@@ -12,16 +12,20 @@ namespace game {
     * All systems must be created through the factory pattern provided by this class.
     */
     class GAME_API System {
+        friend class addin::ISystemProvider;
+
     protected:
 
-        class Creator {
+        class ICreator {
         public:
             virtual System* Create(Engine& engine, SystemConfig& config) = 0;
         };
 
     private:
 
-        static unordered_map<string, Creator*> system_providers_;
+#ifndef DLL_BUILD
+        static unordered_map<string, ICreator*>* creators_;
+#endif
 
         Engine* engine_;
         SystemConfig* config_;
@@ -29,26 +33,25 @@ namespace game {
     protected:
 
         /*
-        * Protected constructor to ensure that engine_ components must be created through the static Create
+        * Protected constructor to ensure that engine components must be created through the static Load
         * function
         */
         System(Engine& engine, SystemConfig& config);
 
         Engine& GetEngine();
-        SystemConfig& GetConfig();
 
     public:
 
         /*
-        * Create provides the only way to instantiate engine_ components.
+        * Load provides the only way to instantiate engine_ components.
         */
         static System* Create(Engine& engine, SystemConfig& config);
 
         
         /*
-        * RegisterProvider must be invoked by all engine_ component implementation providers.
+        * RegisterType must be invoked by all system implementations
         */
-        static void RegisterProvider(const string& typeName, Creator* creator);
+        static void RegisterType(const string& typeName, ICreator* creator);
         
         static bool IsTypeAvailable(const string& type_name);
 
@@ -67,7 +70,7 @@ namespace game {
         */
         virtual void Destroy() = 0;
 
-    
+        SystemConfig& GetConfig();
 
     };
 

@@ -6,6 +6,7 @@ Author: Lars Vidar Magnusson
 #include "GaME.h"
 
 using namespace game;
+using namespace game::lib;
 
 /*
  * Program entry.

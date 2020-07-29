@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{03513B3A-1BE4-4C46-AD61-3C11B0C8DBA9}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>game</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <ProjectName>game_base</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\intermediate\$(Configuration)\</IntDir>
+    <IncludePath>..\include\xerces-3.2.0;..\include\vulkan-1.0.61.1;..\include\v8;$(IncludePath)</IncludePath>
+    <LibraryPath>..\libs\x86\windows;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\external_libs\stb_image-2.26;..\external_libs\glm-0.9.9.8;..\external_libs\glfw-3.3.2\include;..\external_libs\pugixml-1.9;..\external_libs\vulkan-1.2.141.2\include;..\external_libs\v8-7.4.256\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\obj</IntDir>
+    <LibraryPath>..\external_libs\pugixml-1.9\lib;..\external_libs\glfw-3.3.2\lib;..\external_libs\vulkan-1.2.141.2\lib;..\external_libs\v8-7.4.256\lib;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\intermediate\$(Configuration)\</IntDir>
+    <IncludePath>C:\VulkanSDK\1.0.51.0\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\external_libs\glfw-3.2.1\include;..\external_libs\pugixml-1.9;..\external_libs\vulkan-1.2.141.2\include;..\external_libs\v8-7.4.256\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>..\external_libs\pugixml-1.9\lib;..\external_libs\glfw-3.2.1\lib-vc2015;..\external_libs\vulkan-1.2.141.2\lib;..\external_libs\v8-7.4.256\libs\third_party\icu;..\external_libs\v8-7.4.256\libs\src\inspector;..\external_libs\v8-7.4.256\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <UseLldLink>true</UseLldLink>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <TestContent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>OS_WIN32_VULKAN;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.51.0\Lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xerces-c_3D.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>STATIC_BUILD;PLATFORM_GLFWVULKAN;_ITERATOR_DEBUG_LEVEL=0;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;pugixml.lib;glfw3dll.lib;v8_monolith.lib;winmm.lib;dbghelp.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.51.0\Lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>PLATFORM_GLFW_VULKAN;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\VulkanSDK\1.0.51.0\Lib;D:\xerces-c-3.1.4\Build\Win64\VC14\Static Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>shlwapi.lib;dbghelp.lib;winmm.lib;pugixml.lib;v8_base_1.lib;v8_base_0.lib;v8_external_snapshot.lib;v8_libplatform.lib;v8_libbase.lib;v8_libsampler.lib;icuuc.lib;icui18n.lib;inspector.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\addin\Addin.h" />
+    <ClInclude Include="..\src\addin\AddinHeader.h" />
+    <ClInclude Include="..\src\addin\SystemProvider.h" />
+    <ClInclude Include="..\src\CommonTypes.h" />
+    <ClInclude Include="..\src\data\Data.h" />
+    <ClInclude Include="..\src\data\DataLoader.h" />
+    <ClInclude Include="..\src\data\XmlData.h" />
+    <ClInclude Include="..\src\data\xml\XmlAttribute.h" />
+    <ClInclude Include="..\src\data\xml\XmlDocument.h" />
+    <ClInclude Include="..\src\data\xml\XmlNode.h" />
+    <ClInclude Include="..\src\data\xml\XmlRange.h" />
+    <ClInclude Include="..\src\data\xml\XmlSerializable.h" />
+    <ClInclude Include="..\src\Engine.h" />
+    <ClInclude Include="..\src\framework\ComponentConfig.h" />
+    <ClInclude Include="..\src\framework\EntitySpecification.h" />
+    <ClInclude Include="..\src\SystemConfig.h" />
+    <ClInclude Include="..\src\SystemVersionInfo.h" />
+    <ClInclude Include="..\src\EngineConfig.h" />
+    <ClInclude Include="..\src\framework\Component.h" />
+    <ClInclude Include="..\src\framework\Game.h" />
+    <ClInclude Include="..\src\System.h" />
+    <ClInclude Include="..\src\framework\Entity.h" />
+    <ClInclude Include="..\src\framework\GameConfig.h" />
+    <ClInclude Include="..\src\framework\GameHeader.h" />
+    <ClInclude Include="..\src\framework\GameSpecification.h" />
+    <ClInclude Include="..\src\framework\GameTime.h" />
+    <ClInclude Include="..\src\GaME.h" />
+    <ClInclude Include="..\src\graphics\Image.h" />
+    <ClInclude Include="..\src\graphics\ModelViewProjection.h" />
+    <ClInclude Include="..\src\graphics\Vertex.h" />
+    <ClInclude Include="..\src\graphics\vulkan\Shader.h" />
+    <ClInclude Include="..\src\graphics\vulkan\Vulkan.h" />
+    <ClInclude Include="..\src\graphics\vulkan\VulkanFunctions.h" />
+    <ClInclude Include="..\src\lib\CommandLine.h" />
+    <ClInclude Include="..\src\lib\FilePath.h" />
+    <ClInclude Include="..\src\lib\StringUtil.h" />
+    <ClInclude Include="..\src\lib\V8.h" />
+    <ClInclude Include="..\src\platform\DefaultPlatformConfig.h" />
+    <ClInclude Include="..\src\platform\GLFWVulkan.h" />
+    <ClInclude Include="..\src\platform\GLFWVulkanConfig.h" />
+    <ClInclude Include="..\src\platform\InputKey.h" />
+    <ClInclude Include="..\src\platform\VulkanPlatform.h" />
+    <ClInclude Include="..\src\Version.h" />
+    <ClInclude Include="..\src\VersionInfo.h" />
+    <ClInclude Include="..\src\Log.h" />
+    <ClInclude Include="..\src\platform\FontLoader.h" />
+    <ClInclude Include="..\src\platform\Platform.h" />
+    <ClInclude Include="..\src\platform\PlatformConfig.h" />
+    <ClInclude Include="..\src\platform\Win32Vulkan.h" />
+    <ClInclude Include="..\src\platform\x11\X11Config.h" />
+    <ClInclude Include="..\src\platform\x11\X11OpenGL.h" />
+    <ClInclude Include="..\src\platform\x11\X11Vulkan.h" />
+    <ClInclude Include="..\src\scripting\Script.h" />
+    <ClInclude Include="..\src\scripting\Scriptable.h" />
+    <ClInclude Include="..\src\scripting\ScriptEnvironment.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\addin\Addin.cpp" />
+    <ClCompile Include="..\src\addin\AddinHeader.cpp" />
+    <ClCompile Include="..\src\data\Data.cpp" />
+    <ClCompile Include="..\src\data\XmlData.cpp" />
+    <ClCompile Include="..\src\data\xml\XmlAttribute.cpp" />
+    <ClCompile Include="..\src\data\xml\XmlDocument.cpp" />
+    <ClCompile Include="..\src\data\xml\XmlNode.cpp" />
+    <ClCompile Include="..\src\Engine.cpp" />
+    <ClCompile Include="..\src\framework\Component.cpp" />
+    <ClCompile Include="..\src\framework\ComponentConfig.cpp" />
+    <ClCompile Include="..\src\framework\EntitySpecification.cpp" />
+    <ClCompile Include="..\src\SystemConfig.cpp" />
+    <ClCompile Include="..\src\SystemVersionInfo.cpp" />
+    <ClCompile Include="..\src\EngineConfig.cpp" />
+    <ClCompile Include="..\src\framework\Game.cpp" />
+    <ClCompile Include="..\src\System.cpp" />
+    <ClCompile Include="..\src\framework\Entity.cpp" />
+    <ClCompile Include="..\src\framework\GameConfig.cpp" />
+    <ClCompile Include="..\src\framework\GameHeader.cpp" />
+    <ClCompile Include="..\src\framework\GameSpecification.cpp" />
+    <ClCompile Include="..\src\graphics\Image.cpp" />
+    <ClCompile Include="..\src\graphics\vulkan\Shader.cpp" />
+    <ClCompile Include="..\src\graphics\vulkan\Vulkan.cpp" />
+    <ClCompile Include="..\src\graphics\vulkan\VulkanFunctions.cpp" />
+    <ClCompile Include="..\src\lib\CommandLine.cpp" />
+    <ClCompile Include="..\src\lib\FilePath.cpp" />
+    <ClCompile Include="..\src\lib\StringUtil.cpp" />
+    <ClCompile Include="..\src\lib\V8.cpp" />
+    <ClCompile Include="..\src\platform\GLFWVulkan.cpp" />
+    <ClCompile Include="..\src\platform\GLFWVulkanConfig.cpp" />
+    <ClCompile Include="..\src\platform\InputKey.cpp" />
+    <ClCompile Include="..\src\platform\VulkanPlatform.cpp" />
+    <ClCompile Include="..\src\Version.cpp" />
+    <ClCompile Include="..\src\VersionInfo.cpp" />
+    <ClCompile Include="..\src\Log.cpp" />
+    <ClCompile Include="..\src\platform\Platform.cpp" />
+    <ClCompile Include="..\src\platform\PlatformConfig.cpp" />
+    <ClCompile Include="..\src\platform\Win32Vulkan.cpp" />
+    <ClCompile Include="..\src\platform\x11\X11Config.cpp" />
+    <ClCompile Include="..\src\platform\x11\X11OpenGL.cpp" />
+    <ClCompile Include="..\src\platform\x11\X11Vulkan.cpp" />
+    <ClCompile Include="..\src\scripting\Script.cpp" />
+    <ClCompile Include="..\src\scripting\Scriptable.cpp" />
+    <ClCompile Include="..\src\scripting\ScriptEnvironment.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <GameContent Include="..\src\simplerenderer\SimpleRenderer.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <GameContent Include="..\tests\TestGame.engine_config" />
+    <GameContent Include="..\tests\TestGame.game" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

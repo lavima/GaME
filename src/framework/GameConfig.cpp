@@ -14,9 +14,9 @@ namespace game::framework {
         if (root_node.GetName().compare(XMLNAME_GAMECONFIG))
             return false;
 
-        for (data::xml::XmlNode engine_component_config_node : root_node.GetChildren(XMLNAME_GAMECONFIG_ENGINECOMPONENT)) {
+        for (data::xml::XmlNode config_node : root_node.GetChildren(XMLNAME_GAMECONFIG_SYSTEM)) {
 
-            SystemConfig* component_config = SystemConfig::Create(engine_component_config_node);
+            SystemConfig* component_config = SystemConfig::Create(config_node);
             if (!component_config)
                 return false;
 

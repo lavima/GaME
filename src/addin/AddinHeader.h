@@ -5,7 +5,7 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-namespace game {
+namespace game::addin {
 
 #define EXTENSION_ADDIN "addin"
 
@@ -16,8 +16,8 @@ namespace game {
 #define XMLNAME_ADDININFO_VERSION XMLNAME_INFOBASE_VERSION
 #define XMLNAME_ADDININFO_ENGINECOMPONENT XMLNAME_SYSTEMVERSIONINFO 
 
-    enum class GAME_API AddinType {
-        EngineComponent = 1
+    enum class GAME_API AddinType : uint32_t {
+        System = 1
     };
 
     class GAME_API AddinHeader : public VersionInfo, public data::XmlData {
@@ -28,23 +28,23 @@ namespace game {
 
         string library_filename_;
 
-        vector<SystemVersionInfo> engine_components_;
+        vector<SystemVersionInfo> system_infos_;
 
     public:
 
-        AddinHeader(const string& filename) : data::XmlData(filename), type_(AddinType::EngineComponent) {}
+        AddinHeader(const string& filename) : data::XmlData(filename), type_(AddinType::System) {}
 
         AddinType GetType();
 
         const string& GetLibraryFilename();
-        const vector<reference_wrapper<const SystemVersionInfo>> GetEngineComponents() const;
+        const vector<reference_wrapper<const SystemVersionInfo>> GetSystemInfos() const;
 
         bool Load(data::xml::XmlNode root_node) override;
         bool Save(data::xml::XmlNode root_node) override;
 
     private:
 
-        class Loader : public data::Data::DataLoader {
+        class Loader : public data::Data::ILoader {
         private:
 
             static Loader singleton;

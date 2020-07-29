@@ -36,7 +36,7 @@ namespace game::graphics {
 
     private:
 
-        class Loader : public DataLoader {
+        class Loader : public ILoader {
         private:
 
             static Loader singleton;

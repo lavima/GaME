@@ -18,7 +18,7 @@ namespace game::platform {
     protected:
 
         /*
-        * Platform::Creator is a protected abstract class providing an interface for platform
+        * Platform::ICreator is a protected abstract class providing an interface for platform
         * implementations to be created.
         */
         class Creator {

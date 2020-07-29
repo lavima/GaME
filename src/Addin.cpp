@@ -42,14 +42,14 @@ namespace game {
             delete newAddin;
             return nullptr;
         }
-        newAddin->register_fun_ = (RegisterAddinFun)address;
+        newAddin->register_fun_ = (AddinFun_Register)address;
 
         address = engine.GetPlatform().LoadLibrarySymbol(newAddin->handle_, ADDINFUN_UNREGISTERADDIN);
         if (!address) {
             delete newAddin;
             return nullptr;
         }
-        newAddin->unregister_fun_ = (UnregisterAddinFun)address;
+        newAddin->unregister_fun_ = (AddinFun_Unregister)address;
        
 
         newAddin->Register(engine, header);

@@ -52,7 +52,15 @@
 
 
 namespace game {
+    
+    // TODO Should probably be removed in accordance with style guide
     using namespace std;
+
+    // Predeclarations
+
+    class Engine;
+    class System;
+
 }
 
 #include "lib/StringUtil.h"
@@ -76,8 +84,9 @@ namespace game {
 #include "Version.h"
 #include "VersionInfo.h"
 #include "SystemVersionInfo.h"
-#include "AddinHeader.h"
-#include "Addin.h"
+
+#include "addin/AddinHeader.h"
+#include "addin/Addin.h"
 #include "scripting/ScriptEnvironment.h"
 #include "scripting/Scriptable.h"
 #include "scripting/Script.h"
@@ -96,12 +105,15 @@ namespace game {
 #include "platform/DefaultPlatformConfig.h"
 #include "SystemConfig.h"
 #include "framework/GameTime.h"
+#include "framework/ComponentConfig.h"
 #include "framework/Component.h"
+#include "framework/EntitySpecification.h"
 #include "framework/Entity.h"
 #include "framework/GameHeader.h"
 #include "framework/GameConfig.h"
 #include "framework/GameSpecification.h"
 #include "framework/Game.h"
 #include "System.h"
+#include "addin/SystemProvider.h"
 #include "EngineConfig.h"
 #include "Engine.h"

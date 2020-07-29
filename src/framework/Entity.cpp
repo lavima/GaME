@@ -7,22 +7,48 @@ Author: Lars Vidar Magnusson
 
 namespace game::framework {
 
-    Entity::Entity(const string& name) : name_(name) {}
+    Entity::Entity(const string& name, const string& description) {
+        specification_ = unique_ptr<EntitySpecification>(new EntitySpecification(name, description));
+    }
 
-    Entity* Entity::Create(const string& name) {
+    EntitySpecification& Entity::GetSpecification() {
+        return *specification_;
+    }
+
+    Entity* Entity::Create(const string& name, const string& description) {
         
-        Entity* entity = new Entity(name);
+        Entity* entity = new Entity(name, description);
 
         return entity;
 
     }
 
-    void Entity::Initialize() {
+    Entity* Entity::Create(EntitySpecification* specification) {
+        return nullptr;
+    }
 
+    Entity* Entity::Create(const Entity& parent) {
+        return nullptr;
+    }
+
+    bool Entity::Initialize() {
+        return true;
     }
 
     void Entity::Update(GameTime& gameTime) {
 
+    }
+
+    void Entity::Destroy() {
+    
+    }
+
+    const string& Entity::GetName() const {
+        return specification_->GetName();
+    }
+
+    const string& Entity::GetDescription() const {
+        return specification_->GetDescription();
     }
 
 }

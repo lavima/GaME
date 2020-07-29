@@ -3,15 +3,15 @@ File: AddinHeader.cpp
 Author: Lars Vidar Magnusson
  */
 
-#include "GaME.h"
+#include "../GaME.h"
 
-namespace game {
+namespace game::addin {
 
     AddinType AddinHeader::GetType() { return this->type_; }
     const string& AddinHeader::GetLibraryFilename() { return this->library_filename_; }
 
-    const vector<reference_wrapper<const SystemVersionInfo>> AddinHeader::GetEngineComponents() const {
-        return vector<reference_wrapper<const SystemVersionInfo>>(engine_components_.begin(), engine_components_.end());
+    const vector<reference_wrapper<const SystemVersionInfo>> AddinHeader::GetSystemInfos() const {
+        return vector<reference_wrapper<const SystemVersionInfo>>(system_infos_.begin(), system_infos_.end());
     }
 
     bool AddinHeader::Load(data::xml::XmlNode root_node) {
@@ -43,10 +43,10 @@ namespace game {
         if (!root_node.HasChild(XMLNAME_ADDININFO_ENGINECOMPONENT))
             return false;
 
-        type_ = AddinType::EngineComponent;
+        type_ = AddinType::System;
 
-        for (data::xml::XmlNode component_node : root_node.GetChildren(XMLNAME_ADDININFO_ENGINECOMPONENT)) {
-            engine_components_.push_back(SystemVersionInfo(component_node));
+        for (data::xml::XmlNode system_node : root_node.GetChildren(XMLNAME_ADDININFO_ENGINECOMPONENT)) {
+            system_infos_.push_back(SystemVersionInfo(system_node));
         }
 
         return true;
@@ -60,8 +60,8 @@ namespace game {
         data::xml::XmlAttribute library_attribute = root_node.AddAttribute(XMLNAME_ADDININFO_LIBRARYFILENAME);
         library_attribute.SetValue(library_filename_.c_str());
 
-        for (SystemVersionInfo& component_info:engine_components_)
-            component_info.Save(root_node.AddChild());
+        for (SystemVersionInfo& info:system_infos_)
+            info.Save(root_node.AddChild());
 
         return true;
 

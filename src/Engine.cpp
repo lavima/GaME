@@ -42,7 +42,7 @@ namespace game {
 
         info_.executablePath = lib::CommandLine::GetProgram();
 
-        //script_environment_ = ScriptEnvironment::Create(*this);
+        //script_environment_ = ScriptEnvironment::Load(*this);
 
         if (!config_->GetPlatformConfig()) {
             (*log_).AddEvent("Creating default platform config");
@@ -68,7 +68,7 @@ namespace game {
         return true;
 
         /*
-        Script *engineScript = Script::Create(scriptContext, filename_);
+        Script *engineScript = Script::Load(scriptContext, filename_);
         if (engineScript == NULL) {
           printf("Could not load the engine_ script.\n");
           return;
@@ -104,7 +104,7 @@ namespace game {
             if (game_)
                 game_->Update(gameTime);
 
-            for (unordered_map<string, System*>::iterator iter = components_.begin(); iter!=components_.end(); ++iter)
+            for (unordered_map<string, System*>::iterator iter = systems_.begin(); iter!=systems_.end(); ++iter)
                 iter->second->Update(gameTime);
 
             platform_->SwapBuffers();
@@ -131,8 +131,14 @@ namespace game {
             return false;
         }
 
-        game_ = unique_ptr<framework::Game>(new framework::Game(game_spec));
+        game_ = unique_ptr<framework::Game>(framework::Game::Create(game_spec));
+        
+        return LoadGame(*game_);
 
+    }
+
+    bool Engine::LoadGame(framework::Game& game) {
+        
         log_->AddEvent("Initializing game");
         if (!game_->Initialize(*this)) {
             log_->AddEvent(EventType::Error, "Failed to initialize game");
@@ -143,7 +149,6 @@ namespace game {
         log_->AddEvent("Game %s loaded and initialized", (const string&)game_->GetHeader().GetName());
 
         return true;
-
     }
 
     void Engine::UnloadGame() {
@@ -159,7 +164,7 @@ namespace game {
 
     bool Engine::LoadAddin(const string& filename) {
 
-        Addin* addin = Addin::Load(*this, filename);
+        addin::Addin* addin = addin::Addin::Load(*this, filename);
         if (!addin)
             return false;
 
@@ -176,7 +181,7 @@ namespace game {
 
     }
 
-    bool Engine::HasComponentType(const string& type_name) const {
+    bool Engine::HasSystemType(const string& type_name) const {
 
         // TODO this method should be re-implemented or removed. The original functionality has been moved 
         // System::IsTypeAvailable
@@ -185,39 +190,40 @@ namespace game {
 
     }
 
-    //void Engine::AddComponent(const string &name, const string &type_name) {
+    //void Engine::AddSystem(const string &name, const string &type_name) {
     //
     //    if (components_.find(type_name) != components_.end())
-    //        printf("The component with the specified name (%s) already exists\n", type_name.c_str());
+    //        printf("The system with the specified name (%s) already exists\n", type_name.c_str());
     //
-    //    components_[type_name] = System::Create(*this, new SystemConfig(name, type_name));
+    //    components_[type_name] = System::Load(*this, new SystemConfig(name, type_name));
     //
     //}
 
-    bool Engine::AddComponent(const string& name, System* component) {
+    bool Engine::AddSystem(System* system) {
 
-        if (components_.find(name)!=components_.end()) {
-            log_->AddEvent(EventType::Error, "The component with the specified name (%s) already exists\n", name.c_str());
+        const string& name = system->GetConfig().GetName();
+        if (systems_.find(name)!=systems_.end()) {
+            log_->AddEvent(EventType::Error, "The system with the specified name (%s) already exists\n", name.c_str());
             return false;
         }
 
         log_->AddEvent("Initializing engine component %s", name.c_str());
-        if (!component->Initialize()) {
-            log_->AddEvent(EventType::Error, "Couldn't initialize engine component %s", name.c_str());
+        if (!system->Initialize()) {
+            log_->AddEvent(EventType::Error, "Couldn't initialize system %s", name.c_str());
             return false;
         }
 
-        components_[name] = component;
+        systems_[name] = system;
 
         return true;
 
     }
 
-    System* Engine::GetComponent(const string& name) {
+    System* Engine::GetSystem(const string& name) {
 
-        if (this->components_.find(name)==this->components_.end())
+        if (this->systems_.find(name)==this->systems_.end())
             return NULL;
-        return this->components_[name];
+        return this->systems_[name];
 
     }
 
@@ -233,7 +239,7 @@ namespace game {
 
         platform_->Shutdown();
         
-        for (Addin* addin:addins_)
+        for (addin::Addin* addin:addins_)
             addin->Unload(*this);
 
         delete script_environment_;
