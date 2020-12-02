@@ -1,4 +1,13 @@
-#include "../../GaME.h"
+#include <string>
+#include <vector>
+#include <ios>
+#include <iostream>
+#include <fstream>
+
+#include <vulkan/vulkan.h>
+
+#include "../../global.h"
+#include "Shader.h"
 
 namespace game::graphics::vulkan {
 
@@ -26,9 +35,9 @@ namespace game::graphics::vulkan {
 
     }
 
-    bool _ReadFile(const string& filename, vector<char> *buffer) {
+    bool _ReadFile(const std::string& filename, std::vector<char> *buffer) {
 
-        ifstream file(filename, ios::ate|ios::binary);
+        std::ifstream file(filename, std::ios::ate|std::ios::binary);
 
         if (!file.is_open())
             return false;
@@ -45,9 +54,9 @@ namespace game::graphics::vulkan {
 
     }
 
-    VkShaderModule Shader::CreateModule(VkDevice device, const string& filename) {
+    VkShaderModule Shader::CreateModule(VkDevice device, const std::string& filename) {
 
-        vector<char> code;
+        std::vector<char> code;
         if (!_ReadFile(filename, &code))
             return VK_NULL_HANDLE;
 
@@ -64,7 +73,7 @@ namespace game::graphics::vulkan {
 
     }
 
-    Shader* Shader::Create(VkDevice device, const string& vertex_filename, const string& frag_filename) {
+    Shader* Shader::Create(VkDevice device, const std::string& vertex_filename, const std::string& frag_filename) {
 
         VkShaderModule vertex_module = CreateModule(device, vertex_filename);
         if (vertex_module==VK_NULL_HANDLE)
@@ -80,8 +89,8 @@ namespace game::graphics::vulkan {
 
     }
 
-    vector<VkPipelineShaderStageCreateInfo> Shader::GetShaderStages() const {
-        return vector<VkPipelineShaderStageCreateInfo>{ vertex_shader_stage_info_, fragment_shader_stage_info_ };
+    std::vector<VkPipelineShaderStageCreateInfo> Shader::GetShaderStages() const {
+        return std::vector<VkPipelineShaderStageCreateInfo>{ vertex_shader_stage_info_, fragment_shader_stage_info_ };
     }
 
     void Shader::Destroy() {

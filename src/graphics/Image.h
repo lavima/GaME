@@ -13,16 +13,16 @@ namespace game::graphics {
 #define EXTENSION_IMAGE_PPM "ppm"
 #define EXTENSION_IMAGE_PGM "pgm"
 
-    class GAME_API Image : public data::Data {
+    class GAME_API Image : public content::Content {
     private:
 
-        vector<uint8_t> image_data_;
+        std::vector<uint8_t> image_data_;
 
         uint32_t width_;
         uint32_t height_;
         uint32_t num_channels_;
 
-        Image(const string& filename) : data::Data(filename) {}
+        Image(const std::string& filename) : content::Content(filename) {}
 
     public:
 
@@ -32,7 +32,7 @@ namespace game::graphics {
         uint32_t GetWidth() const;
         uint32_t GetHeight() const;
         uint32_t GetNumChannels() const;
-        const vector<uint8_t>& GetData() const;
+        const std::vector<uint8_t>& GetData() const;
 
     private:
 
@@ -45,7 +45,7 @@ namespace game::graphics {
 
         public:
 
-            Data* Load(const string& filename);
+            content::Content* Load(const std::string& filename);
 
         };
 

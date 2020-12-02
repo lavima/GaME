@@ -41,5 +41,8 @@
     <CopyFileToFolders Include="..\external_libs\glfw-3.3.2\lib\glfw3.dll">
       <Filter>Library Files</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="..\tests\TestEntity.entity">
+      <Filter>Content Files\tests</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

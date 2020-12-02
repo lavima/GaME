@@ -16,7 +16,7 @@ namespace game::scripting {
 
         //v8::Persistent<v8::Script>* script;
 
-        Script(const string& name);
+        Script(const std::string& name);
 
     public:
 
@@ -26,7 +26,7 @@ namespace game::scripting {
 
         void InvokeMethod(const std::string& methodName);
 
-        const string& GetName();
+        const std::string& GetName();
         ScriptEnvironment& GetEnvironment();
 
     };

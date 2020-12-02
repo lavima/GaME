@@ -5,21 +5,28 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
+namespace game {
+    class Engine;
+}
+
 namespace game::addin {
 
     class ISystemProvider;
+    class IComponentProvider;
 
     struct AddinBindingInfo {
         
         uint32_t type_flags;
 
-        ISystemProvider* system_creator;
+        ISystemProvider* system_provider;
+
+        IComponentProvider* component_provider;
 
     };
 
-    typedef bool (*AddinFun_CreateAddin)(Engine&, AddinHeader&, AddinBindingInfo* info);
+    typedef bool (*AddinFun_Register)(Engine&, AddinHeader&, AddinBindingInfo* info);
 
-#define ADDINFUN_REGISTERADDIN "RegisterAddin"
+#define ADDINFUN_REGISTERADDIN "Register"
 
     /*
     * Addin provides functionality for loading external functionality into the engine
@@ -29,9 +36,9 @@ namespace game::addin {
 
         void* handle_;
 
-        unique_ptr<AddinHeader> header_;
+        std::unique_ptr<AddinHeader> header_;
 
-        AddinFun_CreateAddin create_fun;
+        AddinFun_Register register_fun;
 
         Addin(AddinHeader* header);
 
@@ -39,7 +46,7 @@ namespace game::addin {
 
     public:
 
-        static Addin* Load(Engine& engine, const string& filename);
+        static Addin* Load(Engine& engine, const std::string& filename);
 
         bool Unload(Engine& engine);
 

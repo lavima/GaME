@@ -3,7 +3,7 @@ File: Main.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include "GaME.h"
+#include "game.h"
 
 using namespace game;
 using namespace game::lib;
@@ -23,9 +23,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 int main(int argc, const char *argv[]) {
 
-    vector<string> arguments;
+    std::vector<std::string> arguments;
     for (int i=0; i<argc; ++i)
-        arguments.push_back(string(argv[i]));
+        arguments.push_back(std::string(argv[i]));
 
 #endif // OS_WIN
 
@@ -35,20 +35,20 @@ int main(int argc, const char *argv[]) {
     CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "gameDirectory", "The directory to use as the root directory");
 
     if (!CommandLine::Parse(arguments)) {
-        cout << CommandLine::GetUsageString() << endl;
+        LOG_INFO(CommandLine::GetUsageString().c_str());
         return 0;
     }
 
     Engine engine;
 
     if (!engine.Initialize()) {
-        cout<<"Couldn't initialize engine";
+        LOG_ERROR("Couldn't initialize engine");
         return 0;
     }
 
     
     if (!engine.LoadGame(CommandLine::GetArgument("GAME_FILE")[0])) {
-        cout<<"Couldn't load game";
+        LOG_ERROR("Couldn't load game");
         return 0;
     }
     

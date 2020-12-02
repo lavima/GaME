@@ -15,13 +15,14 @@ namespace game {
         Warning = 1,
         Info = 2,
         Debug = 3,
-        All = 4
+        Trace = 4
     };
 
-#define ERROR_PREFIX string("ERROR: ") 
-#define WARNING_PREFIX string("WARNING: ")
-#define INFO_PREFIX string("INFO: ")
-#define DEBUG_PREFIX string("DEBUG: ")
+#define ERROR_PREFIX std::string("ERROR: ") 
+#define WARNING_PREFIX std::string("WARNING: ")
+#define INFO_PREFIX std::string("INFO: ")
+#define DEBUG_PREFIX std::string("DEBUG: ")
+#define TRACE_PREFIX std::string("TRACE: ")
 
     class LogListener;
 
@@ -39,79 +40,73 @@ namespace game {
 
     private:
 
-        unique_ptr<ofstream> out_main_;
-        unique_ptr<stringstream> out_string_;
+        static Log *singleton_;
 
-        struct OutStream {
-            EventType level;
-            ostream* out;
-        };
+        std::unique_ptr<std::ofstream> out_main_;
 
-        vector<OutStream> out_streams_;
+        std::vector<std::ostream*> out_streams_;
 
-        list<LogListener*> listeners_;
+        std::list<LogListener*> listeners_;
 
-        EventType level_;
-
-    public:
-
-        Log(EventType level = EventType::All);
-        Log(const string& filename, EventType level = EventType::All);
-        Log(ostream& out, EventType level = EventType::All);
+        Log(const std::string& filename);
+        Log(std::ostream& out);
 
         ~Log();
 
-        template<typename ... T> void AddEvent(const string& format, T ... args) {
 
-            unique_ptr<string> eventText(lib::StringUtil::Create(format, args ...));
+    public:
+
+        static Log& Get();
+        static void Set(Log& singleton);
+        
+        template<typename ... T> void Add(const std::string& filename, int line_number, const std::string& format, T ... args) {
+
+            std::unique_ptr<std::string> eventText(lib::StringUtil::Format(format, args ...));
             (*eventText).append("\n");
-            output(EventType::All, *eventText);
-            dispatchEvent(EventType::All, *eventText);
+            output(EventType::Trace, *eventText);
+            dispatchEvent(EventType::Trace, *eventText);
 
         }
 
-        template<typename ... T> void AddEvent(EventType type, const string& format, T ... args) {
+        template<typename ... T> void Add(const std::string& filename, int line_number, EventType type, const std::string& format, T ... args) {
 
-            if (type>level_)
-                return;
-
-            unique_ptr<string> eventText(lib::StringUtil::Create(format, args ...));
+            std::unique_ptr<std::string> eventText(lib::StringUtil::Format(format, args ...));
             (*eventText).append("\n");
+            auto file_line_prefix = std::unique_ptr<std::string>(lib::StringUtil::Format("[%s %d] ", filename.c_str(), line_number));
             if (type==EventType::Error)
-                output(EventType::Error, ERROR_PREFIX+*eventText);
+                output(EventType::Error, *file_line_prefix+ERROR_PREFIX+*eventText);
             else if (type==EventType::Warning)
-                output(EventType::Warning, WARNING_PREFIX+*eventText);
+                output(EventType::Warning, *file_line_prefix+WARNING_PREFIX+*eventText);
             else if (type==EventType::Info)
-                output(EventType::Info, INFO_PREFIX+*eventText);
+                output(EventType::Info, *file_line_prefix+INFO_PREFIX+*eventText);
             else if (type==EventType::Debug)
-                output(EventType::Debug, DEBUG_PREFIX+*eventText);
-            else // Info | All
-                output(EventType::All, *eventText);
+                output(EventType::Debug, *file_line_prefix+DEBUG_PREFIX+*eventText);
+            else // Trace
+                output(EventType::Trace, *file_line_prefix+TRACE_PREFIX+*eventText);
 
             dispatchEvent(type, *eventText);
 
         }
 
         void AddListener(LogListener* listener);
-        void AddOutputStream(ostream& out, EventType level = EventType::All);
-
-        void SetLevel(EventType level);
-        EventType GetLevel();
+        void AddOutputStream(std::ostream& out);
 
     private:
 
-        void output(EventType type, const string& text);
-        void dispatchEvent(EventType type, const string& text);
+        void output(EventType type, const std::string& text);
+        void dispatchEvent(EventType type, const std::string& text);
 
     };
 
     class GAME_API LogListener {
-
     public:
-
-        virtual void Event(EventType type, const string& text) = 0;
-        virtual EventType GetLevel() = 0;
-
+        virtual void Event(EventType type, const std::string& text) = 0;
     };
+
+#define LOG_ERROR(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Error, message, __VA_ARGS__)
+#define LOG_WARNING(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Warning, message, __VA_ARGS__)
+#define LOG_INFO(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Info, message, __VA_ARGS__)
+#define LOG_DEBUG(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Debug, message, __VA_ARGS__)
+#define LOG_TRACE(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Trace, message, __VA_ARGS__)
 
 }

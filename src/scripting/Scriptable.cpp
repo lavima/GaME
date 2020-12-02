@@ -3,7 +3,13 @@ File: Scriptable.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include "../GaME.h"
+#include <string>
+
+#include <v8.h>
+
+#include "../global.h"
+#include "script_environment.h"
+#include "scriptable.h"
 
 namespace game::scripting {
 

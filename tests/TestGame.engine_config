@@ -4,7 +4,6 @@
         <Width>1024</Width>
         <Height>600</Height>
         <Fullscreen>false</Fullscreen>
-        
     </PlatformConfig>
-    <Addin>SimpleRenderer/SimpleRenderer.addin</Addin>>
+    <Addin>vulkan_renderer/vulkan_renderer.addin</Addin>>
 </EngineConfig>

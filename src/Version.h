@@ -7,12 +7,12 @@ Author: Lars Vidar Magnusson
 
 namespace game {
 
-#define XMLNAME_VERSION string("Version")
-#define XMLNAME_VERSION_MAJOR string("Major")
-#define XMLNAME_VERSION_MINOR string("Minor")
-#define XMLNAME_VERSION_RELEASE string("Release")
+#define XMLNAME_VERSION std::string("Version")
+#define XMLNAME_VERSION_MAJOR std::string("Major")
+#define XMLNAME_VERSION_MINOR std::string("Minor")
+#define XMLNAME_VERSION_RELEASE std::string("Release")
 
-    class GAME_API Version : data::xml::IXmlSerializable {
+    class GAME_API Version : content::xml::IXmlSerializable {
     private:
 
         int major_;
@@ -24,23 +24,23 @@ namespace game {
 
         Version();
         Version(int major, int minor, int release);
-        Version(data::xml::XmlNode node);
+        Version(content::xml::XmlNode node);
 
         int GetMajor() const;
         int GetMinor() const;
         int GetRelease() const;
 
-        const string* GetVersionString();
+        const std::string* GetVersionString();
 
         bool operator==(Version& other);
 
-        static bool Load(Version* version, data::xml::XmlNode node);
-        static bool Save(Version& version, data::xml::XmlNode node);
+        static bool Load(Version* version, content::xml::XmlNode node);
+        static bool Save(Version& version, content::xml::XmlNode node);
 
         /* XMLSerializable Interface */
 
-        bool Load(data::xml::XmlNode node);
-        bool Save(data::xml::XmlNode node);
+        bool Load(content::xml::XmlNode node);
+        bool Save(content::xml::XmlNode node);
 
     };
 

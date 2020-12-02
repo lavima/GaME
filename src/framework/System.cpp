@@ -1,25 +1,78 @@
 /*
-File: System.cpp
+File: system.cpp
 Author: Lars Vidar Magnusson
  */
 
-#include "GaME.h"
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include <cassert>
+#include <algorithm>
+#include <vector>
+#include <optional>
 
-namespace game {
+#include <pugixml.hpp>
+#include <v8.h>
+
+#include "../global.h"
+#include "../lib/string_util.h"
+#include "../lib/file_path.h"
+#include "../log.h"
+#include "../content/content.h"
+#include "../content/xml/xml_range.h"
+#include "../content/xml/xml_attribute.h"
+#include "../content/xml/xml_node.h"
+#include "../content/xml/xml_document.h"
+#include "../content/xml/xml_serializable.h"
+#include "../content/xml_content.h"
+#include "../version.h"
+#include "../version_info.h"
+#include "../scripting/script_environment.h"
+#include "../scripting/script.h"
+#include "../scripting/scriptable.h"
+#include "../platform/input_key.h"
+#include "../platform/platform_config.h"
+#include "../platform/platform.h"
+#include "framework.h"
+#include "component_info.h"
+#include "component_config.h"
+#include "system_info.h"
+#include "system_config.h"
+#include "game_time.h"
+#include "component.h"
+#include "entity_specification.h"
+#include "entity.h"
+#include "game_config.h"
+#include "game_header.h"
+#include "game_specification.h"
+#include "game.h"
+#include "system.h"
+#include "../addin/system_provider.h"
+#include "../addin/addin_header.h"
+#include "../addin/addin.h"
+#include "../engine_config.h"
+#include "../engine.h"
+
+namespace game::framework {
 
 #ifndef DLL_BUILD
-    unordered_map<string, System::ICreator*>* System::creators_ = nullptr;
+    std::unordered_map<std::string, System::ICreator*>* System::creators_ = nullptr;
 #endif
 
-    System::System(Engine& engine, SystemConfig& config) {
+    System::System(Engine& engine, const SystemInfo& info, SystemConfig& config) : info_(info) {
 
         engine_ = &engine;
+
         config_ = &config;
 
     }
 
     Engine& System::GetEngine() {
         return *engine_;
+    }
+
+    const SystemInfo& System::GetInfo() const {
+        return info_;
     }
 
     SystemConfig& System::GetConfig() {
@@ -31,7 +84,7 @@ namespace game {
         assert(creators_);
 
         if (!IsTypeAvailable(config.GetTypeName())) {
-            engine.GetLog().AddEvent(EventType::Error, "Could not find the specified game component type %s", config.GetTypeName());
+            LOG_ERROR("Could not find the specified system type %s", config.GetTypeName());
             return nullptr;
         }
 
@@ -39,16 +92,16 @@ namespace game {
 
     }
 
-    void System::RegisterType(const string& typeName, ICreator* creator) {
+    void System::RegisterType(const std::string& typeName, ICreator* creator) {
 
         if (!creators_)
-            creators_ = new unordered_map<string, ICreator*>();
+            creators_ = new std::unordered_map<std::string, ICreator*>();
 
         creators_->insert_or_assign(typeName, creator);
 
     }
 
-    bool System::IsTypeAvailable(const string& type_name) {
+    bool System::IsTypeAvailable(const std::string& type_name) {
         
         auto iter = creators_->find(type_name);
         if (iter==creators_->end())

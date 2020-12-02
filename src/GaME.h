@@ -22,12 +22,10 @@
 #include <cassert>
 #include <cstdint>
 
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <windows.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <v8.h>
 #include <libplatform/libplatform.h>
 #ifdef PLATFORM_WIN32_VULKAN
@@ -42,78 +40,75 @@
 
 #include <pugixml.hpp>
 
-#ifdef DLL_BUILD
-#define GAME_API __declspec(dllexport)
-#elif STATIC_BUILD
-#define GAME_API 
-#else
-#define GAME_API __declspec(dllimport)
-#endif
 
 
 namespace game {
     
-    // TODO Should probably be removed in accordance with style guide
-    using namespace std;
-
     // Predeclarations
 
     class Engine;
-    class System;
+
+    namespace framework {
+        class System;
+    }
 
 }
 
-#include "lib/StringUtil.h"
-#include "lib/FilePath.h"
-#include "lib/CommandLine.h"
-#include "lib/V8.h"
-#include "graphics/Vertex.h"
-#include "graphics/ModelViewProjection.h"
-#include "data/Data.h"
-#include "data/xml/XmlRange.h"
-#include "data/xml/XmlAttribute.h"
-#include "data/xml/XmlNode.h"
-#include "data/xml/XmlDocument.h"
-#include "data/xml/XmlSerializable.h"
-#include "data/XmlData.h"
-#include "graphics/Image.h"
-#include "graphics/vulkan//VulkanFunctions.h"
-#include "graphics/vulkan/Shader.h"
-#include "graphics/vulkan/Vulkan.h"
-#include "Log.h"
-#include "Version.h"
-#include "VersionInfo.h"
-#include "SystemVersionInfo.h"
+#include "global.h"
+#include "lib/string_util.h"
+#include "lib/file_path.h"
+#include "lib/command_line.h"
+#include "lib/v8.h"
+#include "graphics/vertex.h"
+#include "graphics/model_view_projection.h"
+#include "content/content.h"
+#include "content/xml/xml_range.h"
+#include "content/xml/xml_attribute.h"
+#include "content/xml/xml_node.h"
+#include "content/xml/xml_document.h"
+#include "content/xml/xml_serializable.h"
+#include "content/xml_content.h"
+#include "graphics/image.h"
+#include "graphics/vulkan//vulkan_functions.h"
+#include "graphics/vulkan/shader.h"
+#include "graphics/vulkan/vulkan.h"
+#include "graphics/vulkan/texture.h"
+#include "log.h"
+#include "version.h"
+#include "version_info.h"
+#include "framework/framework.h"
+#include "framework/system_info.h"
+#include "framework/system_config.h"
+#include "framework/component_info.h"
 
-#include "addin/AddinHeader.h"
-#include "addin/Addin.h"
-#include "scripting/ScriptEnvironment.h"
-#include "scripting/Scriptable.h"
-#include "scripting/Script.h"
+#include "addin/addin_header.h"
+#include "addin/addin.h"
+#include "scripting/script_environment.h"
+#include "scripting/scriptable.h"
+#include "scripting/script.h"
 
-#include "platform/InputKey.h"
-#include "platform/PlatformConfig.h"
-#include "platform/Platform.h"
+#include "platform/input_key.h"
+#include "platform/platform_config.h"
+#include "platform/platform.h"
 #ifdef PLATFORM_WIN32VULKAN
-#include "platform/Win32Vulkan.h"
+#include "platform/win32_vulkan.h"
 #endif
 #ifdef PLATFORM_GLFWVULKAN
-#include "platform/VulkanPlatform.h"
-#include "platform/GLFWVulkanConfig.h"
-#include "platform/GLFWVulkan.h"
+#include "platform/vulkan_platform.h"
+#include "platform/glfw_vulkan_config.h"
+#include "platform/glfw_vulkan.h"
 #endif
-#include "platform/DefaultPlatformConfig.h"
-#include "SystemConfig.h"
-#include "framework/GameTime.h"
-#include "framework/ComponentConfig.h"
-#include "framework/Component.h"
-#include "framework/EntitySpecification.h"
-#include "framework/Entity.h"
-#include "framework/GameHeader.h"
-#include "framework/GameConfig.h"
-#include "framework/GameSpecification.h"
-#include "framework/Game.h"
-#include "System.h"
-#include "addin/SystemProvider.h"
-#include "EngineConfig.h"
-#include "Engine.h"
+#include "platform/default_platform.h"
+#include "framework/game_time.h"
+#include "framework/component_config.h"
+#include "framework/component.h"
+#include "framework/entity_specification.h"
+#include "framework/entity.h"
+#include "framework/game_header.h"
+#include "framework/game_config.h"
+#include "framework/game_specification.h"
+#include "framework/game.h"
+#include "framework/system.h"
+#include "addin/system_provider.h"
+#include "engine_config.h"
+#include "engine.h"

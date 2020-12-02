@@ -9,34 +9,52 @@ namespace game::framework {
 
     class Game;
 
+    enum class EntityStatus : uint32_t {
+        Created = 0,
+        Initialized = 1,
+        Spawned = 2,
+        Killed = 3,
+        Destroyed = 4
+    };
+
     class GAME_API Entity {
     private:
 
         Game* game_;
 
-        unique_ptr<EntitySpecification> specification_;
+        EntityStatus status_;
 
-        unordered_map<string, unique_ptr<Component>> components_;
+        std::unique_ptr<EntitySpecification> specification_;
 
-        Entity(const string& name, const string& description);
+        std::unordered_map<std::string, std::unique_ptr<Component>> components_;
+
+        Entity(Game& game, const std::string& name, const std::string& description);
+        Entity(Game& game, EntitySpecification* specification);
 
     protected:
 
-        EntitySpecification& GetSpecification();
+        
 
     public:
 
-        static Entity* Create(const string& name, const string& description = "");
-        static Entity* Create(EntitySpecification* specification);
-        static Entity* Create(const Entity& parent);
+        static Entity* Create(Game& game, const std::string& name, const std::string& description = "");
+        static Entity* Create(Game& game, EntitySpecification* specification);
+        static Entity* Create(Game& game, const Entity& parent);
+
+        void AddComponent(Component* component);
 
         bool Initialize();
-        void Update(GameTime& gameTime);
+        bool Spawn(const GameTime& game_time);
+        void Update(const GameTime& gameTime);
+        void Kill();
         void Destroy();
 
-
-        const string& GetName() const;
-        const string& GetDescription() const;
+        Game& GetGame() const;
+        EntitySpecification& GetSpecification();
+        EntityStatus GetStatus() const;
+        const std::string& GetName() const;
+        const std::string& GetDescription() const;
+        const std::vector<std::reference_wrapper<Component>> GetComponents() const;
 
     };
 

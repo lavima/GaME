@@ -3,7 +3,8 @@
 * Author: Lars Vidar Magnusson
 */
 
-#include "../GaME.h"
+#include "../global.h"
+#include "v8.h"
 
 
 /*

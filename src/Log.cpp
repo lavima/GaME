@@ -3,80 +3,60 @@ File: Log.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include "GaME.h"
+#include <string>
+#include <fstream>
+#include <memory>
+#include <vector>
+#include <iostream>
+#include <list>
+
+#include "global.h"
+#include "Log.h"
 
 namespace game {
 
-    Log::Log(EventType level) {
+    Log* Log::singleton_ = nullptr;
 
-        this->level_ = level;
-
-        out_string_ = unique_ptr<stringstream>(new stringstream());
-        out_streams_.push_back(OutStream{ EventType::All, out_string_.get() });
-
+    Log::Log(const std::string& filename) {
+        out_main_ = std::unique_ptr<std::ofstream>(new std::ofstream(filename, std::ios::out));
+        out_streams_.push_back(out_main_.get());
     }
 
-    Log::Log(const string& filename, EventType level) {
-
-        this->level_ = level;
-
-        out_main_ = unique_ptr<ofstream>(new ofstream(filename, ios::out));
-        out_streams_.push_back(OutStream{ EventType::All, out_main_.get() });
-        out_string_ = unique_ptr<stringstream>(new stringstream());
-        out_streams_.push_back(OutStream{ EventType::All, out_string_.get() });
-
-    }
-
-    Log::Log(ostream& out, EventType level) {
-
-        this->level_ = level;
-
-        out_streams_.push_back(OutStream{ EventType::All, &out });
-        out_string_ = unique_ptr<stringstream>(new stringstream());
-        out_streams_.push_back(OutStream{ EventType::All, out_string_.get() });
-
+    Log::Log(std::ostream& out) {
+        out_streams_.push_back(&out);
     }
 
     Log::~Log() {
-
         if (out_main_)
             (*out_main_).close();
+    }
 
+    Log& Log::Get() { 
+        if (!singleton_)
+            singleton_ = new Log(std::cout);
+        return *singleton_;
+    }
+
+    void Log::Set(Log& singleton) { 
+        singleton_ = &singleton;
     }
 
     void Log::AddListener(LogListener* listener) {
-
         listeners_.push_back(listener);
-
     }
 
-    void Log::AddOutputStream(ostream& out, EventType level) {
-
-        out_streams_.push_back(OutStream{ level, &out });
-
+    void Log::AddOutputStream(std::ostream& out) {
+        out_streams_.push_back(&out);
     }
 
-    void Log::SetLevel(EventType level) { this->level_ = level; }
-    EventType Log::GetLevel() { return level_; }
-
-    void Log::output(EventType type, const string& text) {
-
-        for (auto os:out_streams_) {
-            if (os.level<type)
-                continue;
-            *os.out<<text;
-        }
-
+    void Log::output(EventType type, const std::string& text) {
+        for (auto os:out_streams_)
+            *os<<text;
     }
 
-    void Log::dispatchEvent(EventType type, const string& text) {
-
-        for (auto listener:listeners_) {
-            if (listener->GetLevel()<type)
-                continue;
+    void Log::dispatchEvent(EventType type, const std::string& text) {
+        for (auto listener:listeners_)
             listener->Event(type, text);
-        }
-
     }
 
 }

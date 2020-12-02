@@ -132,9 +132,6 @@
     <ClInclude Include="..\src\data\Data.h">
       <Filter>Header Files\data</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\data\DataLoader.h">
-      <Filter>Header Files\data</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\data\xml\XmlNode.h">
       <Filter>Header Files\data\xml</Filter>
     </ClInclude>
@@ -216,28 +213,40 @@
     <ClInclude Include="..\src\framework\Component.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\SystemConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\SystemVersionInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\addin\Addin.h">
       <Filter>Header Files\addin</Filter>
     </ClInclude>
     <ClInclude Include="..\src\addin\AddinHeader.h">
       <Filter>Header Files\addin</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\addin\SystemProvider.h">
-      <Filter>Header Files\addin</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\framework\ComponentConfig.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
     <ClInclude Include="..\src\framework\EntitySpecification.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\System.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\SystemConfig.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\SystemInfo.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\addin\SystemProvider.h">
+      <Filter>Header Files\addin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\ComponentInfo.h">
+      <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\graphics\vulkan\Texture.h">
+      <Filter>Header Files\graphics\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\framework\framework.h">
       <Filter>Header Files\framework</Filter>
     </ClInclude>
   </ItemGroup>
@@ -350,15 +359,6 @@
     <ClCompile Include="..\src\graphics\Image.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\System.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\SystemConfig.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\SystemVersionInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\addin\Addin.cpp">
       <Filter>Source Files\addin</Filter>
     </ClCompile>
@@ -373,6 +373,21 @@
     </ClCompile>
     <ClCompile Include="..\src\framework\EntitySpecification.cpp">
       <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\System.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\SystemConfig.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\SystemInfo.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\framework\ComponentInfo.cpp">
+      <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\graphics\vulkan\Texture.cpp">
+      <Filter>Source Files\graphics\vulkan</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

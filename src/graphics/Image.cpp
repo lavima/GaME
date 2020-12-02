@@ -1,11 +1,16 @@
-#include "../GaME.h"
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <cassert>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include "../global.h"
+#include "../content/Content.h"
+#include "image.h"
+
 namespace game::graphics {
-
-
 
     bool Image::Load() {
 
@@ -30,7 +35,7 @@ namespace game::graphics {
     }
 
     void Image::Unload() {
-        vector<uint8_t>().swap(image_data_);
+        std::vector<uint8_t>().swap(image_data_);
     }
 
     uint32_t Image::GetWidth() const {
@@ -45,14 +50,14 @@ namespace game::graphics {
         return num_channels_;
     }
 
-    const vector<uint8_t>& Image::GetData() const {
+    const std::vector<uint8_t>& Image::GetData() const {
         return image_data_;
     }
 
     Image::Loader Image::Loader::singleton;
 
     Image::Loader::Loader() {
-        vector<string> extensions = {
+        std::vector<std::string> extensions = {
             EXTENSION_IMAGE_BMP,
             EXTENSION_IMAGE_GIF,
             EXTENSION_IMAGE_HDR,
@@ -64,10 +69,10 @@ namespace game::graphics {
             EXTENSION_IMAGE_PSD,
             EXTENSION_IMAGE_TGA
         };
-        Data::RegisterTypes(extensions, &singleton);
+        Content::RegisterTypes(extensions, &singleton);
     }
 
-    data::Data* Image::Loader::Load(const string& filename) {
+    content::Content* Image::Loader::Load(const std::string& filename) {
 
         Image* image = new Image(filename);
 

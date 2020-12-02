@@ -15,13 +15,13 @@ namespace game::graphics::vulkan {
 
         Shader(VkDevice device, VkShaderModule vertex_module, VkShaderModule fragment_module);
 
-        static VkShaderModule CreateModule(VkDevice device, const string& filename);
+        static VkShaderModule CreateModule(VkDevice device, const std::string& filename);
 
     public:
 
-        static Shader* Create(VkDevice device, const string& vertex_filename, const string& frag_filename);
+        static Shader* Create(VkDevice device, const std::string& vertex_filename, const std::string& frag_filename);
 
-        vector<VkPipelineShaderStageCreateInfo> GetShaderStages() const;
+        std::vector<VkPipelineShaderStageCreateInfo> GetShaderStages() const;
         void Destroy();
 
     };

@@ -3,21 +3,28 @@ File: Script.h
 Author: Lars Vidar Magnusson
  */
 
-#include "../GaME.h"
+#include <string>
+#include <fstream>
+
+#include <v8.h>
+
+#include "../global.h"
+#include "script_environment.h"
+#include "script.h"
 
 namespace game::scripting {
 
-    Script::Script(const string& name) {
+    Script::Script(const std::string& name) {
         this->name = name;
     }
 
-    Script* Script::Load(ScriptEnvironment& environment, const string& filename) {
+    Script* Script::Load(ScriptEnvironment& environment, const std::string& filename) {
 
-        ifstream file(filename, ios::in);
+        std::ifstream file(filename, std::ios::in);
 
         if (!file)
             return nullptr;
-        string source;
+        std::string source;
         file.seekg(0, std::ios::end);
         source.resize(file.tellg());
         file.seekg(0, std::ios::beg);
@@ -69,13 +76,13 @@ namespace game::scripting {
 
     }
 
-    void Script::InvokeMethod(const string& methodName) {
+    void Script::InvokeMethod(const std::string& methodName) {
 
 
 
     }
 
-    const string& Script::GetName() { return name; }
+    const std::string& Script::GetName() { return name; }
     ScriptEnvironment& Script::GetEnvironment() { return *environment; }
 
 }

@@ -3,7 +3,25 @@ File: Vulkan.cpp
 Author: Lars Vidar Magnusson
 */
 
-#include "../../GaME.h"
+#define NOMINMAX = 1
+
+#include <array>
+#include <vector>
+#include <set>
+#include <unordered_map>
+#include <optional>
+#include <string>
+#include <algorithm>
+
+#include <glm/glm.hpp>
+#include <vulkan/vulkan.h>
+
+#include "../../global.h"
+#include "../../content/content.h"
+#include "../vertex.h"
+#include "../image.h"
+#include "vulkan.h"
+
 
 namespace game::graphics::vulkan {
 
@@ -64,14 +82,14 @@ namespace game::graphics::vulkan {
 
     }
 
-    bool Vulkan::CheckDeviceExtensionSupport(VkPhysicalDevice device, const vector<reference_wrapper<const string>> required_extensions) {
+    bool Vulkan::CheckDeviceExtensionSupport(VkPhysicalDevice device, const std::vector<std::reference_wrapper<const std::string>> required_extensions) {
 
         uint32_t extension_count;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extension_count, nullptr);
-        vector<VkExtensionProperties> available_extensions(extension_count);
+        std::vector<VkExtensionProperties> available_extensions(extension_count);
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extension_count, available_extensions.data());
 
-        set<string> required(required_extensions.begin(), required_extensions.end());
+        std::set<std::string> required(required_extensions.begin(), required_extensions.end());
 
         for (const auto& extension:available_extensions)
             required.erase(extension.extensionName);
@@ -106,7 +124,7 @@ namespace game::graphics::vulkan {
 
     }
 
-    VkSurfaceFormatKHR Vulkan::ChooseSwapSurfaceFormat(const vector<VkSurfaceFormatKHR>& available_formats) {
+    VkSurfaceFormatKHR Vulkan::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& available_formats) {
 
         for (const auto& format:available_formats) {
             if (format.format==VK_FORMAT_B8G8R8A8_SRGB&&format.colorSpace==VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
@@ -118,7 +136,7 @@ namespace game::graphics::vulkan {
 
     }
 
-    VkPresentModeKHR Vulkan::ChooseSwapPresentMode(const vector<VkPresentModeKHR>& available_modes) {
+    VkPresentModeKHR Vulkan::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& available_modes) {
 
         for (const auto& mode:available_modes) {
             if (mode==VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -133,8 +151,8 @@ namespace game::graphics::vulkan {
         if (capabilities.currentExtent.width!=UINT32_MAX)
             return capabilities.currentExtent;
 
-        desired_extent.width = max(capabilities.minImageExtent.width, min(capabilities.maxImageExtent.width, desired_extent.width));
-        desired_extent.height = max(capabilities.minImageExtent.height, min(capabilities.maxImageExtent.height, desired_extent.height));
+        desired_extent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, desired_extent.width));
+        desired_extent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, desired_extent.height));
 
         return desired_extent;
 
@@ -157,50 +175,50 @@ namespace game::graphics::vulkan {
 
     }
 
-    const string Vulkan::GetResultString(VkResult result) {
+    const std::string Vulkan::GetResultString(VkResult result) {
         if (result==VK_SUCCESS)
-            return string("Success");
+            return std::string("Success");
         else if (result==VK_NOT_READY)
-            return string("Not Ready");
+            return std::string("Not Ready");
         else if (result==VK_TIMEOUT)
-            return string("Timeout");
+            return std::string("Timeout");
         else if (result==VK_EVENT_SET)
-            return string("Event Set");
+            return std::string("Event Set");
         else if (result==VK_EVENT_RESET)
-            return string("Event Reset");
+            return std::string("Event Reset");
         else if (result==VK_INCOMPLETE)
-            return string("Incomplete");
+            return std::string("Incomplete");
         else if (result==VK_ERROR_OUT_OF_HOST_MEMORY)
-            return string("Out of Host Memory");
+            return std::string("Out of Host Memory");
         else if (result==VK_ERROR_OUT_OF_DEVICE_MEMORY)
-            return string("Out of Device Memory");
+            return std::string("Out of Device Memory");
         else if (result==VK_ERROR_INITIALIZATION_FAILED)
-            return string("Initialization Failed");
+            return std::string("Initialization Failed");
         else if (result==VK_ERROR_DEVICE_LOST)
-            return string("Device Lost");
+            return std::string("Device Lost");
         else if (result==VK_ERROR_MEMORY_MAP_FAILED)
-            return string("Memory Map Failed");
+            return std::string("Memory Map Failed");
         else if (result==VK_ERROR_LAYER_NOT_PRESENT)
-            return string("Layer Not Present");
+            return std::string("Layer Not Present");
         else if (result==VK_ERROR_EXTENSION_NOT_PRESENT)
-            return string("Extension Not Present");
+            return std::string("Extension Not Present");
         else if (result==VK_ERROR_FEATURE_NOT_PRESENT)
-            return string("Feature Not Present");
+            return std::string("Feature Not Present");
         else if (result==VK_ERROR_INCOMPATIBLE_DRIVER)
-            return string("Incompatible Driver");
+            return std::string("Incompatible Driver");
         else if (result==VK_ERROR_TOO_MANY_OBJECTS)
-            return string("Too Many Objects");
+            return std::string("Too Many Objects");
         else if (result==VK_ERROR_FORMAT_NOT_SUPPORTED)
-            return string("Format Not Supported");
+            return std::string("Format Not Supported");
         else if (result==VK_ERROR_FRAGMENTED_POOL)
-            return string("Fragmented Pool");
+            return std::string("Fragmented Pool");
         else
-            return string("UNKNOWN Vulkan Error");
+            return std::string("UNKNOWN Vulkan Error");
     }
 
     bool Vulkan::CreateBuffer(VkPhysicalDevice physical_device, VkDevice device, 
         VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, 
-        VkSharingMode sharing_mode, const vector<uint32_t>& queue_indices,
+        VkSharingMode sharing_mode, const std::vector<uint32_t>& queue_indices,
         VkBuffer* buffer, VkDeviceMemory* buffer_memory) {
 
         VkBufferCreateInfo buffer_info{};
@@ -280,7 +298,7 @@ namespace game::graphics::vulkan {
 
     bool Vulkan::CreateImage(VkPhysicalDevice physical_device, VkDevice device, uint32_t width, uint32_t height,
         VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties,
-        VkSharingMode sharing_mode, const vector<uint32_t>& queue_indices,
+        VkSharingMode sharing_mode, const std::vector<uint32_t>& queue_indices,
         VkImage* image, VkDeviceMemory* image_memory) {
 
         VkImageCreateInfo image_info{};
@@ -321,9 +339,34 @@ namespace game::graphics::vulkan {
         return true;
     }
 
+    bool Vulkan::CreateImageView(VkImage image, VkDevice device, VkImageViewType view_type, VkFormat format, VkImageView* image_view) {
+
+        VkImageViewCreateInfo create_info{};
+        create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        create_info.pNext = nullptr;
+        create_info.flags = 0;
+        create_info.image = image;
+        create_info.viewType = view_type;
+        create_info.format = format;
+        create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        create_info.subresourceRange.baseMipLevel = 0;
+        create_info.subresourceRange.levelCount = 1;
+        create_info.subresourceRange.baseArrayLayer = 0;
+        create_info.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(device, &create_info, nullptr, image_view)!=VK_SUCCESS)
+            return false;
+
+        return true;
+    }
+
     bool Vulkan::CreateTextureImage(VkPhysicalDevice physical_device, VkDevice device, 
-        VkCommandPool command_pool, VkQueue queue,
-        Image& image, VkSharingMode sharing_mode, const vector<uint32_t>& queue_indices,
+        VkCommandPool command_pool, VkQueue queue, VkSharingMode sharing_mode, 
+        const std::vector<uint32_t>& queue_indices, Image& image,
         VkImage* texture_image, VkDeviceMemory* texture_image_memory) {
 
         if (!image.GetData().size())
@@ -363,6 +406,36 @@ namespace game::graphics::vulkan {
 
         return true;
 
+    }
+
+    bool Vulkan::CreateTextureSampler(VkDevice device, VkFilter mag_filter, VkFilter min_filter, 
+        VkSamplerMipmapMode mipmap_mode, float mip_bias, float min_lod, float max_lod, 
+        VkSamplerAddressMode mode_u, VkSamplerAddressMode mode_v, VkSamplerAddressMode mode_w, 
+        VkBool32 anistrophy, float max_anistrophy, VkSampler* sampler) {
+        VkSamplerCreateInfo create_info{};
+        create_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        create_info.pNext = nullptr;
+        create_info.flags = 0;
+        create_info.magFilter = mag_filter;
+        create_info.minFilter = min_filter;
+        create_info.mipmapMode = mipmap_mode;
+        create_info.mipLodBias = mip_bias;
+        create_info.minLod = min_lod;
+        create_info.maxLod = max_lod;
+        create_info.addressModeU = mode_u;
+        create_info.addressModeV = mode_v;
+        create_info.addressModeW = mode_w;
+        create_info.anisotropyEnable = anistrophy;
+        create_info.maxAnisotropy = max_anistrophy;
+        create_info.compareEnable = VK_FALSE;
+        create_info.compareOp = VK_COMPARE_OP_ALWAYS;
+        create_info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+        create_info.unnormalizedCoordinates = VK_FALSE;
+
+        if (vkCreateSampler(device, &create_info, nullptr, sampler)!=VK_SUCCESS)
+            return false;
+
+        return true;
     }
 
     bool Vulkan::ChangeImageLayout(VkDevice device, VkCommandPool command_pool, VkQueue queue, 
@@ -443,17 +516,17 @@ namespace game::graphics::vulkan {
 
     }
 
-    void Vulkan::EndCommandBuffer(VkDevice device, VkCommandPool command_pool, VkQueue queue, VkCommandBuffer command_buffer) {
+    void Vulkan::EndCommandBuffer(VkDevice device, VkCommandPool command_pool, VkQueue submit_queue, VkCommandBuffer command_buffer) {
 
         vkEndCommandBuffer(command_buffer);
 
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &command_buffer;
+        VkSubmitInfo submit_info{};
+        submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submit_info.commandBufferCount = 1;
+        submit_info.pCommandBuffers = &command_buffer;
 
-        vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
-        vkQueueWaitIdle(queue);
+        vkQueueSubmit(submit_queue, 1, &submit_info, VK_NULL_HANDLE);
+        vkQueueWaitIdle(submit_queue);
 
         vkFreeCommandBuffers(device, command_pool, 1, &command_buffer);
 
@@ -470,9 +543,9 @@ namespace game::graphics::vulkan {
 
     }
 
-    array<VkVertexInputAttributeDescription, 2> Vertex::GetAttributeDescriptions() {
+    std::array<VkVertexInputAttributeDescription, 2> Vertex::GetAttributeDescriptions() {
         
-        array<VkVertexInputAttributeDescription, 2> description{};
+        std::array<VkVertexInputAttributeDescription, 2> description{};
 
         description[0].binding = 0;
         description[0].location = 0;

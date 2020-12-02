@@ -26,22 +26,22 @@ namespace game::platform {
             virtual Platform* Create(Engine& engine, PlatformConfig& config) = 0;
         };
 
-        static void RegisterImplementation(const string& name, Platform::Creator* creator);
+        static void RegisterImplementation(const std::string& name, Platform::Creator* creator);
 
     private:
 
-        static unordered_map<string, Platform::Creator*>* implementations_;
+        static std::unordered_map<std::string, Platform::Creator*>* implementations_;
 
-        const string implementation_name_;
+        const std::string implementation_name_;
 
         Engine& engine_;
         PlatformConfig& config_;
 
-        unordered_map<KeyCode, InputKeyWritable> input_keys_;
+        std::unordered_map<KeyCode, InputKeyWritable> input_keys_;
 
     protected:
 
-        Platform(const string& name, Engine& engine, PlatformConfig& config)
+        Platform(const std::string& name, Engine& engine, PlatformConfig& config)
             : implementation_name_(name), engine_(engine), config_(config) {}
 
     public:
@@ -64,18 +64,18 @@ namespace game::platform {
 #ifdef LoadLibrary
 #undef LoadLibrary
 #endif
-        virtual void* LoadLibrary(const string& filename) = 0;
+        virtual void* LoadLibrary(const std::string& filename) = 0;
 
         virtual void UnloadLibrary(void* handle) = 0;
 
-        virtual void* LoadLibrarySymbol(void* handle, const string& name) = 0;
+        virtual void* LoadLibrarySymbol(void* handle, const std::string& name) = 0;
 
         virtual double GetSystemTime() = 0;
 
         /*
         * Creates a new map with constant reference access to all input keys
         */
-        const unordered_map<KeyCode, reference_wrapper<const InputKey>> GetInputKeys();
+        const std::unordered_map<KeyCode, std::reference_wrapper<const InputKey>> GetInputKeys();
 
     public:
 
@@ -85,7 +85,7 @@ namespace game::platform {
 
         Engine& GetEngine();
         PlatformConfig& GetConfig();
-        unordered_map<KeyCode, InputKeyWritable> GetWritableInputKeys();
+        std::unordered_map<KeyCode, InputKeyWritable> GetWritableInputKeys();
 
     };
 

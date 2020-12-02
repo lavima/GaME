@@ -1,12 +1,2 @@
-* Linux build system:
-  The current build system is scons, but other candidates (Make, ninja, ...) 
-  exists. What is better for auto generation?
-
-* XML library:
-  The current solution for parsing and writing XML is to use Xerces. I am unsure
-  whether or not this is a good solution. On one hand it gives us a powerful
-  library for XML management, but on the other hand it might be a bit too much.
-
-* XML in memory:
-  XML data is currently loaded in memory during execution. This is wasteful and
-  should not be required.
+2020-11-16
+  Update to suitable licence according to third party software

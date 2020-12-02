@@ -5,11 +5,11 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-namespace game {
+namespace game::framework {
 
     /*
     * System is the base class for all engine subsystems such as a renderer or audio system. 
-    * All systems must be created through the factory pattern provided by this class.
+    * Trace systems must be created through the factory pattern provided by this class.
     */
     class GAME_API System {
         friend class addin::ISystemProvider;
@@ -24,10 +24,12 @@ namespace game {
     private:
 
 #ifndef DLL_BUILD
-        static unordered_map<string, ICreator*>* creators_;
+        static std::unordered_map<std::string, ICreator*>* creators_;
 #endif
 
         Engine* engine_;
+
+        SystemInfo info_;
         SystemConfig* config_;
 
     protected:
@@ -36,7 +38,7 @@ namespace game {
         * Protected constructor to ensure that engine components must be created through the static Load
         * function
         */
-        System(Engine& engine, SystemConfig& config);
+        System(Engine& engine, const SystemInfo& info, SystemConfig& config);
 
         Engine& GetEngine();
 
@@ -51,17 +53,20 @@ namespace game {
         /*
         * RegisterType must be invoked by all system implementations
         */
-        static void RegisterType(const string& typeName, ICreator* creator);
+        static void RegisterType(const std::string& typeName, ICreator* creator);
         
-        static bool IsTypeAvailable(const string& type_name);
+        static bool IsTypeAvailable(const std::string& type_name);
 
         /*
-        * Initialize is invoked by the engine to initialize an engine component
+        * Initialize is invoked by the engine to initialize a system
         */
         virtual bool Initialize() = 0;
 
+        virtual void GameLoaded(Game& game) = 0;
+        virtual void GameStarted(Game& game) = 0;
+
         /*
-        * Update is invoked by the engine_ on regular intervals
+        * Update is invoked by the engine on regular intervals
         */
         virtual bool Update(framework::GameTime& gameTime) = 0;
 
@@ -70,6 +75,7 @@ namespace game {
         */
         virtual void Destroy() = 0;
 
+        const SystemInfo& GetInfo() const;
         SystemConfig& GetConfig();
 
     };

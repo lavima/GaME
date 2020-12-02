@@ -26,13 +26,13 @@ namespace game {
 
     private:
 
-        string executablePath;
+        std::string executablePath;
 
     public:
 
         EngineInfo() : VersionInfo(ENGINE_NAME, ENGINE_DESCRIPTION, ENGINE_VERSION) {}
 
-        const string& GetExecutablePath() const { return executablePath; }
+        const std::string& GetExecutablePath() const { return executablePath; }
 
     };
 
@@ -51,19 +51,25 @@ namespace game {
         EngineInfo info_;
         EngineStatus status_;
 
-        string config_filename_;
-        unique_ptr<EngineConfig> config_;
+        std::string config_filename_;
+        std::unique_ptr<EngineConfig> config_;
 
-        vector<addin::Addin*> addins_;
-        unordered_map<string, System*> systems_;
+        std::vector<addin::Addin*> addins_;
+        
+        std::unordered_map<std::string, std::unique_ptr<framework::System>> systems_;
+
+        std::unordered_map<std::string, framework::System*> systems_by_type_;
+
+        std::unordered_map<std::string, std::vector<std::reference_wrapper<framework::Component>>> components_by_name_;
+        std::unordered_map<std::string, std::vector<std::reference_wrapper<framework::Component>>> components_by_type_;
 
         scripting::ScriptEnvironment* script_environment_;
-        unique_ptr<platform::Platform> platform_;
+        std::unique_ptr<platform::Platform> platform_;
 
-        unique_ptr<Log> log_;
-        unique_ptr<ofstream> log_file_;
+        Log* log_;
+        std::unique_ptr<std::ofstream> log_file_;
 
-        unique_ptr<framework::Game> game_;
+        std::unique_ptr<framework::Game> game_;
 
     public:
 
@@ -73,16 +79,21 @@ namespace game {
         void Run();
         void Stop();
 
-        bool LoadGame(const string& filename);
+        bool LoadGame(const std::string& filename);
         bool LoadGame(framework::Game& game);
         void UnloadGame();
 
-        bool LoadAddin(const string& filename);
+        bool LoadAddin(const std::string& filename);
 
-        bool HasSystemType(const string& type_name) const;
-        //void AddSystem(const string &name, const string &type_name);
-        bool AddSystem(System* system);
-        System* GetSystem(const string& name);
+        bool HasSystemType(const std::string& type_name) const;
+
+        bool LoadSystem(framework::SystemConfig& system_config);
+        
+        std::optional<std::reference_wrapper<framework::System>> GetSystemByName(const std::string& name);
+        std::optional<std::reference_wrapper<framework::System>> GetSystemByType(const std::string& type_name);
+
+        std::optional<const std::vector<std::reference_wrapper<framework::Component>>> GetComponentsByName(const std::string& name);
+        std::optional<const std::vector<std::reference_wrapper<framework::Component>>> GetComponentsByType(const std::string& type_name);
 
         const EngineInfo& GetInfo();
         scripting::ScriptEnvironment& GetScriptEnvironment();
@@ -91,6 +102,8 @@ namespace game {
         Log& GetLog();
 
     private:
+
+        void UpdateComponentsCache();
 
         void shutdown();
 
