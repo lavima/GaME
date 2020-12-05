@@ -1,0 +1,2 @@
+# No overrides for now. File needed to make GN build work for the default 
+# git-checkout of the vulkan headers (created for chromium I think...)
