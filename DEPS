@@ -1,7 +1,7 @@
 # Base on code from https://github.com/victorgomes/v8-gn-example 
 # Original LICENSE can be found in LICENSE.v8-gn-example
 
-gclient_gn_args_file = 'build/config/gclient_args.gni'
+gclient_gn_args_file = 'game/build/config/gclient_args.gni'
 
 gclient_gn_args = [
   'checkout_google_benchmark',
@@ -144,33 +144,33 @@ hooks = [
     'name': 'win_toolchain',
     'pattern': '.',
     'condition': 'checkout_win',
-    'action': ['python', 'build/vs_toolchain.py', 'update'],
+    'action': ['python', 'game/build/vs_toolchain.py', 'update'],
   },
   {
     # Update the Mac toolchain if necessary.
     'name': 'mac_toolchain',
     'pattern': '.',
     'condition': 'checkout_mac',
-    'action': ['python', 'build/mac_toolchain.py'],
+    'action': ['python', 'game/build/mac_toolchain.py'],
   },
   {
     'name': 'clang',
     'pattern': '.',
-    'action': ['python', 'tools/clang/scripts/update.py'],
+    'action': ['python', 'game/tools/clang/scripts/update.py'],
   },
   {
     # Update LASTCHANGE.
     'name': 'lastchange',
     'pattern': '.',
-    'action': ['python', 'build/util/lastchange.py',
-               '-o', 'build/util/LASTCHANGE'],
+    'action': ['python', 'game/build/util/lastchange.py',
+               '-o', 'game/build/util/LASTCHANGE'],
   },
   {
     'name': 'sysroot_x64',
     'pattern': '.',
     'condition': 'checkout_linux and checkout_x64',
     'action': ['python',
-               'build/linux/sysroot_scripts/install-sysroot.py',
+               'game/build/linux/sysroot_scripts/install-sysroot.py',
                '--arch=x64'],
   },
 ]

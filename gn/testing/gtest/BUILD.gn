@@ -4,5 +4,5 @@
 
 group("gtest") {
   testonly = true
-  public_deps = [ "//v8/testing/gtest" ]
+  public_deps = [ "//third_party/v8/testing/gtest" ]
 }

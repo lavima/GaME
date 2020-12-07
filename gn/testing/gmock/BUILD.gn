@@ -4,5 +4,5 @@
 
 group("gmock") {
   testonly = true
-  public_deps = [ "//v8/testing/gmock" ]
+  public_deps = [ "//third_party/v8/testing/gmock" ]
 }

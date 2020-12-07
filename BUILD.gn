@@ -1,0 +1,161 @@
+executable("game") {
+  sources = [ "src/main.cpp" ]
+  include_dirs = [ 
+    "third_party/glfw/include",
+    "third_party/glm",
+    "third_party/imgui",  
+    "third_party/pugixml/src",
+    "third_party/stb",  
+    "third_party/v8/include",  
+    "third_party/vulkan_headers/include"
+  ]
+  defines = [ "PLATFORM_GLFWVULKAN" ]
+  deps = [
+    ":game_base_source"
+  ]
+}
+
+source_set("game_base_source") {
+  sources = [
+    "src/addin/addin.cpp",
+    "src/addin/addin.h",
+    "src/addin/addin_header.cpp",
+    "src/addin/addin_header.h",
+    "src/addin/system_provider.h",
+    "src/content/xml/xml_attribute.cpp",
+    "src/content/xml/xml_attribute.h",
+    "src/content/xml/xml_document.cpp",
+    "src/content/xml/xml_ducument.h",
+    "src/content/xml/xml_node.cpp",
+    "src/content/xml/xml_node.h",
+    "src/content/xml/xml_range.h",
+    "src/content/xml/xml_serializable.h",
+    "src/content/content.cpp",
+    "src/content/content.h",
+    "src/content/xml_content.cpp",
+    "src/content/xml_content.h",
+    "src/framework/component.cpp",
+    "src/framework/component.h",
+    "src/framework/component_config.cpp",
+    "src/framework/component_config.h",
+    "src/framework/component_info.cpp",
+    "src/framework/component_info.h",
+    "src/framework/entity.cpp",
+    "src/framework/entity.h",
+    "src/framework/entity_specification.cpp",
+    "src/framework/entity_specification.h",
+    "src/framework/framework.h",
+    "src/framework/game.cpp",
+    "src/framework/game.h",
+    "src/framework/game_config.cpp",
+    "src/framework/game_config.h",
+    "src/framework/game_header.cpp",
+    "src/framework/game_header.h",
+    "src/framework/game_specification.cpp",
+    "src/framework/game_specification.h",
+    "src/framework/game_time.cpp",
+    "src/framework/game_time.h",
+    "src/framework/system.cpp",
+    "src/framework/system.h",
+    "src/framework/system_config.cpp",
+    "src/framework/system_config.h",
+    "src/framework/system_info.cpp",
+    "src/framework/system_info.h",
+    "src/graphics/vulkan/shader.cpp",
+    "src/graphics/vulkan/shader.h",
+    "src/graphics/vulkan/texture.cpp",
+    "src/graphics/vulkan/texture.h",
+    "src/graphics/vulkan/vulkan.cpp",
+    "src/graphics/vulkan/vulkan.h",
+    "src/graphics/vulkan/vulkan_functions.cpp",
+    "src/graphics/vulkan/vulkan_functions.h",
+    "src/graphics/image.cpp",
+    "src/graphics/image.h",
+    "src/graphics/model_view_projection.h",
+    "src/graphics/vertex.h",
+    "src/lib/command_line.cpp",
+    "src/lib/command_line.h",
+    "src/lib/file_path.cpp",
+    "src/lib/file_path.h",
+    "src/lib/string_util.cpp",
+    "src/lib/string_util.h",
+    "src/lib/v8.cpp",
+    "src/lib/v8.h",
+    "src/platform/default_platform.h",
+    "src/platform/glfw_vulkan.cpp",
+    "src/platform/glfw_vulkan.h",
+    "src/platform/glfw_vulkan_config.cpp",
+    "src/platform/glfw_vulkan_config.h",
+    "src/platform/input_key.cpp",
+    "src/platform/input_key.h",
+    "src/platform/platform.cpp",
+    "src/platform/platform.h",
+    "src/platform/platform_config.cpp",
+    "src/platform/platform_config.h",
+    "src/platform/vulkan_platform.cpp",
+    "src/platform/vulkan_platform.h",
+    "src/scripting/script.cpp",
+    "src/scripting/script.h",
+    "src/scripting/script_environment.cpp",
+    "src/scripting/script_environment.h",
+    "src/scripting/scriptable.cpp",
+    "src/scripting/scriptable.h",
+    "src/common_types.h",
+    "src/engine.cpp",
+    "src/engine.h",
+    "src/engine_config.cpp",
+    "src/engine_config.h",
+    "src/game.h",
+    "src/global.h",
+    "src/log.cpp",
+    "src/log.h",
+    "src/version.cpp",
+    "src/version.h",
+    "src/version_info.cpp",
+    "src/version_info.h"
+  ]
+
+  defines = [ "PLATFORM_GLFWVULKAN" ]
+  deps = [
+    "//third_party/glfw:glfw_source",
+    "//third_party/pugixml:pugixml_source",
+    "//third_party/v8:v8",
+    "//third_party/vulkan_headers:vulkan_headers"
+  ]
+  include_dirs = [ 
+    "third_party/glfw/include",
+    "third_party/glm",
+    "third_party/imgui",  
+    "third_party/pugixml/src",
+    "third_party/stb",  
+    "third_party/v8/include",  
+    "third_party/vulkan_headers/include"
+  ]
+}
+
+shared_library("vulkan_renderer") {
+  sources = [
+    "src/vulkan_renderer/addin.cpp",
+    "src/vulkan_renderer/addin.h",
+    "src/vulkan_renderer/config.cpp",
+    "src/vulkan_renderer/config.h",
+    "src/vulkan_renderer/mesh_component.cpp",
+    "src/vulkan_renderer/mesh_component.h",
+    "src/vulkan_renderer/renderer.cpp",
+    "src/vulkan_renderer/renderer.h"
+  ]
+  include_dirs = [ 
+    "third_party/glfw/include",
+    "third_party/glm",
+    "third_party/imgui",  
+    "third_party/pugixml/src",
+    "third_party/stb",  
+    "third_party/v8/include",  
+    "third_party/vulkan_headers/include"
+  ]
+  defines = [ "PLATFORM_GLFWVULKAN" ]
+  deps = [
+    ":game_base_source"
+  ]
+}
+
