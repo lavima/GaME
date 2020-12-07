@@ -60,25 +60,46 @@ vars = {
 
   'zlib_revision': 'd7f3ca98b2b0d5f72656502961a59353791c4f8a',
   'zlib_url': 'https://chromium.googlesource.com/chromium/src/third_party/zlib.git',
+
+# GaME Variables
+
+  'glfw_url': 'https://github.com/glfw/glfw.git',
+  'glfw_revision': '7e8da57094281c73a0be5669a4b79686b4917f6c',
+
+  'glm_url': 'https://github.com/g-truc/glm.git',
+  'glm_revision': '24a4befe80171966758983173f381ce1ef6c839f',
+
+  'imgui_url': 'https://github.com/ocornut/imgui.git',
+  'imgui_revision': '9874077fc0e364383ef997e3d4332172bfddc0b9',
+
+  'pugixml_url': 'https://github.com/zeux/pugixml.git',
+  'pugixml_revision': '5a0fd5d85f2b31f44c8df84a4bc51f453cef57ac',
+
+  'stb_url': 'https://github.com/nothings/stb.git',
+  'stb_revision': 'b42009b3b9d4ca35bc703f5310eedc74f584be58',
+
+  'vulkan_headers_url': 'https://github.com/KhronosGroup/Vulkan-Headers.git',
+  'vulkan_headers_revision': '7f9879b1b1fab53f719a9ed5e6e29533b10972b2',
+
 }
 deps = {
-  'base/trace_event/common': Var('trace_common_url') + '@' + Var('trace_common_revision'),
-  'build': Var('build_url') + '@' + Var('build_revision'),
-  'buildtools': Var('buildtools_url') + '@' + Var('buildtools_revision'),
-  'buildtools/clang_format/script': Var('buildtools_clang_format_url') + '@' + Var('buildtools_clang_format_revision'),
-  'buildtools/third_party/libc++/trunk': Var('buildtools_libcxx_url') + '@' + Var('buildtools_libcxx_revision'),
-  'buildtools/third_party/libc++abi/trunk': Var('buildtools_libcxxabi_url') + '@' + Var('buildtools_libcxxabi_revision'),
-  'buildtools/third_party/libunwind/trunk': Var('buildtools_libunwind_url') + '@' + Var('buildtools_libunwind_revision'),
-  'third_party/abseil-cpp': Var('abseil_cpp_url') + '@' + Var('abseil_cpp_revision'),
-  'third_party/depot_tools': Var('depot_tools_url') + '@' + Var('depot_tools_revision'),
-  'third_party/googletest/src': Var('googletest_url') + '@' + Var('googletest_revision'),
-  'third_party/icu': Var('icu_url') + '@' + Var('icu_revision'),
-  'third_party/jinja2': Var('jinja2_url') + '@' + Var('jinja2_revision'),
-  'third_party/markupsafe': Var('markupsafe_url') + '@' + Var('markupsafe_revision'),
-  'third_party/zlib': Var('zlib_url') + '@' + Var('zlib_revision'),
-  'third_party/v8': Var('v8_url') + '@' +  Var('v8_revision'),
-  'tools/clang': Var('clang_url') + '@' + Var('clang_revision'),
-  'buildtools/linux64': {
+  'game/base/trace_event/common': Var('trace_common_url') + '@' + Var('trace_common_revision'),
+  'game/build': Var('build_url') + '@' + Var('build_revision'),
+  'game/buildtools': Var('buildtools_url') + '@' + Var('buildtools_revision'),
+  'game/buildtools/clang_format/script': Var('buildtools_clang_format_url') + '@' + Var('buildtools_clang_format_revision'),
+  'game/buildtools/third_party/libc++/trunk': Var('buildtools_libcxx_url') + '@' + Var('buildtools_libcxx_revision'),
+  'game/buildtools/third_party/libc++abi/trunk': Var('buildtools_libcxxabi_url') + '@' + Var('buildtools_libcxxabi_revision'),
+  'game/buildtools/third_party/libunwind/trunk': Var('buildtools_libunwind_url') + '@' + Var('buildtools_libunwind_revision'),
+  'game/third_party/abseil-cpp': Var('abseil_cpp_url') + '@' + Var('abseil_cpp_revision'),
+  'game/third_party/depot_tools': Var('depot_tools_url') + '@' + Var('depot_tools_revision'),
+  'game/third_party/googletest/src': Var('googletest_url') + '@' + Var('googletest_revision'),
+  'game/third_party/icu': Var('icu_url') + '@' + Var('icu_revision'),
+  'game/third_party/jinja2': Var('jinja2_url') + '@' + Var('jinja2_revision'),
+  'game/third_party/markupsafe': Var('markupsafe_url') + '@' + Var('markupsafe_revision'),
+  'game/third_party/zlib': Var('zlib_url') + '@' + Var('zlib_revision'),
+  'game/third_party/v8': Var('v8_url') + '@' +  Var('v8_revision'),
+  'game/tools/clang': Var('clang_url') + '@' + Var('clang_revision'),
+  'game/buildtools/linux64': {
     'packages': [
       {
         'package': 'gn/gn/linux-amd64',
@@ -88,7 +109,7 @@ deps = {
     'dep_type': 'cipd',
     'condition': 'host_os == "linux"',
   },
-  'buildtools/mac': {
+  'game/buildtools/mac': {
     'packages': [
       {
         'package': 'gn/gn/mac-amd64',
@@ -98,7 +119,7 @@ deps = {
     'dep_type': 'cipd',
     'condition': 'host_os == "mac"',
   },
-  'buildtools/win': {
+  'game/buildtools/win': {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
@@ -108,6 +129,13 @@ deps = {
     'dep_type': 'cipd',
     'condition': 'host_os == "win"',
   },
+  # GaME dependencies
+  'game/third_party/glfw': Var('glfw_url') + '@' + Var('glfw_revision'),
+  'game/third_party/glm': Var('glm_url') + '@' + Var('glm_revision'),
+  'game/third_party/imgui': Var('imgui_url') + '@' + Var('imgui_revision'),
+  'game/third_party/pugixml': Var('pugixml_url') + '@' + Var('pugixml_revision'),
+  'game/third_party/stb': Var('stb_url') + '@' + Var('stb_revision'),
+  'game/third_party/vulkan_headers': Var('vulkan_headers_url') + '@' + Var('vulkan_headers_revision'),
 }
 
 hooks = [
