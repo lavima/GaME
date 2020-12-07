@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Addin library="vulkan_renderer/vulkan_renderer.dll">
+    <Name>VulkanRendererAddin</Name>
+    <Description>Addin providing a simple render</Description>
+    <Version>
+        <Major>0</Major>
+        <Minor>0</Minor>
+        <Release>1</Release>
+    </Version>
+    <System>
+        <Name>VulkanRenderer</Name>
+        <Description>Test renderer</Description>
+        <Version>
+            <Major>0</Major>
+            <Minor>0</Minor>
+            <Release>1</Release>
+        </Version>
+    </System>
+    <Component>
+        <Name>MeshComponent</Name>
+        <Description>Component for holding a vulkan mesh</Description>
+        <Version>
+            <Major>0</Major>
+            <Minor>0</Minor>
+            <Release>1</Release>
+        </Version>
+    </Component>
+</Addin>
