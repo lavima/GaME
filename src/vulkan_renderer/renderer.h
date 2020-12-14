@@ -91,7 +91,9 @@ namespace game::vulkanrenderer {
 #endif
 
         bool CreateInstance();
+#ifdef _DEBUG        
         bool CreateDebugMessenger();
+#endif
         bool FindSuitablePhysicalDevice(std::vector<std::reference_wrapper<const std::string>> extensions);
         bool CreateLogicalDevice(std::vector<std::reference_wrapper<const std::string>> extensions);
         bool CreateSwapChain();
@@ -113,11 +115,13 @@ namespace game::vulkanrenderer {
 
     public:
 
-        virtual bool Initialize() override;
-        virtual void GameLoaded(framework::Game& game) override;
-        virtual void GameStarted(framework::Game& game) override;
-        virtual bool Update(framework::GameTime&) override;
-        virtual void Destroy() override;
+        ~VulkanRenderer() override; 
+
+        bool Initialize() override;
+        void GameLoaded(framework::Game& game) override;
+        void GameStarted(framework::Game& game) override;
+        bool Update(framework::GameTime&) override;
+        void Destroy() override;
 
         VkPhysicalDevice GetPhysicalDevice();
         VkDevice GetDevice();

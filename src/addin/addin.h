@@ -24,7 +24,8 @@ namespace game::addin {
 
     };
 
-    typedef bool (*AddinFun_Register)(Engine&, AddinHeader&, AddinBindingInfo* info);
+#define ADDINFUN_REGISTER_TEMPLATE bool(Engine&, AddinHeader&, AddinBindingInfo*)
+    typedef std::function<ADDINFUN_REGISTER_TEMPLATE> AddinFun_Register;
 
 #define ADDINFUN_REGISTERADDIN "Register"
 
@@ -34,17 +35,19 @@ namespace game::addin {
     class GAME_API Addin {
     private:
 
-        void* handle_;
+        platform::LibraryHandle handle_;
 
         std::unique_ptr<AddinHeader> header_;
 
-        AddinFun_Register register_fun;
+        AddinFun_Register register_fun_;
 
         Addin(AddinHeader* header);
 
         void Register(Engine& engine, AddinHeader& header);
 
     public:
+
+        ~Addin();
 
         static Addin* Load(Engine& engine, const std::string& filename);
 

@@ -3,8 +3,6 @@ File: Vulkan.cpp
 Author: Lars Vidar Magnusson
 */
 
-#define NOMINMAX = 1
-
 #include <array>
 #include <vector>
 #include <set>
@@ -17,6 +15,7 @@ Author: Lars Vidar Magnusson
 #include <vulkan/vulkan.h>
 
 #include "../../global.h"
+#include "../../lib/file_path.h"
 #include "../../content/content.h"
 #include "../vertex.h"
 #include "../image.h"
@@ -25,12 +24,26 @@ Author: Lars Vidar Magnusson
 
 namespace game::graphics::vulkan {
 
+    QueueFamilyIndices::QueueFamilyIndices() {}
+    QueueFamilyIndices::QueueFamilyIndices(const QueueFamilyIndices& other) {
+        this->graphics_index = other.graphics_index;
+        this->present_index = other.present_index;
+        this->transfer_index = other.transfer_index;
+    }
+
     bool QueueFamilyIndices::IsComplete() {
         return graphics_index.has_value()&&present_index.has_value()&&transfer_index.has_value();
     }
 
+    SwapChainDetails::SwapChainDetails() {}
+    SwapChainDetails::SwapChainDetails(const SwapChainDetails& other) {
+        this->capabilities = other.capabilities;
+        this->formats = other.formats;
+        this->present_modes = other.present_modes;
+    }
+    SwapChainDetails::~SwapChainDetails() {}
+
     bool Vulkan::HasGraphicsQueue(VkPhysicalDevice device) {
-        QueueFamilyIndices indices;
 
         uint32_t queue_family_count = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(device, &queue_family_count, nullptr);

@@ -45,6 +45,8 @@ namespace game::framework {
 
 	public:
 
+    virtual ~SystemConfig();
+
 		static SystemConfig* Create(content::xml::XmlNode root_node);
 		static void RegisterType(const std::string& typeName, ILoader* loader);
 

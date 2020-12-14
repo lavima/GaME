@@ -3,13 +3,20 @@ File: system.cpp
 Author: Lars Vidar Magnusson
  */
 
+#include <functional>
 #include <string>
+#include <sstream>
+#include <list>
+#include <vector>
 #include <unordered_map>
 #include <memory>
 #include <cassert>
 #include <algorithm>
-#include <vector>
 #include <optional>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
@@ -66,6 +73,8 @@ namespace game::framework {
         config_ = &config;
 
     }
+
+    System::~System() {}
 
     Engine& System::GetEngine() {
         return *engine_;

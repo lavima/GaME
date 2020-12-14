@@ -7,11 +7,17 @@ Author: Lars Vidar Magnusson
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <list>
 #include <vector>
 #include <unordered_map>
 #include <functional>
 #include <memory>
 #include <optional>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
@@ -68,6 +74,8 @@ namespace game {
         Log::Get().AddOutputStream(std::cerr);
 
     }
+
+    Engine::~Engine() {}
 
     bool Engine::Initialize() {
 
@@ -152,7 +160,6 @@ namespace game {
         LOG_INFO("Notify systems that a new game has been started");
         for (auto& system_pair:systems_) {
             framework::System& system = *system_pair.second;
-            framework::SystemConfig& config = system.GetConfig();
             system.GameStarted(*game_);
         }
 
@@ -227,7 +234,6 @@ namespace game {
         LOG_INFO("Notify systems that a new game has been loaded");
         for (auto& system_pair:systems_) {
             framework::System& system = *system_pair.second;
-            framework::SystemConfig& config = system.GetConfig();
             system.GameLoaded(game);
         }
 
@@ -422,7 +428,7 @@ namespace game {
 
         _Scriptable::Register(environment);
 
-        v8::Handle<v8::ObjectTemplate> engine = v8::ObjectTemplate::New(environment.GetIsolate());
+        v8::Local<v8::ObjectTemplate> engine = v8::ObjectTemplate::New(environment.GetIsolate());
         engine->Set(v8::String::NewFromUtf8(environment.GetIsolate(), "loadGame", v8::NewStringType::kNormal).ToLocalChecked(),
             v8::FunctionTemplate::New(environment.GetIsolate(), scriptableLoadGame));
         engine->Set(v8::String::NewFromUtf8(environment.GetIsolate(), "loadAddin", v8::NewStringType::kNormal).ToLocalChecked(),

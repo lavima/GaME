@@ -7,6 +7,8 @@
 
 #include <cstdint>
 #include <string>
+#include <sstream>
+#include <list>
 #include <vector>
 #include <unordered_map>
 #include <functional>
@@ -70,6 +72,8 @@ namespace game::platform {
         window_ = nullptr;
     }
 
+    GLFWVulkan::~GLFWVulkan() {}
+
     void callbackKey(GLFWwindow* window, int, int, int, int);
 
     bool GLFWVulkan::Initialize() {
@@ -131,20 +135,6 @@ namespace game::platform {
 
     }
 
-    void* GLFWVulkan::LoadLibrary(const std::string& filename) {
-        HMODULE handle = LoadLibraryA(filename.c_str());
-        return (void*)handle;
-    }
-
-    void GLFWVulkan::UnloadLibrary(void* handle) {
-
-    }
-
-    void* GLFWVulkan::LoadLibrarySymbol(void* handle, const std::string& name) {
-        void* address = GetProcAddress((HMODULE)handle, name.c_str());
-        return address;
-    }
-
     double GLFWVulkan::GetSystemTime() {
         return glfwGetTime();
     }
@@ -160,7 +150,7 @@ namespace game::platform {
 
     void callbackKey(GLFWwindow* window, int, int, int, int) {
 
-        GLFWVulkan* platform = (GLFWVulkan*)glfwGetWindowUserPointer(window);
+        //GLFWVulkan* platform = (GLFWVulkan*)glfwGetWindowUserPointer(window);
 
     }
 

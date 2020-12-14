@@ -7,6 +7,7 @@
 #include <vulkan/vulkan.h>
 
 #include "../../global.h"
+#include "../../lib/file_path.h"
 #include "../../content/content.h"
 #include "../image.h"
 #include "../vertex.h"

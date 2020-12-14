@@ -36,6 +36,8 @@ namespace game {
 
     public:
 
+        virtual ~EngineConfig();
+
         const std::string& GetLogFilename() const;
         void SetLogFilename(const std::string& log_filename);
 
@@ -62,7 +64,7 @@ namespace game {
 
         public:
 
-            content::Content* Load(const std::string& filename);
+            content::Content* Load(const std::string& filename) override;
 
         };
 

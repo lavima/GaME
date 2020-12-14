@@ -41,7 +41,8 @@ namespace game::addin {
 
     public:
 
-        AddinHeader(const std::string& filename) : content::XmlContent(filename), type_(AddinType::System) {}
+        AddinHeader(const std::string& filename); 
+        virtual ~AddinHeader();
 
         AddinType GetType();
 
@@ -63,7 +64,7 @@ namespace game::addin {
 
         public:
 
-            content::Content* Load(const std::string& filename);
+            content::Content* Load(const std::string& filename) override;
 
         };
 

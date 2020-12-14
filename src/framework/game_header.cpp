@@ -22,7 +22,9 @@ Author: Lars Vidar Magnusson
 
 namespace game::framework {
 
+    GameHeader::GameHeader() : VersionInfo(XMLNAME_GAMEHEADER) {}
     GameHeader::GameHeader(content::xml::XmlNode root_node) : VersionInfo(root_node, XMLNAME_GAMEHEADER) {}
+    GameHeader::~GameHeader() {}
 
     bool GameHeader::Load(GameHeader* header, content::xml::XmlNode root_node) {
 

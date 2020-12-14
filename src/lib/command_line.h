@@ -41,17 +41,20 @@ namespace game::lib {
     * The format of the command line is PROGRAM [OPTIONS]... [ARGS]..., meaning that command line options must come before
     * the command line arguments.
     */
-    class GAME_API CommandLine {
+    class GAME_API CommandLine final {
 
     private:
 
-        struct commandResult {
+        struct CommandResult {
 
             int NumErrors = 0;
 
             std::string Program;
             std::unordered_map<std::string, std::string> Options;
             std::unordered_map<std::string, std::vector<std::string>> Arguments;
+        
+            CommandResult();
+            ~CommandResult();
 
         };
 
@@ -60,13 +63,15 @@ namespace game::lib {
         std::vector<CommandOption> specifiedOptions;
         std::vector<CommandArgument> specifiedArguments;
 
-        std::unique_ptr<commandResult> result;
+        std::unique_ptr<CommandResult> result;
 
-        CommandLine() {}
+        CommandLine();
 
         static CommandLine& get();
 
     public:
+
+        ~CommandLine();
 
         static void SpecifyOption(OptionType type, const std::string& name, const std::string& description);
         static void SpecifyArgument(const std::string& name, const std::string& description, int minInstances, int maxInstances);

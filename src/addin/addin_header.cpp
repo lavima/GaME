@@ -12,6 +12,7 @@ Author: Lars Vidar Magnusson
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
 #include "../content/xml/xml_node.h"
@@ -26,6 +27,9 @@ Author: Lars Vidar Magnusson
 #include "addin_header.h"
 
 namespace game::addin {
+
+    AddinHeader::AddinHeader(const std::string& filename) : content::XmlContent(filename), type_(AddinType::System) {}
+    AddinHeader::~AddinHeader() {}
 
     AddinType AddinHeader::GetType() { return this->type_; }
     const std::string& AddinHeader::GetLibraryFilename() { return this->library_filename_; }

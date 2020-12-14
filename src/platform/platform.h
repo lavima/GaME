@@ -5,9 +5,11 @@ Author: Lars Vidar Magnusson
 
 #pragma once
 
-class game::Engine;
-
 namespace game::platform {
+
+#ifdef _WINDOWS
+    typedef HMODULE LibraryHandle;
+#endif
 
     /*
     * This class provides the interface for all platform_ implementations_, and a factory function for
@@ -26,8 +28,6 @@ namespace game::platform {
             virtual Platform* Create(Engine& engine, PlatformConfig& config) = 0;
         };
 
-        static void RegisterImplementation(const std::string& name, Platform::Creator* creator);
-
     private:
 
         static std::unordered_map<std::string, Platform::Creator*>* implementations_;
@@ -41,10 +41,11 @@ namespace game::platform {
 
     protected:
 
-        Platform(const std::string& name, Engine& engine, PlatformConfig& config)
-            : implementation_name_(name), engine_(engine), config_(config) {}
+        Platform(const std::string& name, Engine& engine, PlatformConfig& config);
 
     public:
+      
+        virtual ~Platform();
 
         virtual bool Initialize() = 0;
 
@@ -61,14 +62,43 @@ namespace game::platform {
         */
         virtual void SwapBuffers() = 0;
 
-#ifdef LoadLibrary
-#undef LoadLibrary
+        virtual LibraryHandle LoadLibrary(const std::string& filename);
+
+        virtual void UnloadLibrary(LibraryHandle handle);
+
+    private:
+
+        /*
+        * TypdedFunction is a template parameter parser to determine the type of a function. This is 
+        * used by LoadLibrarySymbol<T> to allow "functional template notation" in the template argument 
+        * e.g. LoadLibrarySymbol<int(int)> instead of LoadLibrarySymbol<int,int> 
+        *
+        * TODO Why is this structure needed i.e. why can't we do this on the LoadLibrarySymbol<T> 
+        * directly?
+        */
+        template <typename T> 
+        struct TypedFunction {};
+
+        template <typename Ret, typename... Args> 
+        struct TypedFunction<Ret(Args...)> {
+#ifdef _WINDOWS
+            static std::function<Ret(Args...)> create(const FARPROC proc) {
+                return std::function<Ret(Args...)>(reinterpret_cast<Ret (__stdcall*)(Args...)>(proc));
+            }
 #endif
-        virtual void* LoadLibrary(const std::string& filename) = 0;
+        };  
 
-        virtual void UnloadLibrary(void* handle) = 0;
+     public:
 
-        virtual void* LoadLibrarySymbol(void* handle, const std::string& name) = 0;
+        template<typename T> std::function<T> LoadLibrarySymbol(LibraryHandle handle, const std::string& name) {
+#ifdef _WINDOWS
+            FARPROC proc = GetProcAddress(handle, name.c_str());
+            if (!proc)
+              return nullptr;
+#endif
+            return TypedFunction<T>::create(proc);
+
+        }
 
         virtual double GetSystemTime() = 0;
 
@@ -77,8 +107,6 @@ namespace game::platform {
         */
         const std::unordered_map<KeyCode, std::reference_wrapper<const InputKey>> GetInputKeys();
 
-    public:
-
         static Platform* Create(Engine& engine, PlatformConfig& config);
 
     protected:
@@ -86,6 +114,8 @@ namespace game::platform {
         Engine& GetEngine();
         PlatformConfig& GetConfig();
         std::unordered_map<KeyCode, InputKeyWritable> GetWritableInputKeys();
+
+        static void RegisterImplementation(const std::string& name, Platform::Creator* creator);
 
     };
 

@@ -24,4 +24,7 @@ namespace game::vulkanrenderer {
         return true;
     }
 
+    uint32_t Config::GetFramesInFlight() { 
+        return frames_in_flight_;
+    }
 }

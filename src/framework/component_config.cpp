@@ -6,6 +6,7 @@
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/content.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
@@ -32,6 +33,8 @@ namespace game::framework {
         assert(Load(root_node));
     }
 
+    ComponentConfig::~ComponentConfig() {}
+
     ComponentConfig* ComponentConfig::Create(const std::string& name, const std::string& type_name, bool shared) {
         return new ComponentConfig(name, type_name, shared);
     }
@@ -57,7 +60,7 @@ namespace game::framework {
         return type_name_;
     }
 
-    const bool ComponentConfig::IsShared() const {
+    bool ComponentConfig::IsShared() const {
         return shared_between_entities_;
     }
 

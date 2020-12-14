@@ -14,6 +14,7 @@ namespace game::content::xml {
     using namespace pugi;
 
     XmlDocument::XmlDocument() : internal_(std::unique_ptr<xml_document>(new xml_document())) {}
+    XmlDocument::~XmlDocument() {}
 
     XmlDocument::XmlDocument(XmlDocument& other) {
         internal_.reset(other.internal_.release());

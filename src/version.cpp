@@ -4,7 +4,9 @@ Author: Lars Vidar Magnusson
 */
 
 #include <string>
+#include <sstream>
 #include <memory>
+#include <vector>
 
 #include <pugixml.hpp>
 
@@ -38,7 +40,7 @@ namespace game {
 
     int Version::GetMajor() const { return major_; }
     int Version::GetMinor() const { return minor_; }
-    int Version::GetRelease() const { return release_; };
+    int Version::GetRelease() const { return release_; }
 
     const std::string* Version::GetVersionString() {
         return (const std::string*)lib::StringUtil::Format("%d-%d-%d", major_, minor_, release_);

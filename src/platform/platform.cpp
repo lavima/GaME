@@ -5,11 +5,17 @@ Author: Lars Vidar Magnusson
 
 #include <cstdint>
 #include <string>
+#include <sstream>
+#include <list>
 #include <vector>
 #include <unordered_map>
 #include <functional>
 #include <memory>
 #include <optional>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
@@ -63,6 +69,10 @@ namespace game::platform {
     //
     std::unordered_map<std::string, Platform::Creator*>* Platform::implementations_ = nullptr;
 
+    Platform::Platform(const std::string& name, Engine& engine, PlatformConfig& config)
+        : implementation_name_(name), engine_(engine), config_(config) {}
+
+    Platform::~Platform() {}
 
     Platform* Platform::Create(Engine& engine, PlatformConfig& config) {
 
@@ -85,6 +95,17 @@ namespace game::platform {
             implementations_ = new std::unordered_map<std::string, Platform::Creator*>();
 
         implementations_->insert_or_assign(name, creator);
+
+    }
+
+    LibraryHandle Platform::LoadLibrary(const std::string& filename) {
+#ifdef _WINDOWS
+        HMODULE handle = LoadLibraryA(filename.c_str());
+#endif
+        return handle;
+    }
+
+    void Platform::UnloadLibrary(LibraryHandle handle) {
 
     }
 

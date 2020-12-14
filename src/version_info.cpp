@@ -4,8 +4,10 @@ Author: Lars Vidar Magnusson
  */
 
 #include <string>
+#include <sstream>
 #include <memory>
 #include <cassert>
+#include <vector>
 
 #include <pugixml.hpp>
 
@@ -59,6 +61,13 @@ namespace game {
         assert(this->Load(xml_node));
 
     }
+
+    VersionInfo::VersionInfo(const VersionInfo& other) {
+      name_ = other.name_;
+      description_ = other.description_;
+      version_ = other.version_;
+    }
+
 
     bool VersionInfo::Load(VersionInfo* info, content::xml::XmlNode root_node) {
 

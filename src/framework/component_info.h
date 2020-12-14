@@ -9,7 +9,7 @@ namespace game::framework {
 
 #define XMLNAME_COMPONENINFO std::string("Component")
 
-    class GAME_API ComponentInfo : public VersionInfo {
+    class GAME_API ComponentInfo final : public VersionInfo {
     public:
 
         ComponentInfo(const std::string& name, const std::string& description, const Version& version);

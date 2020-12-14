@@ -36,6 +36,8 @@ namespace game::vulkanrenderer {
 
     public:
 
+        ~MeshComponent() override;
+
         bool Initialize() override;
         void Update(const framework::GameTime& gameTime) override;
         void Destroy() override;

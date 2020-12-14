@@ -5,11 +5,17 @@
 
 #include <cstdint>
 #include <string>
+#include <sstream>
+#include <list>
 #include <vector>
 #include <unordered_map>
 #include <functional>
 #include <memory>
 #include <optional>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
@@ -88,7 +94,7 @@ namespace game::scripting {
             v8::Isolate::Scope isolateScope(env->isolate);
             v8::HandleScope handleScope(env->isolate);
 
-            v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(env->isolate);
+            //v8::Local<v8::ObjectTemplate> global = v8::ObjectTemplate::New(env->isolate);
             //env->context = v8::Persistent<v8::Context>(env->isolate, v8::Context::New(env->isolate, NULL, global));
         }
 
@@ -100,8 +106,8 @@ namespace game::scripting {
         return nullptr;
     }
 
-    v8::Handle<v8::Value> ScriptEnvironment::RunScript(Script& script) {
-        return v8::Handle<v8::Value>();
+    v8::Local<v8::Value> ScriptEnvironment::RunScript(Script& script) {
+        return v8::Local<v8::Value>();
     }
 
     v8::Isolate* ScriptEnvironment::GetIsolate() { return isolate; }

@@ -37,6 +37,8 @@ namespace game::framework {
 
     public:
 
+        virtual ~Entity();
+
         static Entity* Create(Game& game, const std::string& name, const std::string& description = "");
         static Entity* Create(Game& game, EntitySpecification* specification);
         static Entity* Create(Game& game, const Entity& parent);

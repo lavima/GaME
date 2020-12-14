@@ -1,9 +1,14 @@
+#include <functional>
 #include <string>
 #include <unordered_map>
 #include <cassert>
 #include <memory>
 #include <optional>
 #include <algorithm>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
@@ -40,6 +45,10 @@
 #include "game.h"
 
 namespace game::framework {
+    GameSpecification::GameSpecification() : XmlContent(DEFAULT_GAME_NAME+"."+EXTENSION_GAME) {}
+    GameSpecification::GameSpecification(const std::string& filename) : XmlContent(filename) {}
+    GameSpecification::~GameSpecification() {}
+
     GameSpecification* GameSpecification::Create() {
         return new GameSpecification();
     }

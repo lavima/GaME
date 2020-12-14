@@ -11,6 +11,8 @@ namespace game::vulkanrenderer {
     MeshComponent::MeshComponent(framework::Entity& entity, framework::ComponentConfig& config)
         : Component(entity, config) {}
 
+    MeshComponent::~MeshComponent() {}
+
     bool MeshComponent::Initialize() {
 
         auto system_optional = GetEntity().GetGame().GetSystemByType(VULKANRENDERER_TYPENAME);

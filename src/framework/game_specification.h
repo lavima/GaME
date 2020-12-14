@@ -22,10 +22,12 @@ namespace game::framework {
         std::unordered_map<std::string, EntitySpecification*> entities_;
 
 
-        GameSpecification() : XmlContent(DEFAULT_GAME_NAME+"."+EXTENSION_GAME) {}
-        GameSpecification(const std::string& filename) : XmlContent(filename) {}
+        GameSpecification();
+        GameSpecification(const std::string& filename);
 
     public:
+
+        virtual ~GameSpecification();
 
         static GameSpecification* Create();
 
@@ -45,7 +47,7 @@ namespace game::framework {
             static Loader singleton_;
             Loader();
         public:
-            content::Content* Load(const std::string& filename);
+            content::Content* Load(const std::string& filename) override;
         };
 
 

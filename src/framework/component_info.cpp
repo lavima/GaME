@@ -11,6 +11,7 @@ Author: Lars Vidar Magnusson
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/content.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"

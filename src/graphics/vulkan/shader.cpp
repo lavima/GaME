@@ -67,7 +67,7 @@ namespace game::graphics::vulkan {
 
         VkShaderModule shader_module;
         if (vkCreateShaderModule(device, &createInfo, nullptr, &shader_module)!=VK_SUCCESS)
-            return false;
+            return VK_NULL_HANDLE;
 
         return shader_module;
 

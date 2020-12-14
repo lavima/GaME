@@ -22,6 +22,8 @@ namespace game::framework {
         EntitySpecification(const std::string& filename);
 
     public:
+
+        virtual ~EntitySpecification();
         
         static EntitySpecification* Create(const std::string& name, const std::string& description);
         static EntitySpecification* Create(const std::string& filename);
@@ -45,7 +47,7 @@ namespace game::framework {
             static Loader singleton_;
             Loader();
         public:
-            Content* Load(const std::string& filename);
+            Content* Load(const std::string& filename) override;
         };
 
     };

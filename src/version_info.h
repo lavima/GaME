@@ -34,6 +34,12 @@ namespace game {
         VersionInfo(const std::string&& name, const std::string&& description, const Version&& version);
         VersionInfo(content::xml::XmlNode xml_node, const std::string& xml_element_name = XMLNAME_VERSIONINFO);
 
+    public:
+
+        VersionInfo(const VersionInfo& other);
+
+    protected:
+
         static bool Load(VersionInfo* info, content::xml::XmlNode root_node);
         static bool Save(VersionInfo& info, content::xml::XmlNode root_node);
 

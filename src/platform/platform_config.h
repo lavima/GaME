@@ -42,6 +42,12 @@ namespace game::platform {
 
         PlatformConfig(const std::string& implementation_name);
 
+    public:
+
+        virtual ~PlatformConfig();
+
+    protected:
+
         static void RegisterImplementation(const std::string& implementation_name, Loader* loader);
 
     public:

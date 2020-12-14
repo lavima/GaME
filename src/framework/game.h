@@ -34,6 +34,8 @@ namespace game::framework {
 
     public:
 
+        virtual ~Game();
+
         static Game* Create();
         static Game* Create(const std::string& specification_filename);
         static Game* Create(GameSpecification* specification);

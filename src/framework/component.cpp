@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include <memory>
 #include <cassert>
@@ -6,6 +7,7 @@
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/content.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
@@ -40,6 +42,8 @@ namespace game::framework {
         status_ = ComponentStatus::Created;
     }
 
+    Component::~Component() {}
+
     void Component::RegisterType(const std::string& type_name, Component::ICreator *creator) {
         if (!creators_)
             creators_ = new std::unordered_map<std::string, ICreator*>();
@@ -47,7 +51,7 @@ namespace game::framework {
     }
 
     Component* Component::Create(Entity& entity, const std::string& name, const std::string& type_name) {
-        auto config = ComponentConfig::Create(name, type_name);
+        ComponentConfig* config = ComponentConfig::Create(name, type_name);
         return Create(entity, *config);
     }
 

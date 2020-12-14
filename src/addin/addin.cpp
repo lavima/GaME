@@ -8,12 +8,20 @@ Author: Lars Vidar Magnusson
 #include <functional>
 #include <memory>
 #include <string>
+#include <sstream>
 #include <optional>
+#include <list>
+#include <unordered_map>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
 
 #include "../global.h"
+#include "../lib/string_util.h"
 #include "../lib/file_path.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
@@ -54,14 +62,16 @@ Author: Lars Vidar Magnusson
 namespace game::addin {
 
     Addin::Addin(AddinHeader* header) 
-        : handle_(nullptr), header_(std::unique_ptr<AddinHeader>(header)), register_fun(nullptr) {}
+        : handle_(nullptr), header_(std::unique_ptr<AddinHeader>(header)), register_fun_(nullptr) {}
+
+    Addin::~Addin() {}
     
     void Addin::Register(Engine& engine, AddinHeader& header) {
      
-        assert(register_fun);
+        assert(register_fun_);
 
         AddinBindingInfo binding_info;
-        register_fun(engine, header, &binding_info);
+        register_fun_(engine, header, &binding_info);
 
         if (binding_info.type_flags&AddinType::System) {
             for (auto& system_info:header.GetSystemInfos()) {
@@ -94,12 +104,12 @@ namespace game::addin {
             return nullptr;
         }
 
-        void* address = engine.GetPlatform().LoadLibrarySymbol(addin->handle_, ADDINFUN_REGISTERADDIN);
-        if (!address) {
+        AddinFun_Register register_fun = engine.GetPlatform().LoadLibrarySymbol<ADDINFUN_REGISTER_TEMPLATE>(addin->handle_, ADDINFUN_REGISTERADDIN);
+        if (!register_fun) {
             delete addin;
             return nullptr;
         }
-        addin->register_fun = (AddinFun_Register)address;
+        addin->register_fun_ = register_fun;
 
         addin->Register(engine, header);
 

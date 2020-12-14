@@ -74,6 +74,7 @@ namespace game {
     public:
 
         Engine();
+        ~Engine();
 
         bool Initialize();
         void Run();
@@ -110,7 +111,7 @@ namespace game {
         class Scriptable : public scripting::_Scriptable {
         public:
 
-            virtual void Register(scripting::ScriptEnvironment& environment);
+            void Register(scripting::ScriptEnvironment& environment) override;
 
         };
 

@@ -40,6 +40,8 @@ namespace game::framework {
 
     public:
 
+        virtual ~ComponentConfig(); 
+
         static ComponentConfig* Create(const std::string& name, const std::string& type_name, bool shared = false);
         static ComponentConfig* Create(content::xml::XmlNode root_node);
         
@@ -50,7 +52,7 @@ namespace game::framework {
 
         const std::string& GetName() const;
         const std::string& GetTypeName() const;
-        const bool IsShared() const;
+        bool IsShared() const;
 
     };
 

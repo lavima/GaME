@@ -17,7 +17,8 @@ namespace game::vulkanrenderer {
 
         bool Load(content::xml::XmlNode root_node) override;
         bool Save(content::xml::XmlNode root_node) override;
-
+        
+        uint32_t GetFramesInFlight();
 
     };
 

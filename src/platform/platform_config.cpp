@@ -28,6 +28,8 @@ namespace game::platform {
 
     }
 
+    PlatformConfig::~PlatformConfig() {}
+
     void PlatformConfig::RegisterImplementation(const std::string& implementation_name, PlatformConfig::Loader* loader) {
 
         if (!configuration_loaders_)
@@ -77,7 +79,6 @@ namespace game::platform {
         content::xml::XmlNode width_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_WIDTH);
         if (!width_node)
             return false;
-        const std::string& value = width_node.GetValue();
         width_ = stoi(width_node.GetValue());
 
         content::xml::XmlNode height_node = root_node.GetChild(XMLNAME_PLATFORMCONFIG_HEIGHT);
@@ -111,13 +112,13 @@ namespace game::platform {
 
     }
 
-    uint32_t GraphicalPlatformConfig::GetWidth() const { return this->width_; }
-    void GraphicalPlatformConfig::SetWidth(uint32_t width) { this->width_ = width; }
+    uint32_t GraphicalPlatformConfig::GetWidth() const { return width_; }
+    void GraphicalPlatformConfig::SetWidth(uint32_t width) { width_ = width; }
 
-    uint32_t GraphicalPlatformConfig::GetHeight() const { return this->height_; }
-    void GraphicalPlatformConfig::SetHeight(uint32_t width) { this->height_ = height_; }
+    uint32_t GraphicalPlatformConfig::GetHeight() const { return height_; }
+    void GraphicalPlatformConfig::SetHeight(uint32_t height) { height_ = height; }
 
-    bool GraphicalPlatformConfig::GetFullscreen() const { return this->fullscreen_; }
-    void GraphicalPlatformConfig::SetFullscreen(bool fullscreen) { this->fullscreen_ = fullscreen; }
+    bool GraphicalPlatformConfig::GetFullscreen() const { return fullscreen_; }
+    void GraphicalPlatformConfig::SetFullscreen(bool fullscreen) { fullscreen_ = fullscreen; }
 
 }

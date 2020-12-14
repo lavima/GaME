@@ -44,6 +44,8 @@ namespace game::framework {
 
     public:
 
+        virtual ~System();
+
         /*
         * Load provides the only way to instantiate engine_ components.
         */

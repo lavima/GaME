@@ -39,8 +39,8 @@ namespace game {
 
         /* XMLSerializable Interface */
 
-        bool Load(content::xml::XmlNode node);
-        bool Save(content::xml::XmlNode node);
+        bool Load(content::xml::XmlNode node) override;
+        bool Save(content::xml::XmlNode node) override;
 
     };
 

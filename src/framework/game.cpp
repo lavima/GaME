@@ -3,13 +3,20 @@ File: Game.cpp
 Author: Lars Vidar Magnusson
  */
 
+#include <functional>
 #include <string>
+#include <sstream>
 #include <unordered_map>
 #include <memory>
 #include <cassert>
 #include <algorithm>
+#include <list>
 #include <vector>
 #include <optional>
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 
 #include <pugixml.hpp>
 #include <v8.h>
@@ -55,12 +62,14 @@ Author: Lars Vidar Magnusson
 
 namespace game::framework {
 
+    Game::Game() {}
     Game::Game(GameSpecification* specification) {
 
         specification_ = std::unique_ptr<GameSpecification>(specification);
         status_ = GameStatus::Created;
 
     }
+    Game::~Game() {}
 
 
     Game* Game::Create() {
@@ -105,7 +114,6 @@ namespace game::framework {
     }
 
     bool Game::Start() {
-        Log& log = engine_->GetLog();
 
         if (status_!=GameStatus::Initialized)
             return false;

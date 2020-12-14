@@ -9,6 +9,7 @@ executable("game") {
     "third_party/v8/include",  
     "third_party/vulkan_headers/include"
   ]
+  cflags_cc = [ "/std:c++17" ]
   defines = [ "PLATFORM_GLFWVULKAN" ]
   deps = [
     ":game_base_source"
@@ -71,7 +72,9 @@ source_set("game_base_source") {
     "src/graphics/vulkan/vulkan_functions.h",
     "src/graphics/image.cpp",
     "src/graphics/image.h",
+    "src/graphics/model_view_projection.cpp",
     "src/graphics/model_view_projection.h",
+    "src/graphics/vertex.cpp",
     "src/graphics/vertex.h",
     "src/lib/command_line.cpp",
     "src/lib/command_line.h",
@@ -114,11 +117,12 @@ source_set("game_base_source") {
     "src/version_info.cpp",
     "src/version_info.h"
   ]
-
   defines = [ "PLATFORM_GLFWVULKAN" ]
+  cflags_cc = [ "/std:c++17" ]
   deps = [
     "//third_party/glfw:glfw_source",
     "//third_party/pugixml:pugixml_source",
+    "//third_party/v8:v8_libplatform",
     "//third_party/v8:v8",
     "//third_party/vulkan_headers:vulkan_headers"
   ]
@@ -131,6 +135,10 @@ source_set("game_base_source") {
     "third_party/v8/include",  
     "third_party/vulkan_headers/include"
   ]
+  lib_dirs = [
+    "C:/VulkanSDK/1.2.141.2/Lib"
+  ]
+  libs = [ "vulkan-1.lib" ]
 }
 
 shared_library("vulkan_renderer") {
@@ -157,5 +165,6 @@ shared_library("vulkan_renderer") {
   deps = [
     ":game_base_source"
   ]
+  cflags_cc = [ "/std:c++17", "-Wno-missing-braces" ]
 }
 

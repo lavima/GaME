@@ -4,6 +4,7 @@ Author: Lars Vidar Magnusson
 */
 
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <memory>
 #include <vector>
@@ -11,6 +12,7 @@ Author: Lars Vidar Magnusson
 #include <list>
 
 #include "global.h"
+#include "lib/string_util.h"
 #include "Log.h"
 
 namespace game {
@@ -50,12 +52,12 @@ namespace game {
     }
 
     void Log::output(EventType type, const std::string& text) {
-        for (auto os:out_streams_)
+        for (std::ostream* os:out_streams_)
             *os<<text;
     }
 
     void Log::dispatchEvent(EventType type, const std::string& text) {
-        for (auto listener:listeners_)
+        for (LogListener* listener:listeners_)
             listener->Event(type, text);
     }
 

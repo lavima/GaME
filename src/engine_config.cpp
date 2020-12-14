@@ -11,6 +11,7 @@ Author: Lars Vidar Magnusson
 #include <pugixml.hpp>
 
 #include "global.h"
+#include "lib/file_path.h"
 #include "content/xml/xml_range.h"
 #include "content/xml/xml_attribute.h"
 #include "content/xml/xml_node.h"
@@ -29,10 +30,12 @@ Author: Lars Vidar Magnusson
 namespace game {
 
     EngineConfig::EngineConfig(const std::string& filename) : content::XmlContent(filename) {}
+    EngineConfig::~EngineConfig() {}
 
 
     const std::string& EngineConfig::GetLogFilename() const {
-        return log_filename_ ? *log_filename_ : "";
+        static std::string empty = "";
+        return log_filename_ ? *log_filename_ : empty;
     }
 
     void EngineConfig::SetLogFilename(const std::string& logFilename) {
@@ -74,7 +77,6 @@ namespace game {
             return false;
 
         for (content::xml::XmlNode addin_node : root_node.GetChildren(XMLNAME_ENGINECONFIG_ADDIN)) {
-            const std::string& value = addin_node.GetValue();
             addin_filenames_.push_back(addin_node.GetValue());
         }
 

@@ -15,7 +15,7 @@ namespace game::vulkanrenderer {
 
     static const framework::SystemInfo vulkan_renderer_info(VULKANRENDERER_TYPENAME, "Vulkan renderer", Version(0, 0, 1));
 
-#ifndef NDEBUG
+#ifdef _DEBUG
     VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRenderer::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
 
         LOG_ERROR("VULKAN %s", pCallbackData->pMessage);
@@ -29,7 +29,7 @@ namespace game::vulkanrenderer {
         const EngineInfo& engine_info = GetEngine().GetInfo();
         const framework::GameHeader& game_header = GetEngine().GetGame().GetHeader();
 
-        platform::GraphicalPlatformConfig& config = (platform::GraphicalPlatformConfig&)GetConfig();
+        //platform::GraphicalPlatformConfig& config = (platform::GraphicalPlatformConfig&)GetConfig();
 
         uint32_t layer_count;
         vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
@@ -70,7 +70,7 @@ namespace game::vulkanrenderer {
         std::vector<const char*> required_extensions;
         transform(platform_extensions.begin(), platform_extensions.end(), back_inserter(required_extensions),
             [&](const std::string& ext) { return ext.c_str(); });
-#ifndef NDEBUG
+#ifdef _DEBUG
         required_extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 #endif
 
@@ -102,6 +102,7 @@ namespace game::vulkanrenderer {
 
     }
 
+#ifdef _DEBUG
     bool VulkanRenderer::CreateDebugMessenger() {
 
         VkDebugUtilsMessengerCreateInfoEXT debug_create_info{};
@@ -116,6 +117,7 @@ namespace game::vulkanrenderer {
 
         return true;
     }
+#endif 
 
     bool VulkanRenderer::FindSuitablePhysicalDevice(std::vector<std::reference_wrapper<const std::string>> extensions) {
         
@@ -761,6 +763,8 @@ namespace game::vulkanrenderer {
 
     }
 
+    VulkanRenderer::~VulkanRenderer() {}
+
     bool VulkanRenderer::Initialize() {
 
         LOG_INFO("Creating Vulkan Instance");
@@ -775,7 +779,7 @@ namespace game::vulkanrenderer {
             return false;
         }
 
-#ifndef NDEBUG
+#ifdef _DEBUG
         LOG_INFO("Creating debug messenger");
         if (!CreateDebugMessenger()) {
             LOG_ERROR("Couldn't create debug messenger");
@@ -1033,7 +1037,7 @@ namespace game::vulkanrenderer {
         if (command_pool_!=VK_NULL_HANDLE)
             vkDestroyCommandPool(device_, command_pool_, nullptr);
 
-        for (auto framebuffer:swap_chain_framebuffers_) {
+        for (VkFramebuffer framebuffer:swap_chain_framebuffers_) {
             if (framebuffer!=VK_NULL_HANDLE)
                 vkDestroyFramebuffer(device_, framebuffer, nullptr);
         }
@@ -1050,7 +1054,7 @@ namespace game::vulkanrenderer {
         if (render_pass_!=VK_NULL_HANDLE)
             vkDestroyRenderPass(device_, render_pass_, nullptr);
 
-        for (auto image_view:swap_chain_image_views_) {
+        for (VkImageView image_view:swap_chain_image_views_) {
             if (image_view!=VK_NULL_HANDLE)
                 vkDestroyImageView(device_, image_view, nullptr);
         }
@@ -1064,7 +1068,7 @@ namespace game::vulkanrenderer {
         if (device_!=VK_NULL_HANDLE)
             vkDestroyDevice(device_, nullptr);
 
-#ifndef NDEBUG
+#ifdef _DEBUG
         if (debug_messenger_!=VK_NULL_HANDLE)
             DestroyDebugUtilsMessengerEXT(instance_, debug_messenger_, nullptr);
 #endif

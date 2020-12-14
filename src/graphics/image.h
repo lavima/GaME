@@ -22,9 +22,11 @@ namespace game::graphics {
         uint32_t height_;
         uint32_t num_channels_;
 
-        Image(const std::string& filename) : content::Content(filename) {}
+        Image(const std::string& filename);
 
     public:
+
+        virtual ~Image();
 
         bool Load() override;
         void Unload() override;
@@ -45,7 +47,7 @@ namespace game::graphics {
 
         public:
 
-            content::Content* Load(const std::string& filename);
+            content::Content* Load(const std::string& filename) override;
 
         };
 

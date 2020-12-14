@@ -11,6 +11,7 @@ namespace game::content::xml {
     public:
 
         XmlDocument();
+        ~XmlDocument();
         XmlDocument(XmlDocument& other);
 
         bool Load(const std::string& filename);

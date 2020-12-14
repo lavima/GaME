@@ -23,10 +23,10 @@ namespace game::content {
         XmlContent(const std::string& filename, xml::XmlDocument document);
 
         bool Load() override;
-        virtual bool Load(xml::XmlNode) = 0;
+        bool Load(xml::XmlNode) override = 0;
 
         bool Save() override;
-        virtual bool Save(xml::XmlNode) = 0;
+        bool Save(xml::XmlNode) override = 0;
 
         void Unload() override;
 

@@ -7,8 +7,6 @@
 
 namespace game::platform {
 
-
-
     class GAME_API GLFWVulkan : public Platform, public IVulkanPlatform {
 
     private:
@@ -21,6 +19,8 @@ namespace game::platform {
 
     public:
 
+        ~GLFWVulkan() override;
+
         bool Initialize() override;
 
         void Shutdown() override;
@@ -29,14 +29,7 @@ namespace game::platform {
 
         void SwapBuffers() override;
 
-        void* LoadLibrary(const std::string& filename) override;
-
-        void UnloadLibrary(void* handle) override;
-
-        void* LoadLibrarySymbol(void* handle, const std::string& name) override;
-
         double GetSystemTime() override;
-
 
         std::vector<std::reference_wrapper<const std::string>> GetRequiredExtensions() const override;
         bool CreateSurface(VkInstance, VkSurfaceKHR*) override;

@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <memory>
+#include <vector>
 #include <unordered_map>
 
 #include "../global.h"
@@ -9,6 +10,12 @@
 namespace game::lib {
 
     CommandLine* CommandLine::singleton = nullptr;
+
+    CommandLine::CommandLine() {}
+    CommandLine::~CommandLine() {}
+
+    CommandLine::CommandResult::CommandResult() {}
+    CommandLine::CommandResult::~CommandResult() {}
 
     void CommandLine::SpecifyOption(OptionType type, const std::string& name, const std::string& description) {
         CommandLine::get().specifiedOptions.push_back(CommandOption{ type, name, description });
@@ -25,8 +32,8 @@ namespace game::lib {
         for (CommandOption option : CommandLine::get().specifiedOptions)
             optionMap[option.Name] = &option;
 
-        CommandLine::get().result = std::unique_ptr<commandResult>(new commandResult());
-        commandResult& result = *CommandLine::get().result;
+        CommandLine::get().result = std::unique_ptr<CommandResult>(new CommandResult());
+        CommandResult& result = *CommandLine::get().result;
 
         auto argvIter = argumentValues.begin();
 

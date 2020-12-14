@@ -1,5 +1,5 @@
 /*
-File: GameHeader.h
+File: game_header.h
 Author: Lars Vidar Magnusson
 */
 
@@ -22,8 +22,9 @@ namespace game::framework {
 
     public:
 
-        GameHeader() : VersionInfo(XMLNAME_GAMEHEADER) {}
+        GameHeader();
         GameHeader(content::xml::XmlNode root_node);
+        virtual ~GameHeader();
 
         static bool Load(GameHeader* info, content::xml::XmlNode root_node);
         static bool Save(GameHeader& info, content::xml::XmlNode root_node);

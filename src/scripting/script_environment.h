@@ -35,7 +35,7 @@ namespace game::scripting {
         static ScriptEnvironment* Create(Engine&);
 
         Script* LoadScript(const std::string&);
-        v8::Handle<v8::Value> RunScript(Script&);
+        v8::Local<v8::Value> RunScript(Script&);
 
         v8::Isolate* GetIsolate();
         v8::ArrayBuffer::Allocator* GetAllocator();

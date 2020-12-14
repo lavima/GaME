@@ -17,16 +17,17 @@ namespace game::framework {
 
     public:
 
-        GameConfig() {}
+        GameConfig();
         GameConfig(content::xml::XmlNode root_node);
+        virtual ~GameConfig();
 
         static bool Load(GameConfig* config, content::xml::XmlNode root_node);
         static bool Save(const GameConfig& config, content::xml::XmlNode root_node);
 
         const std::vector<std::reference_wrapper<SystemConfig>> GetSystemConfigs();
 
-        bool Load(content::xml::XmlNode root_node);
-        bool Save(content::xml::XmlNode root_node);
+        bool Load(content::xml::XmlNode root_node) override;
+        bool Save(content::xml::XmlNode root_node) override;
 
     };
 

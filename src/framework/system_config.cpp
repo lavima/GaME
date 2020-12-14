@@ -4,6 +4,7 @@ Author: Lars Vidar Magnusson
  */
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include <cassert>
 #include <memory>
@@ -11,6 +12,7 @@ Author: Lars Vidar Magnusson
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/content.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
@@ -35,6 +37,8 @@ namespace game::framework {
     SystemConfig::SystemConfig(content::xml::XmlNode root_node) {
         assert(this->Load(root_node));
     }
+
+    SystemConfig::~SystemConfig() {}
 
     SystemConfig* SystemConfig::Create(content::xml::XmlNode root_node) {
 

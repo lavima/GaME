@@ -44,6 +44,8 @@ namespace game::framework {
 
     public:
 
+        virtual ~Component();
+
         static void RegisterType(const std::string& type_name, ICreator* creator);
         
 
@@ -51,7 +53,7 @@ namespace game::framework {
         static Component* Create(Entity& entity, ComponentConfig& config);
 
 
-        virtual bool Initialize();;
+        virtual bool Initialize();
         virtual void Update(const GameTime& game_time) = 0;
         virtual void Destroy();
 

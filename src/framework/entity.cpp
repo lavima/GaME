@@ -4,15 +4,18 @@ Author: Lars Vidar Magnusson
 */
 
 #include <string>
+#include <sstream>
+#include <vector>
+#include <list>
 #include <unordered_map>
 #include <memory>
 #include <cassert>
 #include <algorithm>
-#include <vector>
 
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../lib/string_util.h"
 #include "../Log.h"
 #include "../content/content.h"
@@ -41,6 +44,8 @@ namespace game::framework {
 
         status_ = EntityStatus::Created;
     }
+
+    Entity::~Entity() {}
 
     Entity* Entity::Create(Game& game, const std::string& name, const std::string& description) {
         
@@ -97,6 +102,8 @@ namespace game::framework {
     
         if (status_!=EntityStatus::Initialized)
             return false;
+
+        return true;
 
     }
 

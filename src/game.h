@@ -22,7 +22,9 @@
 #include <cassert>
 #include <cstdint>
 
+#ifdef _WINDOWS
 #include <windows.h>
+#endif
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -80,13 +82,6 @@ namespace game {
 #include "framework/system_info.h"
 #include "framework/system_config.h"
 #include "framework/component_info.h"
-
-#include "addin/addin_header.h"
-#include "addin/addin.h"
-#include "scripting/script_environment.h"
-#include "scripting/scriptable.h"
-#include "scripting/script.h"
-
 #include "platform/input_key.h"
 #include "platform/platform_config.h"
 #include "platform/platform.h"
@@ -99,6 +94,11 @@ namespace game {
 #include "platform/glfw_vulkan.h"
 #endif
 #include "platform/default_platform.h"
+#include "addin/addin_header.h"
+#include "addin/addin.h"
+#include "scripting/script_environment.h"
+#include "scripting/scriptable.h"
+#include "scripting/script.h"
 #include "framework/game_time.h"
 #include "framework/component_config.h"
 #include "framework/component.h"

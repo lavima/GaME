@@ -7,10 +7,14 @@
 #include <stb_image.h>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/Content.h"
 #include "image.h"
 
 namespace game::graphics {
+
+    Image::Image(const std::string& filename) : content::Content(filename) {}
+    Image::~Image() {}
 
     bool Image::Load() {
 

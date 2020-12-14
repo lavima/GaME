@@ -27,7 +27,7 @@ namespace game::platform {
             static Loader singleton_;
         public:
             Loader();
-            PlatformConfig* Load(const std::string& implementation_name, content::xml::XmlNode root_node);
+            PlatformConfig* Load(const std::string& implementation_name, content::xml::XmlNode root_node) override;
         };
     };
 

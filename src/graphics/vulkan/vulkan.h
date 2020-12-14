@@ -20,6 +20,10 @@ namespace game::graphics::vulkan {
         std::optional<uint32_t> transfer_index;
 
         bool IsComplete();
+
+        QueueFamilyIndices();
+        QueueFamilyIndices(const QueueFamilyIndices& other);
+
     };
 
     /*
@@ -30,6 +34,10 @@ namespace game::graphics::vulkan {
         VkSurfaceCapabilitiesKHR capabilities;
         std::vector<VkSurfaceFormatKHR> formats;
         std::vector<VkPresentModeKHR> present_modes;
+
+        SwapChainDetails();
+        SwapChainDetails(const SwapChainDetails& other);
+        ~SwapChainDetails();
 
     };
 

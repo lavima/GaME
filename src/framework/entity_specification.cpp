@@ -7,6 +7,7 @@
 #include <pugixml.hpp>
 
 #include "../global.h"
+#include "../lib/file_path.h"
 #include "../content/content.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
@@ -27,6 +28,8 @@ namespace game::framework {
     }
     
     EntitySpecification::EntitySpecification(const std::string& filename) : XmlContent(filename) {}
+
+    EntitySpecification::~EntitySpecification() {}
     
     EntitySpecification* EntitySpecification::Create(const std::string& name, const std::string& description) {
         return new EntitySpecification(name, description);
@@ -34,7 +37,7 @@ namespace game::framework {
 
     EntitySpecification* EntitySpecification::Create(const std::string& filename) {
 
-        auto spec = new EntitySpecification(filename);
+        EntitySpecification* spec = new EntitySpecification(filename);
         
         if (!spec->Load())
             return nullptr;

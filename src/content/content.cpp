@@ -4,12 +4,14 @@ Author: Lars Vidar Magnusson
 */
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 #include <pugixml.hpp>
 
 #include "../global.h"
-#include "Content.h"
+#include "../lib/file_path.h"
+#include "content.h"
 
 namespace game::content {
 
@@ -44,7 +46,7 @@ namespace game::content {
     }
 
     void Content::RegisterTypes(const std::vector<std::string>& extensions, ILoader* loader) {
-        for (const auto extension:extensions)
+        for (const auto& extension:extensions)
             RegisterType(extension, loader);
     }
 
