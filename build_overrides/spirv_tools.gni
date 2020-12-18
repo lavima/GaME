@@ -1,0 +1,6 @@
+# This enables a group called fuzzers in //Third_part/spirv_tools/BUILD.gn which
+# seems to be related to testing
+spirv_tools_standalone = false
+
+spirv_tools_googletest_dir = "//third_party/googletest/src"
+spirv_tools_spirv_headers_dir = "//third_party/spirv_headers"

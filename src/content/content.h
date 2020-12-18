@@ -48,7 +48,7 @@ namespace game::content {
         if (!std::is_base_of<Content, T>::value)
             return nullptr;
 
-        const std::string extension = lib::FilePath::GetExtension(filename);
+        const std::string extension = lib::FilePath::extension(filename);
         if (data_loaders_->count(extension)==0)
             return nullptr;
 

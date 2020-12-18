@@ -5,5 +5,5 @@
         <Height>600</Height>
         <Fullscreen>false</Fullscreen>
     </PlatformConfig>
-    <Addin>vulkan_renderer/vulkan_renderer.addin</Addin>>
+    <Addin>vulkan_renderer.addin</Addin>>
 </EngineConfig>

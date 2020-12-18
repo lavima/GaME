@@ -7,8 +7,8 @@ Author: Lars Vidar Magnusson
 
 #define VULKANRENDERER_TYPENAME "VulkanRenderer"
 
-#define VULKANRENDERER_VERTEXSHADER_FILENAME "vulkan_renderer/test.vert.spirv"
-#define VULKANRENDERER_FRAGMENTSHADER_FILENAME "vulkan_renderer/test.frag.spirv"
+#define VULKANRENDERER_VERTEXSHADER_FILENAME "test.vert"
+#define VULKANRENDERER_FRAGMENTSHADER_FILENAME "test.frag"
 
 namespace game::vulkanrenderer {
 

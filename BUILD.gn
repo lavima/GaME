@@ -1,4 +1,17 @@
+declare_args() {
+  game_platform = "glfw"
+  game_graphics = "vulkan"
+}
+
+config("platform_glfw_vulkan") {
+  defines = [ "PLATFORM_GLFWVULKAN" ]
+}
+
+
 executable("game") {
+  if (game_platform == "glfw" && game_graphics == "vulkan") {
+    configs += [ ":platform_glfw_vulkan" ]
+  }
   sources = [ "src/main.cpp" ]
   include_dirs = [ 
     "third_party/glfw/include",
@@ -7,13 +20,24 @@ executable("game") {
     "third_party/pugixml/src",
     "third_party/stb",  
     "third_party/v8/include",  
+    "third_party/glslang",
     "third_party/vulkan_headers/include"
   ]
   cflags_cc = [ "/std:c++17" ]
-  defines = [ "PLATFORM_GLFWVULKAN" ]
   deps = [
-    ":game_base_source"
+    ":game_base_source",
+    ":game_resources",
   ]
+}
+
+copy("game_resources") {
+  sources = [ 
+    "tests/TestEntity.entity",
+    "tests/TestGame.engine_config",
+    "tests/TestGame.game",
+    "tests/texture.jpg",
+  ]  
+  outputs = [ "$root_build_dir/{{source_file_part}}" ]
 }
 
 source_set("game_base_source") {
@@ -84,6 +108,8 @@ source_set("game_base_source") {
     "src/lib/string_util.h",
     "src/lib/v8.cpp",
     "src/lib/v8.h",
+    "src/lib/spirv_tools.cpp",
+    "src/lib/spirv_tools.h",
     "src/platform/default_platform.h",
     "src/platform/glfw_vulkan.cpp",
     "src/platform/glfw_vulkan.h",
@@ -123,8 +149,11 @@ source_set("game_base_source") {
     "//third_party/glfw:glfw_source",
     "//third_party/pugixml:pugixml_source",
     "//third_party/v8:v8_libplatform",
+    "//third_party/glslang:glslang_lib_sources",
+  ]
+  public_deps = [
     "//third_party/v8:v8",
-    "//third_party/vulkan_headers:vulkan_headers"
+    "//third_party/vulkan_headers:vulkan_headers",
   ]
   include_dirs = [ 
     "third_party/glfw/include",
@@ -133,6 +162,7 @@ source_set("game_base_source") {
     "third_party/pugixml/src",
     "third_party/stb",  
     "third_party/v8/include",  
+    "third_party/glslang",
     "third_party/vulkan_headers/include"
   ]
   lib_dirs = [
@@ -159,12 +189,22 @@ shared_library("vulkan_renderer") {
     "third_party/pugixml/src",
     "third_party/stb",  
     "third_party/v8/include",  
+    "third_party/glslang",
     "third_party/vulkan_headers/include"
   ]
   defines = [ "PLATFORM_GLFWVULKAN" ]
   deps = [
-    ":game_base_source"
+    ":game_base_source",
+    ":vulkan_renderer_shaders",
   ]
   cflags_cc = [ "/std:c++17", "-Wno-missing-braces" ]
+}
+
+copy("vulkan_renderer_shaders") {
+  sources = [
+    "src/vulkan_renderer/test.vert",
+    "src/vulkan_renderer/test.frag",
+  ]
+  outputs = [ "$root_build_dir/{{source_file_part}}" ]
 }
 

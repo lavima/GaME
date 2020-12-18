@@ -1,0 +1,5 @@
+<Entity>
+    <Name>TestEntity</Name>
+    <Description>A simple entity for testing</Description>
+    <Component name="Mesh" typeName="MeshComponent" />
+</Entity>

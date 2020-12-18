@@ -88,6 +88,15 @@ vars = {
   'vulkan_headers_url': 'https://github.com/KhronosGroup/Vulkan-Headers.git',
   'vulkan_headers_revision': '7f9879b1b1fab53f719a9ed5e6e29533b10972b2',
 
+  'spirv_headers_url': 'https://github.com/KhronosGroup/SPIRV-Headers.git',
+  'spirv_headers_revision': 'f027d53ded7e230e008d37c8b47ede7cd308e19d',
+
+  'spirv_tools_url': 'https://github.com/KhronosGroup/SPIRV-Tools.git',
+  'spirv_tools_revision': '305caff2ebb135b688a476233ce1873efee032bb',
+
+  'glslang_url': 'https://github.com/KhronosGroup/glslang.git',
+  'glslang_revision': 'c0bcfaf3bae917c57bca49897eb7430cdf256c70',
+
 }
 deps = {
   'game/base/trace_event/common': Var('trace_common_url') + '@' + Var('trace_common_revision'),
@@ -143,6 +152,9 @@ deps = {
   'game/third_party/pugixml': Var('pugixml_url') + '@' + Var('pugixml_revision'),
   'game/third_party/stb': Var('stb_url') + '@' + Var('stb_revision'),
   'game/third_party/vulkan_headers': Var('vulkan_headers_url') + '@' + Var('vulkan_headers_revision'),
+  'game/third_party/spirv_headers': Var('spirv_headers_url') + '@' + Var('spirv_headers_revision'),
+  'game/third_party/spirv_tools': Var('spirv_tools_url') + '@' + Var('spirv_tools_revision'),
+  'game/third_party/glslang': Var('glslang_url') + '@' + Var('glslang_revision'),
 }
 
 hooks = [

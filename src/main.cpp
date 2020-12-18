@@ -11,7 +11,7 @@ using namespace game::lib;
 /*
  * Program entry.
  *
- * Usage: game_ ENGINECONFIG GAMESPEC
+ * Usage: game[.exe] [OPTIONS...] GAMESPEC
  */
 #ifdef PLATFORM_WIN32
 

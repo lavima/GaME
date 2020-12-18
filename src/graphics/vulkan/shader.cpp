@@ -1,12 +1,14 @@
 #include <string>
 #include <vector>
-#include <ios>
-#include <iostream>
-#include <fstream>
 
 #include <vulkan/vulkan.h>
 
+#include "glslang/Public/ShaderLang.h"
+#include "SPIRV/GlslangToSpv.h"
+
 #include "../../global.h"
+#include "../../lib/file_path.h"
+#include "../../lib/spirv_tools.h"
 #include "Shader.h"
 
 namespace game::graphics::vulkan {
@@ -37,33 +39,24 @@ namespace game::graphics::vulkan {
 
     bool _ReadFile(const std::string& filename, std::vector<char> *buffer) {
 
-        std::ifstream file(filename, std::ios::ate|std::ios::binary);
-
-        if (!file.is_open())
-            return false;
-
-        size_t file_size = (size_t)file.tellg();
-        buffer->resize(file_size);
-
-        file.seekg(0);
-        file.read(buffer->data(), file_size);
-
-        file.close();
-
         return true;
 
     }
 
     VkShaderModule Shader::CreateModule(VkDevice device, const std::string& filename) {
 
-        std::vector<char> code;
-        if (!_ReadFile(filename, &code))
+				
+        std::vector<uint32_t> code;
+				std::string extension = lib::FilePath::extension(filename);
+        if (extension == lib::ShaderExtension_Spirv && !lib::SpirvTools::LoadRaw(filename, code))
+            return VK_NULL_HANDLE;
+				else if (!lib::SpirvTools::LoadAndCompile(filename, code))
             return VK_NULL_HANDLE;
 
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         createInfo.codeSize = code.size();
-        createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+        createInfo.pCode = code.data();
 
         VkShaderModule shader_module;
         if (vkCreateShaderModule(device, &createInfo, nullptr, &shader_module)!=VK_SUCCESS)
