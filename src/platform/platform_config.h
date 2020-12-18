@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 namespace game::platform {
 
-#define PLATFORM_CONFIG_EXTENSION "platform_config"
+#define PLATFORM_CONFIG_EXTENSION ".platform_config"
 
 #define XMLNAME_PLATFORMCONFIG "PlatformConfig"
 #define XMLNAME_PLATFORMCONFIG_WIDTH "Width"

@@ -11,7 +11,7 @@ Author: Lars Vidar Magnusson
 #include <pugixml.hpp>
 
 #include "global.h"
-#include "lib/string_util.h"
+#include "lib/format.h"
 #include "content/xml/xml_range.h"
 #include "content/xml/xml_attribute.h"
 #include "content/xml/xml_node.h"
@@ -43,7 +43,7 @@ namespace game {
     int Version::GetRelease() const { return release_; }
 
     const std::string* Version::GetVersionString() {
-        return (const std::string*)lib::StringUtil::Format("%d-%d-%d", major_, minor_, release_);
+        return (const std::string*)lib::format::Format::string("%0-%1-%2", major_, minor_, release_);
     }
 
     bool Version::operator==(Version& other) { return major_==other.major_&&minor_==other.minor_&&release_==other.release_; }

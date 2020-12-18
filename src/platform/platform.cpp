@@ -22,7 +22,7 @@ Author: Lars Vidar Magnusson
 
 #include "../global.h"
 #include "../lib/file_path.h"
-#include "../lib/string_util.h"
+#include "../lib/format.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
 #include "../content/xml/xml_node.h"

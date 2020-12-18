@@ -24,7 +24,7 @@ Author: Lars Vidar Magnusson
 
 #include "global.h"
 #include "lib/file_path.h"
-#include "lib/string_util.h"
+#include "lib/format.h"
 #include "lib/command_line.h"
 #include "content/xml/xml_range.h"
 #include "content/xml/xml_attribute.h"
@@ -67,20 +67,19 @@ Author: Lars Vidar Magnusson
 namespace game {
 
     Engine::Engine() : status_(EngineStatus::Created) {
-
+				
         script_environment_ = nullptr;
 
         log_ = &Log::Get();
-        Log::Get().AddOutputStream(std::cerr);
+        //Log::Get().AddOutputStream(std::cerr);
 
     }
 
     Engine::~Engine() {}
 
     bool Engine::Initialize() {
-
         if (lib::CommandLine::HasOption("engineConfig")) {
-            LOG_INFO("Loading engine configuration from %s", lib::CommandLine::GetOption("engineConfig").c_str());
+            LOG_INFO("Loading engine configuration from %0", lib::CommandLine::GetOption("engineConfig"));
             config_ = std::unique_ptr<EngineConfig>(content::Content::Load<EngineConfig>(lib::CommandLine::GetOption("engineConfig")));
         }
         else {
@@ -120,7 +119,7 @@ namespace game {
         LOG_INFO("Loading addins");
         for (const std::string& addin_filename:config_->GetAddinFilenames()) {
             if (!LoadAddin(addin_filename)) {
-                LOG_ERROR("Failed to load addin %s", addin_filename.c_str());
+                LOG_ERROR("Failed to load addin %0", addin_filename);
                 return false;
             }
 
@@ -194,7 +193,7 @@ namespace game {
 
         framework::GameSpecification* game_spec = content::Content::Load<framework::GameSpecification>(filename);
         if (!game_spec) {
-            LOG_ERROR("Failed to load game specification from %s", filename);
+            LOG_ERROR("Failed to load game specification from %0", filename);
             return false;
         }
 
@@ -237,7 +236,7 @@ namespace game {
             system.GameLoaded(game);
         }
 
-        LOG_INFO("Game %s loaded and initialized", (const std::string&)game_->GetHeader().GetName());
+        LOG_INFO("Game %0 loaded and initialized", (const std::string&)game_->GetHeader().GetName());
 
         return true;
     }
@@ -266,7 +265,7 @@ namespace game {
         if (status_>EngineStatus::Created)
             config_->AddAddinFilename(filename);
 
-        LOG_INFO("Sucessfully loaded addin %s from %s\n", addin->GetHeader().GetName().c_str(), filename.c_str());
+        LOG_INFO("Sucessfully loaded addin %0 from %1\n", addin->GetHeader().GetName(), filename);
 
         return true;
 
@@ -298,26 +297,23 @@ namespace game {
         bool name_found = systems_.find(name)!=systems_.end();
         bool type_found = systems_by_type_.find(type_name)!=systems_by_type_.end();
         if (name_found&&type_found) {
-            LOG_ERROR("The system with the specified name (%s) and type (%s) already exists", 
-                name.c_str(), type_name.c_str());
+            LOG_ERROR("The system with the specified name (%0) and type (%1) already exists", name, type_name);
             return true;
         }
         else if (name_found) {
-            LOG_ERROR("The system with name (%s) already exists with different type", 
-                name.c_str());
+            LOG_ERROR("The system with name (%0) already exists with different type", name);
             return false;
         }
         else if (type_found) {
-            LOG_ERROR("There already exists a system with the specified type (%s)",
-                type_name.c_str());
+            LOG_ERROR("There already exists a system with the specified type (%0)", type_name);
             return false;
         }
 
         framework::System* system = framework::System::Create(*this, system_config);
 
-        LOG_INFO("Initializing system %s", name.c_str());
+        LOG_INFO("Initializing system %0", name);
         if (!system->Initialize()) {
-            LOG_ERROR("Couldn't initialize system %s", name.c_str());
+            LOG_ERROR("Couldn't initialize system %0", name);
             return false;
         }
 

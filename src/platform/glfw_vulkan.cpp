@@ -23,7 +23,7 @@
 
 #include "../global.h"
 #include "../lib/file_path.h"
-#include "../lib/string_util.h"
+#include "../lib/format.h"
 #include "../content/xml/xml_range.h"
 #include "../content/xml/xml_attribute.h"
 #include "../content/xml/xml_node.h"
@@ -97,7 +97,7 @@ namespace game::platform {
         if (!window_) {
             const char* description;
             glfwGetError(&description);
-            LOG_ERROR("Could not create GLFW window: %s", description);
+            LOG_ERROR("Could not create GLFW window: %0", description);
             return false;
         }
 

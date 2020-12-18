@@ -3,6 +3,7 @@ File: Main.cpp
 Author: Lars Vidar Magnusson
 */
 
+#include <iostream>
 #include "game.h"
 
 using namespace game;
@@ -34,6 +35,8 @@ int main(int argc, const char *argv[]) {
     CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "engineLog", "The filename of the engine log");
     CommandLine::SpecifyOption(COMMANDOPTION_VALUE, "gameDirectory", "The directory to use as the root directory");
 
+
+    LOG_DEBUG("Attempting to parse the command line");
     if (!CommandLine::Parse(arguments)) {
         LOG_INFO(CommandLine::GetUsageString().c_str());
         return 0;
@@ -41,12 +44,14 @@ int main(int argc, const char *argv[]) {
 
     Engine engine;
 
+    LOG_DEBUG("Attempting to initialize engine");
     if (!engine.Initialize()) {
         LOG_ERROR("Couldn't initialize engine");
         return 0;
     }
 
     
+    LOG_DEBUG("Attempting to load game");
     if (!engine.LoadGame(CommandLine::GetArgument("GAME_FILE")[0])) {
         LOG_ERROR("Couldn't load game");
         return 0;

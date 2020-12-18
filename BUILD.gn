@@ -1,6 +1,7 @@
 declare_args() {
   game_platform = "glfw"
   game_graphics = "vulkan"
+  vulkan_dir = "C:/VulkanSDK/1.2.141.2"
 }
 
 config("platform_glfw_vulkan") {
@@ -104,8 +105,8 @@ source_set("game_base_source") {
     "src/lib/command_line.h",
     "src/lib/file_path.cpp",
     "src/lib/file_path.h",
-    "src/lib/string_util.cpp",
-    "src/lib/string_util.h",
+    "src/lib/format.cpp",
+    "src/lib/format.h",
     "src/lib/v8.cpp",
     "src/lib/v8.h",
     "src/lib/spirv_tools.cpp",
@@ -166,7 +167,7 @@ source_set("game_base_source") {
     "third_party/vulkan_headers/include"
   ]
   lib_dirs = [
-    "C:/VulkanSDK/1.2.141.2/Lib"
+    "$vulkan_dir/Lib"
   ]
   libs = [ "vulkan-1.lib" ]
 }

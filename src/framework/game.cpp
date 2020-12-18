@@ -22,7 +22,7 @@ Author: Lars Vidar Magnusson
 #include <v8.h>
 
 #include "../global.h"
-#include "../lib/string_util.h"
+#include "../lib/format.h"
 #include "../lib/file_path.h"
 #include "../log.h"
 #include "../content/content.h"
@@ -96,14 +96,14 @@ namespace game::framework {
 
         for (const SystemInfo& system_info:GetHeader().GetRequiredSystems()) {
             if (!System::IsTypeAvailable(system_info.GetName())) {
-                LOG_ERROR("The engine does not support the system type %s", system_info.GetName());
+                LOG_ERROR("The engine does not support the system type %0", system_info.GetName());
                 return false;
             }
         }
 
         for (SystemConfig& system_config:GetConfig().GetSystemConfigs()) {
             if (!engine_->LoadSystem(system_config)) {
-                LOG_ERROR("Couldn't load system %s", system_config.GetName());
+                LOG_ERROR("Couldn't load system %0", system_config.GetName());
                 return false;
             }
         }
@@ -119,10 +119,10 @@ namespace game::framework {
             return false;
 
         for (EntitySpecification& entity_spec:specification_->GetEntities()) {
-            LOG_INFO("Creating entity %s", entity_spec.GetName());
+            LOG_INFO("Creating entity %0", entity_spec.GetName());
             Entity* entity = Entity::Create(*this, &entity_spec);
             if (!entity) {
-                LOG_ERROR("Failed to create entity %s", entity_spec.GetName());
+                LOG_ERROR("Failed to create entity %0", entity_spec.GetName());
                 return false;
             }
             entities_.insert_or_assign(entity->GetName(), std::unique_ptr<Entity>(entity));
@@ -130,9 +130,9 @@ namespace game::framework {
 
         for (auto& entity_pair:entities_) {
             Entity& entity = *entity_pair.second;
-            LOG_INFO("Initializing entity %s", entity.GetName());
+            LOG_INFO("Initializing entity %0", entity.GetName());
             if (!entity.Initialize()) {
-                LOG_ERROR("Failed to initialize entity %s", entity.GetName());
+                LOG_ERROR("Failed to initialize entity %0", entity.GetName());
                 return false;
             }
         }

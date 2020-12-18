@@ -1,15 +1,19 @@
 /*
-File: string_util.h
+File: format.h
 Author: Lars Vidar Magnusson
 */
 
 #pragma once
 
-namespace game::lib {
+namespace game::lib::format {
 
-    class GAME_API StringUtil final {
+		inline const std::string ArgumentErrorString = "ERROR";
+
+    class GAME_API Format final {
 
     private:
+
+
         static void argsToStrings(std::vector<std::string> &arg_strings) {}
 
         template <typename T, typename ... R> 
@@ -22,10 +26,10 @@ namespace game::lib {
 
     public:
 
-        template <typename ... T> static std::string* Format(const std::string& format, T ... args) {
+        template <typename ... T> static std::string* string(const std::string& format, T ... args) {
 
             std::vector<std::string> arg_strings; 
-            StringUtil::argsToStrings(arg_strings, args...);
+            Format::argsToStrings(arg_strings, args...);
 
             size_t args_total_length = 0;
             for (const std::string& arg_string : arg_strings) {
@@ -48,8 +52,19 @@ namespace game::lib {
                 }
 
                 size_t j = i++;
+								if (!std::isdigit(format[j+1])) {
+									  total_length += ArgumentErrorString.length();	
+                    continue;
+                }
+
                 while (std::isdigit(format[++j]));                
                 size_t arg_index = std::stoi(format.substr(i, j-i));
+
+                if (arg_index >=arg_strings.size()) {
+									  total_length += ArgumentErrorString.length();	
+                    continue;
+                }
+
                 total_length += arg_strings[arg_index].length();
                 i = j-1;
 
@@ -74,8 +89,19 @@ namespace game::lib {
                 }
 
                 size_t j = i++;
+								if (!std::isdigit(format[j+1])) {
+                    final->append(ArgumentErrorString);
+                    continue;
+                }
+
                 while (std::isdigit(format[++j])); 
                 size_t arg_index = std::stoi(format.substr(i, j-i));
+
+                if (arg_index >=arg_strings.size()) {
+                    final->append(ArgumentErrorString);
+                    continue;
+                }
+
                 const std::string& arg = arg_strings[arg_index];
                 final->append(arg);
                 i = j-1;

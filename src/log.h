@@ -27,8 +27,7 @@ namespace game {
     class LogListener;
 
     /*
-    * A log with different event levels. Events are filtered in accordance with the log instance
-    * iisten level.
+    * Log provides logging functionality. 
     *
     * Supports event listeners through the LogListener interface. Event listeners can have different
     * listen level than the log itself.
@@ -61,28 +60,27 @@ namespace game {
         
         template<typename ... T> void Add(const std::string& filename, int line_number, const std::string& format, T ... args) {
 
-            std::unique_ptr<std::string> eventText(lib::StringUtil::Format(format, args ...));
+            std::unique_ptr<std::string> eventText(lib::format::Format::string(format, args ...));
             (*eventText).append("\n");
             output(EventType::Trace, *eventText);
             dispatchEvent(EventType::Trace, *eventText);
 
         }
 
-        template<typename ... T> void Add(const std::string& filename, int line_number, EventType type, const std::string& format, T ... args) {
 
-            std::unique_ptr<std::string> eventText(lib::StringUtil::Format(format, args ...));
-            (*eventText).append("\n");
-            auto file_line_prefix = std::unique_ptr<std::string>(lib::StringUtil::Format("[%s %d] ", filename.c_str(), line_number));
+        template<typename ... T> void Add(const std::string& filename, int line_number, EventType type, const std::string& format, T ... args) {
+            std::unique_ptr<std::string> eventText(lib::format::Format::string(format, args ...));
+            auto line_postfix = std::unique_ptr<std::string>(lib::format::Format::string("[%0 %1] ", filename.c_str(), line_number));
             if (type==EventType::Error)
-                output(EventType::Error, *file_line_prefix+ERROR_PREFIX+*eventText);
+                output(EventType::Error, ERROR_PREFIX+*eventText+" "+*line_postfix+"\n");
             else if (type==EventType::Warning)
-                output(EventType::Warning, *file_line_prefix+WARNING_PREFIX+*eventText);
+                output(EventType::Warning, WARNING_PREFIX+*eventText+" "+*line_postfix+"\n");
             else if (type==EventType::Info)
-                output(EventType::Info, *file_line_prefix+INFO_PREFIX+*eventText);
+                output(EventType::Info, INFO_PREFIX+*eventText+" "+*line_postfix+"\n");
             else if (type==EventType::Debug)
-                output(EventType::Debug, *file_line_prefix+DEBUG_PREFIX+*eventText);
+                output(EventType::Debug, DEBUG_PREFIX+*eventText+" "+*line_postfix+"\n");
             else // Trace
-                output(EventType::Trace, *file_line_prefix+TRACE_PREFIX+*eventText);
+                output(EventType::Trace, TRACE_PREFIX+*eventText+" "+*line_postfix+"\n");
 
             dispatchEvent(type, *eventText);
 
@@ -103,10 +101,21 @@ namespace game {
         virtual void Event(EventType type, const std::string& text) = 0;
     };
 
+#ifdef _DEBUG
 #define LOG_ERROR(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Error, message, __VA_ARGS__)
 #define LOG_WARNING(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Warning, message, __VA_ARGS__)
 #define LOG_INFO(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Info, message, __VA_ARGS__)
 #define LOG_DEBUG(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Debug, message, __VA_ARGS__)
 #define LOG_TRACE(message, ...) Log::Get().Add(__FILE__, __LINE__, EventType::Trace, message, __VA_ARGS__)
+#endif
+
+#ifdef NDEBUG
+#define LOG_ERROR(message, ...) 
+#define LOG_WARNING(message, ...)
+#define LOG_INFO(message, ...)
+#define LOG_DEBUG(message, ...)
+#define LOG_TRACE(message, ...)
+#endif
+
 
 }

@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 namespace game::content {
 
-#define EXTENSION_XML "xml"
+#define EXTENSION_XML ".xml"
 
     /*
     * Base class for XML serializable classes.

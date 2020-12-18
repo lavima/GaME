@@ -7,7 +7,7 @@ Author: Lars Vidar Magnusson
 
 namespace game::addin {
 
-#define EXTENSION_ADDIN "addin"
+#define EXTENSION_ADDIN ".addin"
 
 #define XMLNAME_ADDINHEADER "Addin"
 #define XMLNAME_ADDINHEADER_LIBRARYFILENAME "library"

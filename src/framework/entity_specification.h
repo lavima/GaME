@@ -2,7 +2,7 @@
 
 namespace game::framework {
 
-#define EXTENSION_ENTITY "entity"
+#define EXTENSION_ENTITY ".entity"
 
 #define XMLNAME_ENTITY "Entity"
 #define XMLNAME_ENTITY_NAME "Name"

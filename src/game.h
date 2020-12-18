@@ -57,7 +57,7 @@ namespace game {
 }
 
 #include "global.h"
-#include "lib/string_util.h"
+#include "lib/format.h"
 #include "lib/file_path.h"
 #include "lib/command_line.h"
 #include "lib/v8.h"

@@ -1,11 +1,14 @@
 #include <string>
 #include <sstream>
 #include <memory>
+#include <list>
 #include <vector>
 #include <unordered_map>
 
 #include "../global.h"
+#include "format.h"
 #include "command_line.h"
+#include "../log.h"
 
 namespace game::lib {
 
@@ -18,10 +21,12 @@ namespace game::lib {
     CommandLine::CommandResult::~CommandResult() {}
 
     void CommandLine::SpecifyOption(OptionType type, const std::string& name, const std::string& description) {
+				LOG_DEBUG("CommandLine::SpecifyOption %0", name);
         CommandLine::get().specifiedOptions.push_back(CommandOption{ type, name, description });
     }
 
     void CommandLine::SpecifyArgument(const std::string& name, const std::string& description, int minInstances, int maxInstances) {
+				LOG_DEBUG("CommandLine::SpecifyArgument %0", name);
         CommandLine::get().specifiedArguments.push_back(CommandArgument{ name, description, minInstances, maxInstances });
     }
 
@@ -30,17 +35,14 @@ namespace game::lib {
         // Insert the option declarations into a map for quick implementation_name_ lookup
         std::unordered_map<std::string, CommandOption*> optionMap;
         for (CommandOption option : CommandLine::get().specifiedOptions)
-            optionMap[option.Name] = &option;
+            optionMap[option.name] = &option;
 
         CommandLine::get().result = std::unique_ptr<CommandResult>(new CommandResult());
         CommandResult& result = *CommandLine::get().result;
 
         auto argvIter = argumentValues.begin();
 
-        if (CommandLine::IsOptionName(*argvIter)) {
-            result.NumErrors++;
-        }
-        result.Program = *argvIter;
+        result.program = *argvIter;
 
         ++argvIter;
         while (argvIter!=argumentValues.end()&&CommandLine::IsOptionName(*argvIter)) {
@@ -48,23 +50,26 @@ namespace game::lib {
             std::string optionName = (*argvIter).substr(2);
 
             if (!optionMap.count(optionName)) {
-                result.NumErrors++;
+								LOG_DEBUG("CommandLine::Parse could not find option %0", optionName);
+                result.num_errors++;
                 ++argvIter;
                 continue;
             }
 
             CommandOption& option = *optionMap[optionName];
-            if (option.Type==COMMANDOPTION_VALUE) {
+            if (option.type==COMMANDOPTION_VALUE) {
 
                 ++argvIter;
-                if (argvIter==argumentValues.end()||CommandLine::IsOptionName(*argvIter))
-                    result.NumErrors++;
+                if (argvIter==argumentValues.end()||CommandLine::IsOptionName(*argvIter)) {
+										LOG_DEBUG("CommandLine::Parse could not find value for %0", optionName);
+                    result.num_errors++;
+								}
 
-                result.Options[optionName] = *argvIter;
+                result.options[optionName] = *argvIter;
 
             }
             else // COMMANDOPTION_LITERAL
-                result.Options[optionName] = "";
+                result.options[optionName] = "";
 
             ++argvIter;
 
@@ -73,20 +78,20 @@ namespace game::lib {
         for (auto argument:CommandLine::get().specifiedArguments) {
 
             int num = 0;
-            for (; num<argument.MaxInstances&&argvIter!=argumentValues.end(); ++num) {
-                result.Arguments[argument.Name].push_back(*argvIter);
+            for (; num<argument.max_instances&&argvIter!=argumentValues.end(); ++num) {
+                result.arguments[argument.name].push_back(*argvIter);
                 ++argvIter;
             }
 
-            if (num<argument.MinInstances)
-                result.NumErrors++;
+            if (num<argument.min_instances)
+                result.num_errors++;
 
         }
 
         if (argvIter!=argumentValues.end())
-            result.NumErrors++;
+            result.num_errors++;
 
-        return result.NumErrors==0;
+        return result.num_errors==0;
     }
 
     const std::string CommandLine::GetUsageString() {
@@ -102,14 +107,14 @@ namespace game::lib {
         for (CommandArgument argument : CommandLine::get().specifiedArguments) {
 
             int instances = 0;
-            while (instances<argument.MinInstances)
-                usage<<argument.Name+" ";
+            while (instances<argument.min_instances)
+                usage<<argument.name+" ";
 
-            if (argument.MaxInstances>argument.MinInstances) {
+            if (argument.max_instances>argument.min_instances) {
                 usage<<"[";
-                while (instances<argument.MinInstances-1)
-                    usage<<argument.Name+" ";
-                usage<<argument.Name+"]";
+                while (instances<argument.min_instances-1)
+                    usage<<argument.name+" ";
+                usage<<argument.name+"]";
             }
 
             usage<<" ";
@@ -119,14 +124,14 @@ namespace game::lib {
 
     }
 
-    const std::string& CommandLine::GetProgram() { return (*CommandLine::get().result).Program; }
+    const std::string& CommandLine::GetProgram() { return (*CommandLine::get().result).program; }
 
-    bool CommandLine::HasOption(const std::string& name) { return (*CommandLine::get().result).Options.count(name)>0; }
-    const std::string& CommandLine::GetOption(const std::string& name) { return (*CommandLine::get().result).Options[name]; }
+    bool CommandLine::HasOption(const std::string& name) { return (*CommandLine::get().result).options.count(name)>0; }
+    const std::string& CommandLine::GetOption(const std::string& name) { return (*CommandLine::get().result).options[name]; }
 
     const std::vector<std::reference_wrapper<const std::string>> CommandLine::GetArgument(const std::string& name) {
 
-        std::vector<std::string>& argumentValues = (*CommandLine::get().result).Arguments[name];
+        std::vector<std::string>& argumentValues = (*CommandLine::get().result).arguments[name];
         return std::vector<std::reference_wrapper<const std::string>>(argumentValues.begin(), argumentValues.end());
 
     }

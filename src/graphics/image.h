@@ -2,16 +2,16 @@
 
 namespace game::graphics {
 
-#define EXTENSION_IMAGE_JPG "jpg"
-#define EXTENSION_IMAGE_PNG "png"
-#define EXTENSION_IMAGE_TGA "tga"
-#define EXTENSION_IMAGE_BMP "bmp"
-#define EXTENSION_IMAGE_PSD "psd"
-#define EXTENSION_IMAGE_GIF "gif"
-#define EXTENSION_IMAGE_HDR "hdr"
-#define EXTENSION_IMAGE_PIC "pic"
-#define EXTENSION_IMAGE_PPM "ppm"
-#define EXTENSION_IMAGE_PGM "pgm"
+#define EXTENSION_IMAGE_JPG ".jpg"
+#define EXTENSION_IMAGE_PNG ".png"
+#define EXTENSION_IMAGE_TGA ".tga"
+#define EXTENSION_IMAGE_BMP ".bmp"
+#define EXTENSION_IMAGE_PSD ".psd"
+#define EXTENSION_IMAGE_GIF ".gif"
+#define EXTENSION_IMAGE_HDR ".hdr"
+#define EXTENSION_IMAGE_PIC ".pic"
+#define EXTENSION_IMAGE_PPM ".ppm"
+#define EXTENSION_IMAGE_PGM ".pgm"
 
     class GAME_API Image : public content::Content {
     private:

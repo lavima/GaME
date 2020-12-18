@@ -22,7 +22,7 @@ Author: Lars Vidar Magnusson
 #include <v8.h>
 
 #include "../global.h"
-#include "../lib/string_util.h"
+#include "../lib/format.h"
 #include "../lib/file_path.h"
 #include "../log.h"
 #include "../content/content.h"
@@ -93,7 +93,7 @@ namespace game::framework {
         assert(creators_);
 
         if (!IsTypeAvailable(config.GetTypeName())) {
-            LOG_ERROR("Could not find the specified system type %s", config.GetTypeName());
+            LOG_ERROR("Could not find the specified system type %0", config.GetTypeName());
             return nullptr;
         }
 

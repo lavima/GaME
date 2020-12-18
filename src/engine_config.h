@@ -10,7 +10,7 @@ namespace game {
 #define DEFAULT_LOG_FILENAME "engine.log"
 #define DEFAULT_ENGINECONFIG_FILENAME "default.engine_config"
 
-#define EXTENSION_ENGINECONFIG "engine_config"
+#define EXTENSION_ENGINECONFIG ".engine_config"
 
 #define XMLNAME_ENGINECONFIG "EngineConfig"
 #define XMLNAME_ENGINECONFIG_LOGFILENAME "LogFilename"

@@ -12,7 +12,7 @@ Author: Lars Vidar Magnusson
 #include <list>
 
 #include "global.h"
-#include "lib/string_util.h"
+#include "lib/format.h"
 #include "Log.h"
 
 namespace game {

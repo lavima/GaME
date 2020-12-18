@@ -17,9 +17,9 @@ namespace game::lib {
     */
     struct GAME_API CommandOption {
 
-        const OptionType Type;
-        const std::string Name;
-        const std::string Description;
+        const OptionType type;
+        const std::string name;
+        const std::string description;
 
     };
 
@@ -28,10 +28,10 @@ namespace game::lib {
     */
     struct GAME_API CommandArgument {
 
-        const std::string Name;
-        const std::string Description;
-        const int MinInstances;
-        const int MaxInstances;
+        const std::string name;
+        const std::string description;
+        const int min_instances;
+        const int max_instances;
 
     };
 
@@ -47,11 +47,11 @@ namespace game::lib {
 
         struct CommandResult {
 
-            int NumErrors = 0;
+            int num_errors = 0;
 
-            std::string Program;
-            std::unordered_map<std::string, std::string> Options;
-            std::unordered_map<std::string, std::vector<std::string>> Arguments;
+            std::string program;
+            std::unordered_map<std::string, std::string> options;
+            std::unordered_map<std::string, std::vector<std::string>> arguments;
         
             CommandResult();
             ~CommandResult();

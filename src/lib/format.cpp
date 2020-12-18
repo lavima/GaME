@@ -10,5 +10,5 @@ Author: Lars Vidar Magnusson
 #include <vector>
 
 #include "../global.h"
-#include "string_util.h"
+#include "format.h"
 

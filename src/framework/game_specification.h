@@ -4,7 +4,7 @@ namespace game::framework {
 
 #define DEFAULT_GAME_NAME std::string("NewGame")
 
-#define EXTENSION_GAME std::string("game")
+#define EXTENSION_GAME std::string(".game")
 
 #define XMLNAME_GAME std::string("Game")
 #define XMLNAME_GAME_HEADER XMLNAME_GAMEHEADER

@@ -16,7 +16,7 @@ Author: Lars Vidar Magnusson
 
 #include "../global.h"
 #include "../lib/file_path.h"
-#include "../lib/string_util.h"
+#include "../lib/format.h"
 #include "../Log.h"
 #include "../content/content.h"
 #include "../content/xml/xml_range.h"
