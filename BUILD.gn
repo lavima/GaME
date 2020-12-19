@@ -196,13 +196,14 @@ shared_library("vulkan_renderer") {
   defines = [ "PLATFORM_GLFWVULKAN" ]
   deps = [
     ":game_base_source",
-    ":vulkan_renderer_shaders",
+    ":vulkan_renderer_resources",
   ]
   cflags_cc = [ "/std:c++17", "-Wno-missing-braces" ]
 }
 
-copy("vulkan_renderer_shaders") {
+copy("vulkan_renderer_resources") {
   sources = [
+    "src/vulkan_renderer/vulkan_renderer.addin",
     "src/vulkan_renderer/test.vert",
     "src/vulkan_renderer/test.frag",
   ]

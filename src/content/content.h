@@ -52,7 +52,8 @@ namespace game::content {
         if (data_loaders_->count(extension)==0)
             return nullptr;
 
-        return dynamic_cast<T*>(data_loaders_->at(extension)->Load(filename));
+        Content* content = data_loaders_->at(extension)->Load(filename);
+        return static_cast<T*>(content);
 
     }
 

@@ -86,7 +86,7 @@ vars = {
   'stb_revision': 'b42009b3b9d4ca35bc703f5310eedc74f584be58',
 
   'vulkan_headers_url': 'https://github.com/KhronosGroup/Vulkan-Headers.git',
-  'vulkan_headers_revision': '7f9879b1b1fab53f719a9ed5e6e29533b10972b2',
+  'vulkan_headers_revision': 'bd6eab92a0e961e2ea6b5eb744bd5aadeb0461e4',
 
   'spirv_headers_url': 'https://github.com/KhronosGroup/SPIRV-Headers.git',
   'spirv_headers_revision': 'f027d53ded7e230e008d37c8b47ede7cd308e19d',

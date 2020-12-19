@@ -16,9 +16,26 @@ namespace game::vulkanrenderer {
     static const framework::SystemInfo vulkan_renderer_info(VULKANRENDERER_TYPENAME, "Vulkan renderer", Version(0, 0, 1));
 
 #ifdef _DEBUG
-    VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRenderer::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+    VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRenderer::DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, 
+        VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+        
+        std::string messageTypeString;
+        if (messageType&VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
+            messageTypeString = "GEN";
+        else if (messageType&VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
+            messageTypeString = "VAL";
+        else if (messageType&VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
+            messageTypeString = "PERF";
 
-        LOG_ERROR("VULKAN %s", pCallbackData->pMessage);
+        if (messageSeverity&VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+            LOG_TRACE("VULKAN %0 %1", messageTypeString, pCallbackData->pMessage);
+        else if (messageSeverity&VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
+            LOG_INFO("VULKAN %0 %1", messageTypeString, pCallbackData->pMessage);
+        else if (messageSeverity&VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+            LOG_WARNING("VULKAN %0 %1", messageTypeString, pCallbackData->pMessage);
+        else if (messageSeverity&VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+            LOG_ERROR("VULKAN %0 %1", messageTypeString, pCallbackData->pMessage);
+
         return VK_FALSE;
 
     }
@@ -48,7 +65,7 @@ namespace game::vulkanrenderer {
             }
 
             if (!layer_found) {
-                LOG_ERROR("Couldn't find validation layer %s", layer_name.c_str());
+                LOG_ERROR("Couldn't find validation layer %0", layer_name.c_str());
                 return false;
             }
         }
@@ -92,7 +109,7 @@ namespace game::vulkanrenderer {
 
         LOG_INFO("Extensions:");
         for (const std::string& extension:required_extensions)
-            LOG_INFO("\t%s", extension.c_str());
+            LOG_INFO("\t%0", extension.c_str());
 
         VkResult result = vkCreateInstance(&create_info, nullptr, &instance_);
         if (result!=VK_SUCCESS) 
@@ -200,7 +217,7 @@ namespace game::vulkanrenderer {
 
         LOG_INFO("Extensions:");
         for (const std::string& extension:extensions)
-            LOG_INFO("\t%s", extension.c_str());
+            LOG_INFO("\t%0", extension.c_str());
 
         if (vkCreateDevice(physical_device_, &device_create_info, nullptr, &device_)!=VK_SUCCESS)
             return false;
@@ -700,7 +717,7 @@ namespace game::vulkanrenderer {
             if (vkCreateSemaphore(device_, &semaphore_info, nullptr, &image_available_semaphores_[i])!=VK_SUCCESS||
                 vkCreateSemaphore(device_, &semaphore_info, nullptr, &render_finished_semaphores_[i])!=VK_SUCCESS||
                 vkCreateFence(device_, &fence_info, nullptr, &in_flight_fences_[i])!=VK_SUCCESS) {
-                LOG_ERROR("Failed to create semaphores for frame %d", i);
+                LOG_ERROR("Failed to create semaphores for frame %", i);
                 return false;
             }
         }
@@ -832,7 +849,7 @@ namespace game::vulkanrenderer {
             return false;
         }
 
-        LOG_INFO("Loading shaders %s and %s", VULKANRENDERER_VERTEXSHADER_FILENAME, VULKANRENDERER_FRAGMENTSHADER_FILENAME);
+        LOG_INFO("Loading shaders %0 and %1", VULKANRENDERER_VERTEXSHADER_FILENAME, VULKANRENDERER_FRAGMENTSHADER_FILENAME);
         shader_ = std::unique_ptr<Shader>(Shader::Create(device_,
             VULKANRENDERER_VERTEXSHADER_FILENAME, VULKANRENDERER_FRAGMENTSHADER_FILENAME));
         if (!shader_) {

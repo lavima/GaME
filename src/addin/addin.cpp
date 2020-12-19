@@ -96,9 +96,9 @@ namespace game::addin {
         Addin* addin = new Addin(content::Content::Load<AddinHeader>(filename));
         AddinHeader& header = addin->GetHeader();
 
-        std::string libraryFilename = lib::FilePath::filename(header.GetLibraryFilename());
+        const std::string libraryFilename = header.GetLibraryFilename(); 
 
-        addin->handle_ = engine.GetPlatform().LoadLibrary(libraryFilename);
+        addin->handle_ = engine.GetPlatform().LoadLibrary(lib::FilePath::filename(libraryFilename));
         if (!addin->handle_) {
             delete addin;
             return nullptr;

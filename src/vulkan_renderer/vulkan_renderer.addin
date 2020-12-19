@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Addin library="vulkan_renderer/vulkan_renderer.dll">
+<Addin library="vulkan_renderer.dll">
     <Name>VulkanRendererAddin</Name>
     <Description>Addin providing a simple render</Description>
     <Version>

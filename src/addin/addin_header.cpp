@@ -32,7 +32,9 @@ namespace game::addin {
     AddinHeader::~AddinHeader() {}
 
     AddinType AddinHeader::GetType() { return this->type_; }
-    const std::string& AddinHeader::GetLibraryFilename() { return this->library_filename_; }
+    const std::string& AddinHeader::GetLibraryFilename() { 
+        return this->library_filename_; 
+    }
 
     const std::vector<std::reference_wrapper<const framework::SystemInfo>> AddinHeader::GetSystemInfos() const {
         return std::vector<std::reference_wrapper<const framework::SystemInfo>>(system_infos_.begin(), system_infos_.end());

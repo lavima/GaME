@@ -1,5 +1,9 @@
 #include <string>
+#include <sstream>
+#include <list>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 #include <vulkan/vulkan.h>
 
@@ -7,8 +11,10 @@
 #include "SPIRV/GlslangToSpv.h"
 
 #include "../../global.h"
+#include "../../lib/format.h"
 #include "../../lib/file_path.h"
 #include "../../lib/spirv_tools.h"
+#include "../../log.h"
 #include "Shader.h"
 
 namespace game::graphics::vulkan {
@@ -37,25 +43,20 @@ namespace game::graphics::vulkan {
 
     }
 
-    bool _ReadFile(const std::string& filename, std::vector<char> *buffer) {
-
-        return true;
-
-    }
-
     VkShaderModule Shader::CreateModule(VkDevice device, const std::string& filename) {
 
-				
+        LOG_TRACE("Shader::CreateModule %0", filename);
         std::vector<uint32_t> code;
-				std::string extension = lib::FilePath::extension(filename);
-        if (extension == lib::ShaderExtension_Spirv && !lib::SpirvTools::LoadRaw(filename, code))
+        std::string extension = lib::FilePath::extension(filename);
+        if (extension==lib::ShaderExtension_Spirv&&!lib::SpirvTools::LoadRaw(filename, code))
             return VK_NULL_HANDLE;
-				else if (!lib::SpirvTools::LoadAndCompile(filename, code))
+        else if (!lib::SpirvTools::LoadAndCompile(filename, code))
             return VK_NULL_HANDLE;
 
+        LOG_TRACE("Shader::CreateModule Code Size %0", code.size());
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.codeSize = code.size();
+        createInfo.codeSize = code.size()*4;
         createInfo.pCode = code.data();
 
         VkShaderModule shader_module;
@@ -77,7 +78,7 @@ namespace game::graphics::vulkan {
             return nullptr;
 
         Shader* shader = new Shader(device, vertex_module, fragment_module);
-        
+
         return shader;
 
     }
@@ -87,7 +88,7 @@ namespace game::graphics::vulkan {
     }
 
     void Shader::Destroy() {
-        
+
         vkDestroyShaderModule(device_, vertex_module_, nullptr);
         vkDestroyShaderModule(device_, fragment_module_, nullptr);
 

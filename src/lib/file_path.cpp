@@ -23,6 +23,8 @@ namespace game::lib {
     const std::string FilePath::filename(const std::string& file_path) {
 
         size_t last = file_path.find_last_of("/\\", 0);
+        if (last==std::string::npos)
+            return file_path;
         return file_path.substr(last+1);
 
     }
